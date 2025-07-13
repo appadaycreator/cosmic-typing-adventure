@@ -558,6 +558,16 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
+                        <h3 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-4">実績</h3>
+                        <div class="text-sm text-gray-400 mb-2">
+                            進捗: <span id="achievementProgress">0/0</span>
+                        </div>
+                        <div id="achievementList" class="space-y-2 max-h-40 overflow-y-auto">
+                            <!-- Achievements will be populated here -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1106,10 +1116,20 @@
                     if (i >= gameState.currentPosition) {
                         gameState.combo++;
                         gameState.maxCombo = Math.max(gameState.maxCombo, gameState.combo);
+                        
+                        // Play correct sound
+                        if (window.audioManager) {
+                            window.audioManager.playCorrect();
+                        }
                     }
                 } else {
                     incorrect++;
                     gameState.combo = 0; // Reset combo on mistake
+                    
+                    // Play error sound
+                    if (window.audioManager) {
+                        window.audioManager.playError();
+                    }
                     
                     // Track weak keys
                     const wrongChar = gameState.currentText[i];
@@ -1217,6 +1237,11 @@
                 discoverPlanet();
             }
             
+            // Check achievements
+            if (window.achievementSystem) {
+                window.achievementSystem.checkAchievements(userStats);
+            }
+            
             // Show results
             document.getElementById('finalWPM').textContent = finalWPM;
             document.getElementById('finalAccuracy').textContent = finalAccuracy + '%';
@@ -1264,6 +1289,11 @@
             // Show discovery notification
             showPlanetDiscovery(selectedPlanet);
             
+            // Play discovery sound
+            if (window.audioManager) {
+                window.audioManager.playDiscovery();
+            }
+            
             console.log(`Discovered planet: ${selectedPlanet.name}`);
         }
         
@@ -1297,8 +1327,28 @@
         }
         
         function showLevelUpEffect() {
-            // You can add visual effects here
-            console.log(`Level up! Now level ${userStats.level}`);
+            // Play level up sound
+            if (window.audioManager) {
+                window.audioManager.playLevelUp();
+            }
+            
+            // Show level up notification
+            const notification = document.createElement('div');
+            notification.className = 'level-up-notification fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-cosmic-card border-2 border-energy-green rounded-lg p-6 z-50 text-center';
+            notification.innerHTML = `
+                <div class="text-energy-green text-4xl mb-2">🎉</div>
+                <div class="text-energy-green text-xl font-bold mb-2">レベルアップ！</div>
+                <div class="text-white">レベル ${userStats.level} に到達しました！</div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, 3000);
         }
         
         function playAgain() {
@@ -1388,6 +1438,13 @@
             
             // Update weak keys
             updateWeakKeysDisplay();
+            
+            // Update achievements
+            if (window.achievementSystem) {
+                const progress = window.achievementSystem.getProgress();
+                document.getElementById('achievementProgress').textContent = `${progress.unlocked}/${progress.total}`;
+                window.achievementSystem.updateAchievementDisplay();
+            }
         }
         
         function updateWeakKeysDisplay() {
@@ -1644,6 +1701,12 @@
                     break;
             }
         });
+        
+        // Initialize Audio Manager
+        window.audioManager = new AudioManager();
+        
+        // Initialize Achievement System
+        window.achievementSystem = new AchievementSystem();
         
         console.log('Cosmic Typing Adventure - All systems operational! 🚀');
     </script>
