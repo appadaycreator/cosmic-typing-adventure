@@ -697,10 +697,14 @@
                         <!-- Language -->
                         <div>
                             <label class="block text-sm font-bold mb-2">言語 / Language</label>
-                            <select id="languageSelect" class="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-cosmic-cyan focus:outline-none">
-                                <option value="ja">日本語</option>
-                                <option value="en">English</option>
-                            </select>
+                            <div class="flex space-x-2">
+                                <button data-language="ja" class="flex-1 p-2 bg-blue-600 text-white rounded-lg border border-gray-600 hover:bg-blue-700 transition-colors">
+                                    日本語
+                                </button>
+                                <button data-language="en" class="flex-1 p-2 bg-gray-600 text-gray-300 rounded-lg border border-gray-600 hover:bg-gray-700 transition-colors">
+                                    English
+                                </button>
+                            </div>
                         </div>
                         
                         <!-- Font Size -->
@@ -880,7 +884,7 @@
             const savedLang = localStorage.getItem('cosmicTyping_language');
             if (savedLang) {
                 currentLanguage = savedLang;
-                document.getElementById('languageSelect').value = savedLang;
+                updateLanguageButtons(savedLang);
                 updateLanguage();
             }
             
@@ -898,11 +902,35 @@
         // Setup event listeners
         function setupEventListeners() {
             // Language change
-            document.getElementById('languageSelect').addEventListener('change', function() {
-                currentLanguage = this.value;
-                localStorage.setItem('cosmicTyping_language', currentLanguage);
-                updateLanguage();
+            // Language button event listeners
+            document.addEventListener('click', function(e) {
+                if (e.target.hasAttribute('data-language')) {
+                    const lang = e.target.getAttribute('data-language');
+                    currentLanguage = lang;
+                    localStorage.setItem('cosmicTyping_language', currentLanguage);
+                    updateLanguageButtons(lang);
+                    updateLanguage();
+                }
             });
+            
+            function updateLanguageButtons(lang) {
+                const jaButton = document.querySelector('[data-language="ja"]');
+                const enButton = document.querySelector('[data-language="en"]');
+                
+                if (jaButton && enButton) {
+                    if (lang === 'ja') {
+                        jaButton.classList.add('bg-blue-600', 'text-white');
+                        jaButton.classList.remove('bg-gray-600', 'text-gray-300');
+                        enButton.classList.remove('bg-blue-600', 'text-white');
+                        enButton.classList.add('bg-gray-600', 'text-gray-300');
+                    } else {
+                        enButton.classList.add('bg-blue-600', 'text-white');
+                        enButton.classList.remove('bg-gray-600', 'text-gray-300');
+                        jaButton.classList.remove('bg-blue-600', 'text-white');
+                        jaButton.classList.add('bg-gray-600', 'text-gray-300');
+                    }
+                }
+            }
             
             // Font size change
             document.getElementById('fontSizeSelect').addEventListener('change', function() {
@@ -978,11 +1006,55 @@
         }
         
         function updateLanguage() {
-            const langToggle = document.getElementById('langToggle');
-            langToggle.textContent = currentLanguage === 'ja' ? 'EN' : '日本語';
+            // Use language manager if available
+            if (window.languageManager) {
+                window.languageManager.updateAllTexts();
+                window.languageManager.updatePracticeTexts();
+            } else {
+                // Fallback to basic translations
+                const langToggle = document.getElementById('langToggle');
+                if (langToggle) {
+                    langToggle.textContent = currentLanguage === 'ja' ? 'EN' : '日本語';
+                }
+                
+                // Basic text updates
+                if (currentLanguage === 'en') {
+                    // English translations
+                    document.querySelectorAll('[data-translate]').forEach(element => {
+                        const key = element.getAttribute('data-translate');
+                        const translations = {
+                            'nav.game': 'Game',
+                            'nav.stats': 'Stats',
+                            'nav.fleet': 'Fleet',
+                            'nav.settings': 'Settings',
+                            'game.start': 'Start',
+                            'game.pause': 'Pause',
+                            'game.reset': 'Reset'
+                        };
+                        if (translations[key]) {
+                            element.textContent = translations[key];
+                        }
+                    });
+                } else {
+                    // Japanese translations
+                    document.querySelectorAll('[data-translate]').forEach(element => {
+                        const key = element.getAttribute('data-translate');
+                        const translations = {
+                            'nav.game': 'ゲーム',
+                            'nav.stats': '統計',
+                            'nav.fleet': '艦隊',
+                            'nav.settings': '設定',
+                            'game.start': '開始',
+                            'game.pause': '一時停止',
+                            'game.reset': 'リセット'
+                        };
+                        if (translations[key]) {
+                            element.textContent = translations[key];
+                        }
+                    });
+                }
+            }
             
-            // Here you would update all text content based on language
-            // For now, keeping it simple
             console.log(`Language changed to ${currentLanguage}`);
         }
         
@@ -1757,15 +1829,30 @@
         // Initialize Performance Optimizer
         window.performanceOptimizer = new PerformanceOptimizer();
         
-        // Update upgrade display after initialization
+        // Load user data and apply upgrades
+        loadUserData();
         if (window.shipUpgradeSystem) {
             window.shipUpgradeSystem.updateUpgradeDisplay();
+        }
+        
+        // Apply language settings
+        if (window.languageManager) {
+            window.languageManager.updateAllTexts();
+        }
+        
+        // Start ambient music
+        if (window.audioManager) {
+            window.audioManager.playMusic('ambient');
         }
         
         console.log('Cosmic Typing Adventure - All systems operational! 🚀');
     </script>
     
     <!-- Additional Scripts -->
+    <script src="js/audio-manager.js"></script>
+    <script src="js/achievement-system.js"></script>
+    <script src="js/language-manager.js"></script>
+    <script src="js/ship-upgrade-system.js"></script>
     <script src="js/pwa-installer.js"></script>
     <script src="js/mobile-optimizer.js"></script>
     <script src="js/performance-optimizer.js"></script>

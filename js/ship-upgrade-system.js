@@ -3,34 +3,64 @@
 class ShipUpgradeSystem {
     constructor() {
         this.upgrades = {
-            engine: { level: 1, cost: 100, effect: 0.05, maxLevel: 5 },
-            fuel: { level: 1, cost: 150, effect: 0.02, maxLevel: 5 },
-            shield: { level: 1, cost: 200, effect: 0.10, maxLevel: 5 }
+            engine: { 
+                level: 1, 
+                cost: 100, 
+                effect: 0.05, 
+                maxLevel: 5,
+                name: { ja: 'エンジン', en: 'Engine' },
+                description: { ja: 'タイピング速度を向上', en: 'Improves typing speed' }
+            },
+            fuel: { 
+                level: 1, 
+                cost: 150, 
+                effect: 0.02, 
+                maxLevel: 5,
+                name: { ja: '燃料システム', en: 'Fuel System' },
+                description: { ja: '正確率を向上', en: 'Improves accuracy' }
+            },
+            shield: { 
+                level: 1, 
+                cost: 200, 
+                effect: 0.10, 
+                maxLevel: 5,
+                name: { ja: 'シールド', en: 'Shield' },
+                description: { ja: 'コンボペナルティを軽減', en: 'Reduces combo penalty' }
+            }
         };
         
         this.loadUpgrades();
         this.setupEventListeners();
+        this.applyUpgradeEffects();
         console.log('🚀 Ship Upgrade System initialized');
     }
 
     loadUpgrades() {
         const savedUpgrades = localStorage.getItem('cosmicTyping_upgrades');
         if (savedUpgrades) {
-            const parsedUpgrades = JSON.parse(savedUpgrades);
-            Object.keys(parsedUpgrades).forEach(key => {
-                if (this.upgrades[key]) {
-                    this.upgrades[key].level = parsedUpgrades[key].level;
-                }
-            });
+            try {
+                const parsedUpgrades = JSON.parse(savedUpgrades);
+                Object.keys(parsedUpgrades).forEach(key => {
+                    if (this.upgrades[key]) {
+                        this.upgrades[key].level = Math.min(parsedUpgrades[key].level, this.upgrades[key].maxLevel);
+                    }
+                });
+            } catch (error) {
+                console.error('Failed to load upgrades:', error);
+            }
         }
     }
 
     saveUpgrades() {
-        const upgradeData = {};
-        Object.keys(this.upgrades).forEach(key => {
-            upgradeData[key] = { level: this.upgrades[key].level };
-        });
-        localStorage.setItem('cosmicTyping_upgrades', JSON.stringify(upgradeData));
+        try {
+            const upgradeData = {};
+            Object.keys(this.upgrades).forEach(key => {
+                upgradeData[key] = { level: this.upgrades[key].level };
+            });
+            localStorage.setItem('cosmicTyping_upgrades', JSON.stringify(upgradeData));
+        } catch (error) {
+            console.error('Failed to save upgrades:', error);
+        }
     }
 
     setupEventListeners() {
@@ -66,7 +96,7 @@ class ShipUpgradeSystem {
             return;
         }
 
-        const cost = upgrade.cost * upgrade.level;
+        const cost = this.calculateUpgradeCost(upgradeType);
         
         if (window.userStats && window.userStats.xp >= cost) {
             // Deduct XP
@@ -88,11 +118,17 @@ class ShipUpgradeSystem {
             }
             
             // Show success notification
-            this.showNotification(`${upgradeType.toUpperCase()} upgraded to level ${upgrade.level}!`, 'success');
+            const levelText = upgrade.level === 1 ? 'level 1' : `level ${upgrade.level}`;
+            this.showNotification(`${upgradeType.toUpperCase()} upgraded to ${levelText}!`, 'success');
             
             // Play upgrade sound
             if (window.audioManager) {
                 window.audioManager.playUpgrade();
+            }
+            
+            // Trigger achievement check
+            if (window.achievementSystem) {
+                window.achievementSystem.checkAchievements(window.userStats);
             }
             
             console.log(`${upgradeType} upgraded to level ${upgrade.level}`);
@@ -101,18 +137,32 @@ class ShipUpgradeSystem {
         }
     }
 
+    calculateUpgradeCost(upgradeType) {
+        const upgrade = this.upgrades[upgradeType];
+        if (!upgrade) return 0;
+        
+        // Exponential cost increase
+        return Math.floor(upgrade.cost * Math.pow(1.5, upgrade.level - 1));
+    }
+
     applyUpgradeEffects() {
         if (!window.gameState) return;
         
-        // Calculate bonuses
-        const engineBonus = (this.upgrades.engine.level - 1) * this.upgrades.engine.effect;
-        const fuelBonus = (this.upgrades.fuel.level - 1) * this.upgrades.fuel.effect;
-        const shieldBonus = (this.upgrades.shield.level - 1) * this.upgrades.shield.effect;
+        // Calculate bonuses with diminishing returns
+        const engineBonus = this.calculateEngineBonus();
+        const fuelBonus = this.calculateFuelBonus();
+        const shieldBonus = this.calculateShieldBonus();
         
         // Apply effects to game state
         window.gameState.speedMultiplier = 1 + engineBonus;
         window.gameState.accuracyBonus = fuelBonus;
         window.gameState.comboPenaltyReduction = shieldBonus;
+        
+        // Apply effects to typing engine if available
+        if (window.typingEngine) {
+            window.typingEngine.setSpeedMultiplier(window.gameState.speedMultiplier);
+            window.typingEngine.setAccuracyBonus(window.gameState.accuracyBonus);
+        }
         
         console.log('Upgrade effects applied:', {
             speedMultiplier: window.gameState.speedMultiplier,
@@ -121,24 +171,47 @@ class ShipUpgradeSystem {
         });
     }
 
+    calculateEngineBonus() {
+        const level = this.upgrades.engine.level;
+        const baseEffect = this.upgrades.engine.effect;
+        // Diminishing returns: each level gives less bonus
+        return baseEffect * (level - 1) * (1 - (level - 1) * 0.1);
+    }
+
+    calculateFuelBonus() {
+        const level = this.upgrades.fuel.level;
+        const baseEffect = this.upgrades.fuel.effect;
+        return baseEffect * (level - 1);
+    }
+
+    calculateShieldBonus() {
+        const level = this.upgrades.shield.level;
+        const baseEffect = this.upgrades.shield.effect;
+        return baseEffect * (level - 1);
+    }
+
     updateUpgradeDisplay() {
         // Update engine display
-        this.updateUpgradeElement('engine', 'engineLevel', 'engineProgress');
+        this.updateUpgradeElement('engine', 'engineLevel', 'engineProgress', 'engineCost');
         
         // Update fuel display
-        this.updateUpgradeElement('fuel', 'fuelLevel', 'fuelProgress');
+        this.updateUpgradeElement('fuel', 'fuelLevel', 'fuelProgress', 'fuelCost');
         
         // Update shield display
-        this.updateUpgradeElement('shield', 'shieldLevel', 'shieldProgress');
+        this.updateUpgradeElement('shield', 'shieldLevel', 'shieldProgress', 'shieldCost');
         
         // Update upgrade buttons
         this.updateUpgradeButtons();
+        
+        // Update bonus display
+        this.updateBonusDisplay();
     }
 
-    updateUpgradeElement(upgradeType, levelElementId, progressElementId) {
+    updateUpgradeElement(upgradeType, levelElementId, progressElementId, costElementId) {
         const upgrade = this.upgrades[upgradeType];
         const levelElement = document.getElementById(levelElementId);
         const progressElement = document.getElementById(progressElementId);
+        const costElement = document.getElementById(costElementId);
         
         if (levelElement) {
             levelElement.textContent = upgrade.level;
@@ -148,6 +221,11 @@ class ShipUpgradeSystem {
             const progress = (upgrade.level / upgrade.maxLevel) * 100;
             progressElement.style.width = `${progress}%`;
         }
+        
+        if (costElement && upgrade.level < upgrade.maxLevel) {
+            const cost = this.calculateUpgradeCost(upgradeType);
+            costElement.textContent = `${cost} XP`;
+        }
     }
 
     updateUpgradeButtons() {
@@ -156,7 +234,7 @@ class ShipUpgradeSystem {
             const button = document.querySelector(`[data-upgrade="${upgradeType}"]`);
             
             if (button) {
-                const cost = upgrade.cost * upgrade.level;
+                const cost = this.calculateUpgradeCost(upgradeType);
                 const canAfford = window.userStats && window.userStats.xp >= cost;
                 const isMaxLevel = upgrade.level >= upgrade.maxLevel;
                 
@@ -164,21 +242,52 @@ class ShipUpgradeSystem {
                 if (isMaxLevel) {
                     button.textContent = 'MAX LEVEL';
                     button.disabled = true;
-                    button.classList.add('opacity-50');
+                    button.classList.add('opacity-50', 'cursor-not-allowed');
                 } else {
                     button.textContent = `Upgrade (${cost} XP)`;
                     button.disabled = !canAfford;
                     button.classList.toggle('opacity-50', !canAfford);
+                    button.classList.toggle('cursor-not-allowed', !canAfford);
                 }
             }
         });
+    }
+
+    updateBonusDisplay() {
+        const bonuses = this.getTotalBonuses();
+        
+        // Update bonus display elements
+        const speedBonusElement = document.getElementById('speedBonus');
+        const accuracyBonusElement = document.getElementById('accuracyBonus');
+        const comboBonusElement = document.getElementById('comboBonus');
+        
+        if (speedBonusElement) {
+            speedBonusElement.textContent = `+${(bonuses.speed * 100).toFixed(1)}%`;
+        }
+        
+        if (accuracyBonusElement) {
+            accuracyBonusElement.textContent = `+${(bonuses.accuracy * 100).toFixed(1)}%`;
+        }
+        
+        if (comboBonusElement) {
+            comboBonusElement.textContent = `-${(bonuses.combo * 100).toFixed(1)}%`;
+        }
     }
 
     getUpgradeBonus(upgradeType) {
         const upgrade = this.upgrades[upgradeType];
         if (!upgrade) return 0;
         
-        return (upgrade.level - 1) * upgrade.effect;
+        switch (upgradeType) {
+            case 'engine':
+                return this.calculateEngineBonus();
+            case 'fuel':
+                return this.calculateFuelBonus();
+            case 'shield':
+                return this.calculateShieldBonus();
+            default:
+                return 0;
+        }
     }
 
     getTotalBonuses() {
@@ -186,6 +295,20 @@ class ShipUpgradeSystem {
             speed: this.getUpgradeBonus('engine'),
             accuracy: this.getUpgradeBonus('fuel'),
             combo: this.getUpgradeBonus('shield')
+        };
+    }
+
+    getUpgradeInfo(upgradeType) {
+        const upgrade = this.upgrades[upgradeType];
+        if (!upgrade) return null;
+        
+        return {
+            name: upgrade.name,
+            description: upgrade.description,
+            level: upgrade.level,
+            maxLevel: upgrade.maxLevel,
+            cost: this.calculateUpgradeCost(upgradeType),
+            bonus: this.getUpgradeBonus(upgradeType)
         };
     }
 
@@ -237,6 +360,28 @@ class ShipUpgradeSystem {
         this.applyUpgradeEffects();
         
         console.log('All upgrades reset to level 1');
+    }
+
+    // Get upgrade statistics
+    getUpgradeStats() {
+        const stats = {
+            totalUpgrades: 0,
+            totalCost: 0,
+            averageLevel: 0,
+            maxedUpgrades: 0
+        };
+        
+        Object.values(this.upgrades).forEach(upgrade => {
+            stats.totalUpgrades += upgrade.level - 1;
+            stats.averageLevel += upgrade.level;
+            if (upgrade.level >= upgrade.maxLevel) {
+                stats.maxedUpgrades++;
+            }
+        });
+        
+        stats.averageLevel = stats.averageLevel / Object.keys(this.upgrades).length;
+        
+        return stats;
     }
 }
 
