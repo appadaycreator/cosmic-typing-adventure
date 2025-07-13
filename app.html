@@ -485,12 +485,16 @@
                 <div class="lg:col-span-2">
                     <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500 mb-6">
                         <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-6">パフォーマンス推移</h3>
-                        <canvas id="performanceChart" style="height: 400px;"></canvas>
+                        <div class="chart-container" style="height: 400px; width: 100%;">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
                     </div>
                     
                     <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
                         <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-6">キー別統計</h3>
-                        <canvas id="keyStatsChart" style="height: 300px;"></canvas>
+                        <div class="chart-container" style="height: 300px; width: 100%;">
+                            <canvas id="keyStatsChart"></canvas>
+                        </div>
                     </div>
                 </div>
                 
@@ -1406,8 +1410,11 @@
                                 }
                             },
                             y: {
+                                beginAtZero: true,
+                                max: 100,
                                 ticks: {
-                                    color: '#9ca3af'
+                                    color: '#9ca3af',
+                                    stepSize: 20
                                 },
                                 grid: {
                                     color: 'rgba(156, 163, 175, 0.2)'
@@ -1455,8 +1462,11 @@
                                 }
                             },
                             y: {
+                                beginAtZero: true,
+                                max: 100,
                                 ticks: {
-                                    color: '#9ca3af'
+                                    color: '#9ca3af',
+                                    stepSize: 20
                                 },
                                 grid: {
                                     color: 'rgba(156, 163, 175, 0.2)'
