@@ -72,8 +72,12 @@ class CosmicTypingApp {
       return;
     }
     // 簡易テスト: 履歴取得
-    if (window.TypingStats && typeof TypingStats.getHistory === "function") {
-      TypingStats.getHistory(1)
+    if (
+      window.CosmicSupabase &&
+      window.CosmicSupabase.TypingStats &&
+      typeof window.CosmicSupabase.TypingStats.getHistory === "function"
+    ) {
+      window.CosmicSupabase.TypingStats.getHistory(1)
         .then((data) => {
           console.log("[Supabaseテスト] typing_sessionsサンプル:", data);
         })
@@ -397,8 +401,8 @@ class CosmicTypingApp {
 
     // Try to save to Supabase first, fallback to localStorage
     if (window.CosmicSupabase && window.CosmicSupabase.TypingStats) {
-      window.CosmicSupabase.TypingStats.saveSession(sessionData).then(
-        (success) => {
+      window.CosmicSupabase.TypingStats.saveSession(sessionData)
+        .then((success) => {
           if (success) {
             this.showMessage("結果を保存しました。", "success");
           } else {
@@ -406,8 +410,13 @@ class CosmicTypingApp {
             this.saveResultsToStorage(sessionData);
             this.showMessage("結果をローカルに保存しました。", "info");
           }
-        },
-      );
+        })
+        .catch((error) => {
+          console.error("Error saving to Supabase:", error);
+          // Fallback to localStorage
+          this.saveResultsToStorage(sessionData);
+          this.showMessage("結果をローカルに保存しました。", "info");
+        });
     } else {
       // Fallback to localStorage
       this.saveResultsToStorage(sessionData);
@@ -496,38 +505,44 @@ class CosmicTypingApp {
         };
       }
 
-      const stats = {
-        totalSessions: sessions.length,
-        totalWpm: 0,
-        totalAccuracy: 0,
-        totalTyped: 0,
-        totalErrors: 0,
-        bestWpm: 0,
-        bestAccuracy: 0,
-      };
+      // Calculate stats in one pass
+      const stats = sessions.reduce(
+        (acc, session) => {
+          acc.totalWpm += session.wpm;
+          acc.totalAccuracy += session.accuracy;
+          acc.totalTyped += session.totalTyped;
+          acc.totalErrors += session.totalErrors;
+          acc.bestWpm = Math.max(acc.bestWpm, session.wpm);
+          acc.bestAccuracy = Math.max(acc.bestAccuracy, session.accuracy);
+          return acc;
+        },
+        {
+          totalSessions: sessions.length,
+          totalWpm: 0,
+          totalAccuracy: 0,
+          totalTyped: 0,
+          totalErrors: 0,
+          bestWpm: 0,
+          bestAccuracy: 0,
+        },
+      );
 
-      sessions.forEach((session) => {
-        stats.totalWpm += session.wpm;
-        stats.totalAccuracy += session.accuracy;
-        stats.totalTyped += session.totalTyped;
-        stats.totalErrors += session.totalErrors;
-
-        if (session.wpm > stats.bestWpm) {
-          stats.bestWpm = session.wpm;
-        }
-
-        if (session.accuracy > stats.bestAccuracy) {
-          stats.bestAccuracy = session.accuracy;
-        }
-      });
-
+      // Calculate averages
       stats.avgWpm = stats.totalWpm / stats.totalSessions;
       stats.avgAccuracy = stats.totalAccuracy / stats.totalSessions;
 
       return stats;
     } catch (error) {
       console.error("Error getting local stats:", error);
-      return null;
+      return {
+        totalSessions: 0,
+        avgWpm: 0,
+        avgAccuracy: 0,
+        totalTyped: 0,
+        totalErrors: 0,
+        bestWpm: 0,
+        bestAccuracy: 0,
+      };
     }
   }
 }

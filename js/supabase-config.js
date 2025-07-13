@@ -347,6 +347,9 @@ function handleSupabaseError(error, fallbackData = null) {
       "データの保存に失敗しました。オフラインで練習を続けます。",
       "error",
     );
+  } else {
+    // Fallback to alert if CosmicUtils is not available
+    alert("データの保存に失敗しました。オフラインで練習を続けます。");
   }
 
   return fallbackData;
@@ -442,13 +445,5 @@ window.CosmicSupabase = {
   handleSupabaseError,
 };
 
-// Initialize when DOM is loaded
-document.addEventListener("DOMContentLoaded", function () {
-  initializeSupabase().then((success) => {
-    if (success) {
-      console.log("Supabase ready for use");
-    } else {
-      console.log("Using offline storage fallback");
-    }
-  });
-});
+// Note: Supabase initialization is now handled by individual applications
+// (e.g., CosmicTypingApp.initSupabaseAndTest())
