@@ -1,258 +1,340 @@
-// Common JavaScript for Cosmic Typing Adventure
+// Common utilities for Cosmic Typing Adventure - Optimized Version
 
-// DOM Content Loaded Event
-document.addEventListener('DOMContentLoaded', function() {
-    initializeCommonFeatures();
-});
+// Performance monitoring utilities
+const PerformanceUtils = {
+    // Measure execution time
+    measureTime(fn, label = 'Function') {
+        const start = performance.now();
+        const result = fn();
+        const end = performance.now();
+        console.log(`${label} took ${(end - start).toFixed(2)}ms`);
+        return result;
+    },
 
-// Initialize common features
-function initializeCommonFeatures() {
-    initializeNavigation();
-    initializeAnimations();
-    initializeFormValidation();
-    initializeAccessibility();
-    initializePerformanceOptimizations();
-}
+    // Measure memory usage
+    getMemoryUsage() {
+        if (performance.memory) {
+            return {
+                used: performance.memory.usedJSHeapSize,
+                total: performance.memory.totalJSHeapSize,
+                limit: performance.memory.jsHeapSizeLimit
+            };
+        }
+        return null;
+    },
 
-// Navigation functionality
-function initializeNavigation() {
-    // Mobile menu toggle (if needed)
-    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-    const nav = document.querySelector('.nav');
-    
-    if (mobileMenuToggle && nav) {
-        mobileMenuToggle.addEventListener('click', function() {
-            nav.classList.toggle('active');
-            mobileMenuToggle.classList.toggle('active');
-        });
+    // Debounce function for performance
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    },
+
+    // Throttle function for performance
+    throttle(func, limit) {
+        let inThrottle;
+        return function executedFunction(...args) {
+            if (!inThrottle) {
+                func.apply(this, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
     }
-    
-    // Smooth scrolling for anchor links
-    const anchorLinks = document.querySelectorAll('a[href^="#"]');
-    anchorLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href').substring(1);
-            const targetElement = document.getElementById(targetId);
-            
-            if (targetElement) {
-                targetElement.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+};
+
+// Image optimization utilities
+const ImageUtils = {
+    // Lazy load images
+    lazyLoadImages() {
+        const images = document.querySelectorAll('img[data-src]');
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    img.classList.remove('lazy');
+                    observer.unobserve(img);
+                }
+            });
+        });
+
+        images.forEach(img => imageObserver.observe(img));
+    },
+
+    // Preload critical images
+    preloadImages(imageUrls) {
+        imageUrls.forEach(url => {
+            const img = new Image();
+            img.src = url;
+        });
+    },
+
+    // Optimize image loading
+    optimizeImageLoading() {
+        // Add loading="lazy" to non-critical images
+        const images = document.querySelectorAll('img:not([loading])');
+        images.forEach(img => {
+            if (!img.classList.contains('critical')) {
+                img.loading = 'lazy';
             }
         });
-    });
-}
+    }
+};
+
+// DOM optimization utilities
+const DOMUtils = {
+    // Batch DOM updates
+    batchDOMUpdates(updates) {
+        requestAnimationFrame(() => {
+            updates.forEach(update => update());
+        });
+    },
+
+    // Efficient element creation
+    createElement(tag, attributes = {}, children = []) {
+        const element = document.createElement(tag);
+        
+        // Set attributes
+        Object.entries(attributes).forEach(([key, value]) => {
+            if (key === 'className') {
+                element.className = value;
+            } else if (key === 'textContent') {
+                element.textContent = value;
+            } else {
+                element.setAttribute(key, value);
+            }
+        });
+
+        // Add children
+        children.forEach(child => {
+            if (typeof child === 'string') {
+                element.appendChild(document.createTextNode(child));
+            } else {
+                element.appendChild(child);
+            }
+        });
+
+        return element;
+    },
+
+    // Efficient element removal
+    removeElement(element) {
+        if (element && element.parentNode) {
+            element.parentNode.removeChild(element);
+        }
+    },
+
+    // Efficient class manipulation
+    toggleClass(element, className, force) {
+        if (force === undefined) {
+            element.classList.toggle(className);
+        } else {
+            element.classList.toggle(className, force);
+        }
+    }
+};
+
+// Storage utilities with performance optimization
+const StorageUtils = {
+    // Efficient localStorage operations
+    setItem(key, value) {
+        try {
+            const serialized = JSON.stringify(value);
+            localStorage.setItem(key, serialized);
+            return true;
+        } catch (error) {
+            console.error('Failed to save to localStorage:', error);
+            return false;
+        }
+    },
+
+    getItem(key, defaultValue = null) {
+        try {
+            const item = localStorage.getItem(key);
+            return item ? JSON.parse(item) : defaultValue;
+        } catch (error) {
+            console.error('Failed to read from localStorage:', error);
+            return defaultValue;
+        }
+    },
+
+    removeItem(key) {
+        try {
+            localStorage.removeItem(key);
+            return true;
+        } catch (error) {
+            console.error('Failed to remove from localStorage:', error);
+            return false;
+        }
+    },
+
+    // Clear old data
+    cleanupOldData(maxAge = 30 * 24 * 60 * 60 * 1000) { // 30 days
+        const now = Date.now();
+        const keys = Object.keys(localStorage);
+        
+        keys.forEach(key => {
+            try {
+                const item = JSON.parse(localStorage.getItem(key));
+                if (item && item.timestamp && (now - item.timestamp) > maxAge) {
+                    localStorage.removeItem(key);
+                }
+            } catch (error) {
+                // Skip invalid items
+            }
+        });
+    }
+};
+
+// Network utilities
+const NetworkUtils = {
+    // Check online status
+    isOnline() {
+        return navigator.onLine;
+    },
+
+    // Retry function with exponential backoff
+    async retry(fn, maxRetries = 3, delay = 1000) {
+        for (let i = 0; i < maxRetries; i++) {
+            try {
+                return await fn();
+            } catch (error) {
+                if (i === maxRetries - 1) throw error;
+                await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, i)));
+            }
+        }
+    },
+
+    // Fetch with timeout
+    async fetchWithTimeout(url, options = {}, timeout = 5000) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
+        
+        try {
+            const response = await fetch(url, {
+                ...options,
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+            return response;
+        } catch (error) {
+            clearTimeout(timeoutId);
+            throw error;
+        }
+    }
+};
 
 // Animation utilities
-function initializeAnimations() {
-    // Intersection Observer for fade-in animations
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('fade-in');
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-    
-    // Observe elements with animation classes
-    const animatedElements = document.querySelectorAll('.card, .feature-card, .planet-card');
-    animatedElements.forEach(el => {
-        observer.observe(el);
-    });
-    
-    // Add hover effects
-    addHoverEffects();
-}
-
-// Add hover effects to interactive elements
-function addHoverEffects() {
-    const interactiveElements = document.querySelectorAll('.btn, .nav-link, .planet-card');
-    
-    interactiveElements.forEach(element => {
-        element.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-2px)';
-        });
+const AnimationUtils = {
+    // Smooth scroll to element
+    scrollToElement(element, offset = 0) {
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
         
-        element.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
         });
-    });
-}
+    },
 
-// Form validation
-function initializeFormValidation() {
-    const forms = document.querySelectorAll('form');
-    
-    forms.forEach(form => {
-        form.addEventListener('submit', function(e) {
-            if (!validateForm(this)) {
-                e.preventDefault();
-                showMessage('フォームにエラーがあります。確認してください。', 'error');
-            }
-        });
+    // Fade in element
+    fadeIn(element, duration = 300) {
+        element.style.opacity = '0';
+        element.style.display = 'block';
         
-        // Real-time validation
-        const inputs = form.querySelectorAll('input, textarea, select');
-        inputs.forEach(input => {
-            input.addEventListener('blur', function() {
-                validateField(this);
-            });
+        let start = performance.now();
+        
+        function animate(currentTime) {
+            const elapsed = currentTime - start;
+            const progress = Math.min(elapsed / duration, 1);
             
-            input.addEventListener('input', function() {
-                clearFieldError(this);
-            });
-        });
-    });
-}
-
-// Validate individual field
-function validateField(field) {
-    const value = field.value.trim();
-    const type = field.type;
-    const required = field.hasAttribute('required');
-    
-    // Clear previous errors
-    clearFieldError(field);
-    
-    // Check if required field is empty
-    if (required && !value) {
-        showFieldError(field, 'この項目は必須です。');
-        return false;
-    }
-    
-    // Email validation
-    if (type === 'email' && value) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(value)) {
-            showFieldError(field, '有効なメールアドレスを入力してください。');
-            return false;
-        }
-    }
-    
-    // URL validation
-    if (type === 'url' && value) {
-        const urlRegex = /^https?:\/\/.+/;
-        if (!urlRegex.test(value)) {
-            showFieldError(field, '有効なURLを入力してください。');
-            return false;
-        }
-    }
-    
-    return true;
-}
-
-// Show field error
-function showFieldError(field, message) {
-    const errorDiv = document.createElement('div');
-    errorDiv.className = 'field-error';
-    errorDiv.textContent = message;
-    errorDiv.style.color = '#dc3545';
-    errorDiv.style.fontSize = '0.8rem';
-    errorDiv.style.marginTop = '0.25rem';
-    
-    field.parentNode.appendChild(errorDiv);
-    field.style.borderColor = '#dc3545';
-}
-
-// Clear field error
-function clearFieldError(field) {
-    const errorDiv = field.parentNode.querySelector('.field-error');
-    if (errorDiv) {
-        errorDiv.remove();
-    }
-    field.style.borderColor = '';
-}
-
-// Validate entire form
-function validateForm(form) {
-    const inputs = form.querySelectorAll('input, textarea, select');
-    let isValid = true;
-    
-    inputs.forEach(input => {
-        if (!validateField(input)) {
-            isValid = false;
-        }
-    });
-    
-    return isValid;
-}
-
-// Accessibility features
-function initializeAccessibility() {
-    // Skip to main content link
-    addSkipLink();
-    
-    // Keyboard navigation
-    initializeKeyboardNavigation();
-    
-    // Focus management
-    initializeFocusManagement();
-    
-    // ARIA labels and roles
-    enhanceARIA();
-}
-
-// Add skip link for accessibility
-function addSkipLink() {
-    const skipLink = document.createElement('a');
-    skipLink.href = '#main-content';
-    skipLink.textContent = 'メインコンテンツにスキップ';
-    skipLink.className = 'skip-link';
-    skipLink.style.cssText = `
-        position: absolute;
-        top: -40px;
-        left: 6px;
-        background: #667eea;
-        color: white;
-        padding: 8px;
-        text-decoration: none;
-        border-radius: 4px;
-        z-index: 10000;
-    `;
-    
-    document.body.insertBefore(skipLink, document.body.firstChild);
-    
-    // Add main content ID if not exists
-    const main = document.querySelector('main');
-    if (main && !main.id) {
-        main.id = 'main-content';
-    }
-}
-
-// Keyboard navigation
-function initializeKeyboardNavigation() {
-    // Handle keyboard navigation for custom elements
-    const focusableElements = document.querySelectorAll('button, a, input, textarea, select, [tabindex]');
-    
-    focusableElements.forEach(element => {
-        element.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                this.click();
+            element.style.opacity = progress;
+            
+            if (progress < 1) {
+                requestAnimationFrame(animate);
             }
-        });
-    });
-}
+        }
+        
+        requestAnimationFrame(animate);
+    },
 
-// Focus management
-function initializeFocusManagement() {
-    // Trap focus in modals (if any)
-    const modals = document.querySelectorAll('[role="dialog"]');
-    
-    modals.forEach(modal => {
-        const focusableElements = modal.querySelectorAll('button, a, input, textarea, select');
+    // Fade out element
+    fadeOut(element, duration = 300) {
+        let start = performance.now();
+        const initialOpacity = parseFloat(getComputedStyle(element).opacity) || 1;
+        
+        function animate(currentTime) {
+            const elapsed = currentTime - start;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            element.style.opacity = initialOpacity * (1 - progress);
+            
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                element.style.display = 'none';
+            }
+        }
+        
+        requestAnimationFrame(animate);
+    }
+};
+
+// Error handling utilities
+const ErrorUtils = {
+    // Global error handler
+    setupGlobalErrorHandler() {
+        window.addEventListener('error', (event) => {
+            console.error('Global error:', event.error);
+            // Send to analytics if needed
+        });
+
+        window.addEventListener('unhandledrejection', (event) => {
+            console.error('Unhandled promise rejection:', event.reason);
+            // Send to analytics if needed
+        });
+    },
+
+    // Safe function execution
+    safeExecute(fn, fallback = null) {
+        try {
+            return fn();
+        } catch (error) {
+            console.error('Function execution failed:', error);
+            return fallback;
+        }
+    },
+
+    // Async safe execution
+    async safeExecuteAsync(fn, fallback = null) {
+        try {
+            return await fn();
+        } catch (error) {
+            console.error('Async function execution failed:', error);
+            return fallback;
+        }
+    }
+};
+
+// Accessibility utilities
+const AccessibilityUtils = {
+    // Focus management
+    trapFocus(element) {
+        const focusableElements = element.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        
         const firstElement = focusableElements[0];
         const lastElement = focusableElements[focusableElements.length - 1];
         
-        modal.addEventListener('keydown', function(e) {
+        element.addEventListener('keydown', (e) => {
             if (e.key === 'Tab') {
                 if (e.shiftKey) {
                     if (document.activeElement === firstElement) {
@@ -267,172 +349,58 @@ function initializeFocusManagement() {
                 }
             }
         });
-    });
-}
+    },
 
-// Enhance ARIA attributes
-function enhanceARIA() {
-    // Add ARIA labels to buttons without text
-    const buttons = document.querySelectorAll('button');
-    buttons.forEach(button => {
-        if (!button.textContent.trim() && !button.getAttribute('aria-label')) {
-            const icon = button.querySelector('i, img');
-            if (icon) {
-                const alt = icon.getAttribute('alt') || icon.className;
-                button.setAttribute('aria-label', alt);
-            }
-        }
-    });
-    
-    // Add ARIA live regions for dynamic content
-    const liveRegions = document.querySelectorAll('.message, .results');
-    liveRegions.forEach(region => {
-        region.setAttribute('aria-live', 'polite');
-    });
-}
-
-// Performance optimizations
-function initializePerformanceOptimizations() {
-    // Lazy loading for images
-    initializeLazyLoading();
-    
-    // Debounce scroll events
-    debounceScrollEvents();
-    
-    // Optimize animations
-    optimizeAnimations();
-}
-
-// Lazy loading for images
-function initializeLazyLoading() {
-    if ('IntersectionObserver' in window) {
-        const imageObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    img.src = img.dataset.src;
-                    img.classList.remove('lazy');
-                    imageObserver.unobserve(img);
-                }
-            });
-        });
+    // Announce to screen readers
+    announce(message) {
+        const announcement = document.createElement('div');
+        announcement.setAttribute('aria-live', 'polite');
+        announcement.setAttribute('aria-atomic', 'true');
+        announcement.style.position = 'absolute';
+        announcement.style.left = '-10000px';
+        announcement.style.width = '1px';
+        announcement.style.height = '1px';
+        announcement.style.overflow = 'hidden';
         
-        const lazyImages = document.querySelectorAll('img[data-src]');
-        lazyImages.forEach(img => imageObserver.observe(img));
-    }
-}
-
-// Debounce scroll events
-function debounceScrollEvents() {
-    let ticking = false;
-    
-    function updateOnScroll() {
-        // Handle scroll-based updates here
-        ticking = false;
-    }
-    
-    window.addEventListener('scroll', function() {
-        if (!ticking) {
-            requestAnimationFrame(updateOnScroll);
-            ticking = true;
-        }
-    });
-}
-
-// Optimize animations
-function optimizeAnimations() {
-    // Use transform and opacity for better performance
-    const animatedElements = document.querySelectorAll('.card, .btn, .planet-card');
-    
-    animatedElements.forEach(element => {
-        element.style.willChange = 'transform';
-    });
-}
-
-// Utility functions
-function showMessage(message, type = 'info') {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${type}`;
-    messageDiv.textContent = message;
-    messageDiv.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 10000;
-        max-width: 300px;
-        padding: 1rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    `;
-    
-    document.body.appendChild(messageDiv);
-    
-    // Auto remove after 5 seconds
-    setTimeout(() => {
-        messageDiv.remove();
-    }, 5000);
-}
-
-// Debounce function
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-// Throttle function
-function throttle(func, limit) {
-    let inThrottle;
-    return function() {
-        const args = arguments;
-        const context = this;
-        if (!inThrottle) {
-            func.apply(context, args);
-            inThrottle = true;
-            setTimeout(() => inThrottle = false, limit);
-        }
-    };
-}
-
-// Local storage utilities
-const Storage = {
-    set: function(key, value) {
-        try {
-            localStorage.setItem(key, JSON.stringify(value));
-        } catch (e) {
-            console.warn('Failed to save to localStorage:', e);
-        }
-    },
-    
-    get: function(key, defaultValue = null) {
-        try {
-            const item = localStorage.getItem(key);
-            return item ? JSON.parse(item) : defaultValue;
-        } catch (e) {
-            console.warn('Failed to read from localStorage:', e);
-            return defaultValue;
-        }
-    },
-    
-    remove: function(key) {
-        try {
-            localStorage.removeItem(key);
-        } catch (e) {
-            console.warn('Failed to remove from localStorage:', e);
-        }
+        document.body.appendChild(announcement);
+        announcement.textContent = message;
+        
+        setTimeout(() => {
+            document.body.removeChild(announcement);
+        }, 1000);
     }
 };
 
-// Export utilities for use in other modules
+// Initialize utilities
+const initUtils = () => {
+    // Setup global error handler
+    ErrorUtils.setupGlobalErrorHandler();
+    
+    // Optimize image loading
+    ImageUtils.optimizeImageLoading();
+    
+    // Cleanup old data
+    StorageUtils.cleanupOldData();
+    
+    console.log('Common utilities initialized');
+};
+
+// Export utilities for global access
 window.CosmicUtils = {
-    showMessage,
-    debounce,
-    throttle,
-    Storage
-}; 
+    PerformanceUtils,
+    ImageUtils,
+    DOMUtils,
+    StorageUtils,
+    NetworkUtils,
+    AnimationUtils,
+    ErrorUtils,
+    AccessibilityUtils,
+    initUtils
+};
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initUtils);
+} else {
+    initUtils();
+} 

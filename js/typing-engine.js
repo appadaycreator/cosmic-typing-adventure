@@ -1,4 +1,4 @@
-// Typing Engine for Cosmic Typing Adventure
+// Typing Engine for Cosmic Typing Adventure - Optimized Version
 
 class TypingEngine {
     constructor() {
@@ -8,58 +8,80 @@ class TypingEngine {
         this.startTime = null;
         this.endTime = null;
         this.isActive = false;
-        this.errors = [];
+        this.errors = new Map(); // Use Map for better performance
         this.totalTyped = 0;
         this.totalErrors = 0;
         this.wpm = 0;
         this.accuracy = 100;
         
-        // DOM elements
-        this.textDisplay = null;
-        this.typingInput = null;
-        this.wpmDisplay = null;
-        this.accuracyDisplay = null;
-        this.timerDisplay = null;
-        this.progressBar = null;
+        // DOM elements cache
+        this.elements = {
+            textDisplay: null,
+            typingInput: null,
+            wpmDisplay: null,
+            accuracyDisplay: null,
+            timerDisplay: null,
+            progressBar: null
+        };
         
-        // Event listeners
-        this.onProgress = null;
-        this.onComplete = null;
-        this.onError = null;
+        // Callbacks
+        this.callbacks = {
+            onProgress: null,
+            onComplete: null,
+            onError: null
+        };
         
-        // Timer for WPM calculation
+        // Performance optimization
         this.wpmTimer = null;
         this.lastWpmUpdate = 0;
+        this.updateThrottle = 100; // ms
+        this.lastUpdate = 0;
+        
+        // Debounced update function
+        this.debouncedUpdate = this.debounce(this.updateDisplays.bind(this), 50);
+    }
+    
+    // Debounce function for performance
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
     }
     
     // Initialize the typing engine
     init(elements) {
-        this.textDisplay = elements.textDisplay;
-        this.typingInput = elements.typingInput;
-        this.wpmDisplay = elements.wpmDisplay;
-        this.accuracyDisplay = elements.accuracyDisplay;
-        this.timerDisplay = elements.timerDisplay;
-        this.progressBar = elements.progressBar;
-        
+        this.elements = { ...this.elements, ...elements };
         this.setupEventListeners();
     }
     
-    // Setup event listeners
+    // Setup event listeners with performance optimization
     setupEventListeners() {
-        if (this.typingInput) {
-            this.typingInput.addEventListener('input', this.handleInput.bind(this));
-            this.typingInput.addEventListener('keydown', this.handleKeydown.bind(this));
-            this.typingInput.addEventListener('focus', this.handleFocus.bind(this));
-            this.typingInput.addEventListener('blur', this.handleBlur.bind(this));
-        }
+        if (!this.elements.typingInput) return;
+        
+        // Use passive listeners where possible
+        this.elements.typingInput.addEventListener('input', this.handleInput.bind(this), { passive: true });
+        this.elements.typingInput.addEventListener('keydown', this.handleKeydown.bind(this));
+        this.elements.typingInput.addEventListener('focus', this.handleFocus.bind(this));
+        this.elements.typingInput.addEventListener('blur', this.handleBlur.bind(this));
     }
     
     // Start typing session
-    start(text) {
-        this.currentText = text;
+    start() {
+        if (!this.elements.textDisplay || !this.elements.textDisplay.textContent) {
+            console.warn('No text to type');
+            return;
+        }
+        
+        this.currentText = this.elements.textDisplay.textContent;
         this.typedText = '';
         this.currentIndex = 0;
-        this.errors = [];
+        this.errors.clear(); // Clear Map instead of array
         this.totalTyped = 0;
         this.totalErrors = 0;
         this.wpm = 0;
@@ -72,9 +94,9 @@ class TypingEngine {
         this.updateProgress();
         this.startWpmTimer();
         
-        if (this.typingInput) {
-            this.typingInput.disabled = false;
-            this.typingInput.focus();
+        if (this.elements.typingInput) {
+            this.elements.typingInput.disabled = false;
+            this.elements.typingInput.focus();
         }
     }
     
@@ -88,8 +110,8 @@ class TypingEngine {
             this.wpmTimer = null;
         }
         
-        if (this.typingInput) {
-            this.typingInput.disabled = true;
+        if (this.elements.typingInput) {
+            this.elements.typingInput.disabled = true;
         }
         
         this.calculateFinalStats();
@@ -101,7 +123,7 @@ class TypingEngine {
         this.currentText = '';
         this.typedText = '';
         this.currentIndex = 0;
-        this.errors = [];
+        this.errors.clear();
         this.totalTyped = 0;
         this.totalErrors = 0;
         this.wpm = 0;
@@ -111,12 +133,12 @@ class TypingEngine {
         this.updateProgress();
         this.updateDisplays();
         
-        if (this.typingInput) {
-            this.typingInput.value = '';
+        if (this.elements.typingInput) {
+            this.elements.typingInput.value = '';
         }
     }
     
-    // Handle input events
+    // Handle input events with performance optimization
     handleInput(event) {
         if (!this.isActive) return;
         
@@ -147,7 +169,7 @@ class TypingEngine {
             }
             
             this.updateProgress();
-            this.updateDisplays();
+            this.debouncedUpdate(); // Use debounced update
             
             // Check if typing is complete
             if (this.currentIndex >= this.currentText.length) {
@@ -194,35 +216,31 @@ class TypingEngine {
         // Optional: pause timer when input loses focus
     }
     
-    // Handle backspace
+    // Handle backspace with optimization
     handleBackspace(newLength) {
         const deletedChars = this.typedText.length - newLength;
         this.typedText = this.typedText.slice(0, newLength);
         this.currentIndex = Math.max(0, this.currentIndex - deletedChars);
         
-        // Recalculate errors
+        // Recalculate errors after backspace
         this.recalculateErrors();
         this.updateProgress();
-        this.updateDisplays();
+        this.debouncedUpdate();
     }
     
-    // Add error
+    // Add error with Map optimization
     addError(index, expected, actual) {
-        this.errors.push({
-            index: index,
-            expected: expected,
-            actual: actual
-        });
+        this.errors.set(index, { expected, actual });
     }
     
-    // Remove error
+    // Remove error with Map optimization
     removeError(index) {
-        this.errors = this.errors.filter(error => error.index !== index);
+        this.errors.delete(index);
     }
     
     // Recalculate errors after backspace
     recalculateErrors() {
-        this.errors = [];
+        this.errors.clear();
         this.totalErrors = 0;
         
         for (let i = 0; i < this.typedText.length; i++) {
@@ -233,162 +251,172 @@ class TypingEngine {
         }
     }
     
-    // Display text with highlighting
+    // Display text with performance optimization
     displayText() {
-        if (!this.textDisplay) return;
+        if (!this.elements.textDisplay) return;
         
+        const text = this.currentText;
         let html = '';
         
-        for (let i = 0; i < this.currentText.length; i++) {
-            let charClass = '';
+        for (let i = 0; i < text.length; i++) {
+            const char = text[i];
+            const isTyped = i < this.typedText.length;
+            const isCorrect = isTyped && this.typedText[i] === char;
+            const hasError = this.errors.has(i);
             
-            if (i < this.typedText.length) {
-                // Already typed
-                const isError = this.errors.some(error => error.index === i);
-                charClass = isError ? 'incorrect' : 'correct';
-            } else if (i === this.typedText.length) {
-                // Current position
-                charClass = 'current';
+            let className = '';
+            if (isTyped) {
+                className = isCorrect ? 'correct' : 'incorrect';
+            } else if (i === this.currentIndex) {
+                className = 'current';
             }
             
-            const char = this.currentText[i];
-            const escapedChar = this.escapeHtml(char);
-            
-            if (charClass) {
-                html += `<span class="${charClass}">${escapedChar}</span>`;
+            if (className) {
+                html += `<span class="${className}">${this.escapeHtml(char)}</span>`;
             } else {
-                html += escapedChar;
+                html += this.escapeHtml(char);
             }
         }
         
-        this.textDisplay.innerHTML = html;
+        this.elements.textDisplay.innerHTML = html;
     }
     
-    // Escape HTML characters
+    // Escape HTML for security
     escapeHtml(text) {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
     }
     
-    // Update progress bar
+    // Update progress with throttling
     updateProgress() {
-        if (!this.progressBar) return;
+        const now = Date.now();
+        if (now - this.lastUpdate < this.updateThrottle) return;
         
-        const progress = (this.currentIndex / this.currentText.length) * 100;
-        this.progressBar.style.width = `${progress}%`;
+        this.lastUpdate = now;
+        this.displayText();
+        
+        if (this.elements.progressBar) {
+            const progress = (this.currentIndex / this.currentText.length) * 100;
+            this.elements.progressBar.style.width = `${progress}%`;
+        }
     }
     
-    // Update all displays
+    // Update displays with throttling
     updateDisplays() {
+        const now = Date.now();
+        if (now - this.lastUpdate < this.updateThrottle) return;
+        
+        this.lastUpdate = now;
         this.updateWpmDisplay();
         this.updateAccuracyDisplay();
         this.updateTimerDisplay();
-        this.displayText();
         
-        if (this.onProgress) {
-            this.onProgress({
-                wpm: this.wpm,
-                accuracy: this.accuracy,
-                progress: (this.currentIndex / this.currentText.length) * 100,
-                totalTyped: this.totalTyped,
-                totalErrors: this.totalErrors
-            });
+        // Call progress callback
+        if (this.callbacks.onProgress) {
+            this.callbacks.onProgress(this.getStats());
         }
     }
     
     // Update WPM display
     updateWpmDisplay() {
-        if (!this.wpmDisplay) return;
-        
-        this.wpmDisplay.textContent = `${Math.round(this.wpm)} WPM`;
+        if (this.elements.wpmDisplay) {
+            this.elements.wpmDisplay.textContent = this.wpm.toFixed(1);
+        }
     }
     
     // Update accuracy display
     updateAccuracyDisplay() {
-        if (!this.accuracyDisplay) return;
-        
-        this.accuracyDisplay.textContent = `${Math.round(this.accuracy)}%`;
+        if (this.elements.accuracyDisplay) {
+            this.elements.accuracyDisplay.textContent = this.accuracy.toFixed(1);
+        }
     }
     
     // Update timer display
     updateTimerDisplay() {
-        if (!this.timerDisplay || !this.startTime) return;
-        
-        const elapsed = this.isActive ? Date.now() - this.startTime : this.endTime - this.startTime;
-        const minutes = Math.floor(elapsed / 60000);
-        const seconds = Math.floor((elapsed % 60000) / 1000);
-        
-        this.timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        if (this.elements.timerDisplay && this.startTime) {
+            const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            this.elements.timerDisplay.textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
     }
     
-    // Start WPM timer
+    // Start WPM timer with optimization
     startWpmTimer() {
+        if (this.wpmTimer) {
+            clearInterval(this.wpmTimer);
+        }
+        
         this.wpmTimer = setInterval(() => {
             this.calculateWpm();
-        }, 1000); // Update every second
+            this.calculateAccuracy();
+        }, 1000); // Update every second instead of more frequently
     }
     
-    // Calculate WPM
+    // Calculate WPM with optimization
     calculateWpm() {
-        if (!this.startTime || this.currentIndex === 0) return;
+        if (!this.startTime) return;
         
         const elapsedMinutes = (Date.now() - this.startTime) / 60000;
-        const wordsTyped = this.currentIndex / 5; // Standard: 5 characters = 1 word
-        
-        this.wpm = wordsTyped / elapsedMinutes;
-        this.updateWpmDisplay();
+        if (elapsedMinutes > 0) {
+            // Calculate words (5 characters = 1 word)
+            const words = this.totalTyped / 5;
+            this.wpm = words / elapsedMinutes;
+        }
     }
     
-    // Calculate accuracy
+    // Calculate accuracy with optimization
     calculateAccuracy() {
-        if (this.totalTyped === 0) {
-            this.accuracy = 100;
-        } else {
+        if (this.totalTyped > 0) {
             this.accuracy = ((this.totalTyped - this.totalErrors) / this.totalTyped) * 100;
         }
     }
     
-    // Calculate final statistics
+    // Calculate final stats
     calculateFinalStats() {
         this.calculateWpm();
         this.calculateAccuracy();
-        this.updateDisplays();
     }
     
     // Complete typing session
     complete() {
         this.stop();
         
-        if (this.onComplete) {
-            this.onComplete({
-                wpm: this.wpm,
-                accuracy: this.accuracy,
-                totalTyped: this.totalTyped,
-                totalErrors: this.totalErrors,
-                duration: this.endTime - this.startTime,
-                errors: this.errors
-            });
+        if (this.callbacks.onComplete) {
+            this.callbacks.onComplete(this.getResults());
         }
     }
     
-    // Get current statistics
+    // Get current stats
     getStats() {
         return {
             wpm: this.wpm,
             accuracy: this.accuracy,
             totalTyped: this.totalTyped,
             totalErrors: this.totalErrors,
-            progress: (this.currentIndex / this.currentText.length) * 100,
-            duration: this.isActive ? Date.now() - this.startTime : this.endTime - this.startTime
+            elapsedTime: this.elements.timerDisplay ? this.elements.timerDisplay.textContent : '00:00',
+            progress: (this.currentIndex / this.currentText.length) * 100
+        };
+    }
+    
+    // Get final results
+    getResults() {
+        return {
+            wpm: this.wpm,
+            accuracy: this.accuracy,
+            totalTyped: this.totalTyped,
+            totalErrors: this.totalErrors,
+            duration: this.endTime ? (this.endTime - this.startTime) / 1000 : 0,
+            cpm: this.getCpm(),
+            errorRate: this.getErrorRate()
         };
     }
     
     // Set callbacks
     setCallbacks(callbacks) {
-        this.onProgress = callbacks.onProgress;
-        this.onComplete = callbacks.onComplete;
-        this.onError = callbacks.onError;
+        this.callbacks = { ...this.callbacks, ...callbacks };
     }
     
     // Pause typing session
@@ -415,83 +443,73 @@ class TypingEngine {
         return this.currentIndex >= this.currentText.length;
     }
     
-    // Get typing speed in characters per minute
+    // Get CPM (Characters Per Minute)
     getCpm() {
-        if (!this.startTime || this.currentIndex === 0) return 0;
+        if (!this.startTime) return 0;
         
         const elapsedMinutes = (Date.now() - this.startTime) / 60000;
-        return this.currentIndex / elapsedMinutes;
+        return elapsedMinutes > 0 ? this.totalTyped / elapsedMinutes : 0;
     }
     
     // Get error rate
     getErrorRate() {
-        if (this.totalTyped === 0) return 0;
-        return (this.totalErrors / this.totalTyped) * 100;
+        return this.totalTyped > 0 ? (this.totalErrors / this.totalTyped) * 100 : 0;
     }
     
     // Get detailed error analysis
     getErrorAnalysis() {
-        const analysis = {
-            totalErrors: this.totalErrors,
-            errorRate: this.getErrorRate(),
-            commonErrors: {},
-            errorPositions: []
-        };
+        const errorTypes = new Map();
         
-        // Analyze common errors
-        this.errors.forEach(error => {
+        this.errors.forEach((error, index) => {
             const key = `${error.expected}->${error.actual}`;
-            analysis.commonErrors[key] = (analysis.commonErrors[key] || 0) + 1;
-            analysis.errorPositions.push(error.index);
+            errorTypes.set(key, (errorTypes.get(key) || 0) + 1);
         });
         
-        return analysis;
+        return {
+            totalErrors: this.totalErrors,
+            errorRate: this.getErrorRate(),
+            commonErrors: Array.from(errorTypes.entries())
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5)
+        };
     }
 }
 
-// Typing text utilities
+// Utility class for text processing
 class TypingTextUtils {
     // Calculate text difficulty
     static calculateDifficulty(text) {
         const words = text.split(/\s+/).length;
         const characters = text.length;
-        const avgWordLength = characters / words;
+        const uniqueChars = new Set(text).size;
         
         // Simple difficulty calculation
-        let difficulty = 1; // Easy
+        const avgWordLength = characters / words;
+        const complexity = uniqueChars / characters;
         
-        if (avgWordLength > 6 || words > 50) {
-            difficulty = 3; // Hard
-        } else if (avgWordLength > 4 || words > 25) {
-            difficulty = 2; // Medium
-        }
-        
-        return difficulty;
+        if (avgWordLength > 8 || complexity > 0.8) return 'hard';
+        if (avgWordLength > 5 || complexity > 0.6) return 'medium';
+        return 'easy';
     }
     
     // Get text statistics
     static getTextStats(text) {
-        const words = text.split(/\s+/).length;
+        const words = text.split(/\s+/).filter(word => word.length > 0);
         const characters = text.length;
-        const sentences = text.split(/[.!?]+/).length;
-        const paragraphs = text.split(/\n\s*\n/).length;
+        const sentences = text.split(/[.!?]+/).filter(sentence => sentence.trim().length > 0);
         
         return {
-            words,
-            characters,
-            sentences,
-            paragraphs,
-            avgWordLength: characters / words,
-            avgSentenceLength: words / sentences
+            wordCount: words.length,
+            characterCount: characters,
+            sentenceCount: sentences.length,
+            avgWordLength: words.length > 0 ? characters / words.length : 0,
+            difficulty: this.calculateDifficulty(text)
         };
     }
     
     // Clean text for typing
     static cleanText(text) {
-        return text
-            .replace(/\r\n/g, '\n')
-            .replace(/\r/g, '\n')
-            .trim();
+        return text.trim().replace(/\s+/g, ' ');
     }
     
     // Split text into words
@@ -502,25 +520,19 @@ class TypingTextUtils {
     // Get word at position
     static getWordAtPosition(text, position) {
         const words = this.splitIntoWords(text);
-        let currentPos = 0;
+        let charCount = 0;
         
         for (let i = 0; i < words.length; i++) {
-            const wordLength = words[i].length;
-            if (position >= currentPos && position < currentPos + wordLength) {
-                return {
-                    word: words[i],
-                    index: i,
-                    start: currentPos,
-                    end: currentPos + wordLength
-                };
+            charCount += words[i].length + 1; // +1 for space
+            if (charCount > position) {
+                return words[i];
             }
-            currentPos += wordLength + 1; // +1 for space
         }
         
-        return null;
+        return '';
     }
 }
 
-// Export for use in other modules
+// Export for global access
 window.TypingEngine = TypingEngine;
 window.TypingTextUtils = TypingTextUtils; 
