@@ -83,7 +83,7 @@ async function loadSupabaseFromCDN() {
     }, 10000); // 10 second timeout
 
     const script = document.createElement("script");
-    script.src = "https://unpkg.com/@supabase/supabase-js@2";
+    script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
     script.onload = () => {
       clearTimeout(timeout);
       if (window.supabase) {
