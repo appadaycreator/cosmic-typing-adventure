@@ -423,6 +423,9 @@
                             <button onclick="playAgain()" class="bg-energy-green hover:bg-green-600 px-6 py-2 rounded-lg font-bold transition-colors">
                                 <i class="fas fa-play mr-2"></i>もう一度
                             </button>
+                            <button onclick="selectNewMission()" class="bg-planet-orange hover:bg-orange-600 px-6 py-2 rounded-lg font-bold transition-colors">
+                                <i class="fas fa-globe mr-2"></i>別の惑星
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1050,6 +1053,7 @@
             gameState.correctChars = 0;
             gameState.incorrectChars = 0;
             gameState.totalChars = 0;
+            gameState.maxCombo = 0;
             
             if (gameState.timer) {
                 clearInterval(gameState.timer);
@@ -1068,13 +1072,20 @@
             const missionBtns = document.querySelectorAll('.mission-btn');
             missionBtns.forEach(btn => btn.style.display = 'block');
             
+            // Hide all game interfaces
             document.getElementById('typingInterface').classList.add('hidden');
             document.getElementById('resultsPanel').classList.add('hidden');
             
+            // Reset ship status display
             updateShipStatus();
-            displayText();
             
-            console.log('Typing reset');
+            // Clear text display
+            const textDisplay = document.getElementById('textDisplay');
+            if (textDisplay) {
+                textDisplay.innerHTML = '惑星を選択してタイピング練習を開始してください。';
+            }
+            
+            console.log('Typing reset - ready for new mission');
         }
         
         function handleTypingInput(event) {
@@ -1291,7 +1302,46 @@
         }
         
         function playAgain() {
+            // Reset typing state
             resetTyping();
+            
+            // Show mission selection
+            const missionBtns = document.querySelectorAll('.mission-btn');
+            missionBtns.forEach(btn => btn.style.display = 'block');
+            
+            // Hide results panel and show game section
+            document.getElementById('resultsPanel').classList.add('hidden');
+            document.getElementById('typingInterface').classList.add('hidden');
+            
+            // Ensure mission selection is visible
+            const gameSection = document.getElementById('gameSection');
+            if (gameSection) {
+                gameSection.classList.remove('hidden');
+            }
+            
+            console.log('Ready for next mission');
+        }
+        
+        function selectNewMission() {
+            // Reset typing state
+            resetTyping();
+            
+            // Show mission selection
+            const missionBtns = document.querySelectorAll('.mission-btn');
+            missionBtns.forEach(btn => btn.style.display = 'block');
+            
+            // Hide results panel and show game section
+            document.getElementById('resultsPanel').classList.add('hidden');
+            document.getElementById('typingInterface').classList.add('hidden');
+            
+            // Ensure mission selection is visible
+            const gameSection = document.getElementById('gameSection');
+            if (gameSection) {
+                gameSection.classList.remove('hidden');
+            }
+            
+            // Show notification
+            console.log('New mission selection ready');
         }
         
         function shareResults() {
