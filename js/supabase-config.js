@@ -11,6 +11,18 @@ const SUPABASE_CONFIG = {
 let supabase = null;
 let isInitializing = false;
 let initializationPromise = null;
+let isOnline = navigator.onLine;
+
+// Network status monitoring
+window.addEventListener('online', () => {
+  isOnline = true;
+  console.log('Network: Online');
+});
+
+window.addEventListener('offline', () => {
+  isOnline = false;
+  console.log('Network: Offline');
+});
 
 // Initialize Supabase with improved error handling
 async function initializeSupabase() {
@@ -59,13 +71,17 @@ async function performInitialization() {
       SUPABASE_CONFIG.anonKey
     );
 
-    // Test connection
-    const { data, error } = await supabase.from('typing_sessions').select('count').limit(1);
-    if (error) {
-      console.warn("Supabase connection test failed:", error);
-      // Continue anyway for offline functionality
+    // Test connection only if online
+    if (isOnline) {
+      const { data, error } = await supabase.from('typing_sessions').select('count').limit(1);
+      if (error) {
+        console.warn("Supabase connection test failed:", error);
+        // Continue anyway for offline functionality
+      } else {
+        console.log("Supabase initialized and connected successfully");
+      }
     } else {
-      console.log("Supabase initialized and connected successfully");
+      console.log("Supabase initialized in offline mode");
     }
 
     return true;
@@ -75,12 +91,33 @@ async function performInitialization() {
   }
 }
 
-// Load Supabase from CDN with timeout
+// Load Supabase from CDN with timeout and retry
 async function loadSupabaseFromCDN() {
+  const maxRetries = 3;
+  let lastError;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      return await attemptLoadSupabase(attempt);
+    } catch (error) {
+      lastError = error;
+      console.warn(`Supabase CDN load attempt ${attempt} failed:`, error);
+      
+      if (attempt < maxRetries) {
+        // Wait before retry (exponential backoff)
+        await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+      }
+    }
+  }
+
+  throw lastError;
+}
+
+async function attemptLoadSupabase(attempt) {
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(() => {
-      reject(new Error("Supabase CDN load timeout"));
-    }, 10000); // 10 second timeout
+      reject(new Error(`Supabase CDN load timeout (attempt ${attempt})`));
+    }, 8000); // 8 second timeout
 
     const script = document.createElement("script");
     script.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
@@ -104,9 +141,12 @@ async function loadSupabaseFromCDN() {
 const TypingStats = {
   // Save typing session results with improved error handling
   async saveSession(sessionData) {
-    if (!supabase) {
-      console.warn("Supabase not initialized, saving to localStorage only");
-      return this.saveToLocalStorage(sessionData);
+    // Always save to localStorage first for reliability
+    const localSaved = this.saveToLocalStorage(sessionData);
+    
+    if (!supabase || !isOnline) {
+      console.warn("Supabase not available or offline, using localStorage only");
+      return localSaved;
     }
 
     try {
@@ -124,16 +164,14 @@ const TypingStats = {
 
       if (error) {
         console.error("Supabase save error:", error);
-        // Fallback to localStorage
-        return this.saveToLocalStorage(sessionData);
+        return localSaved;
       }
 
       console.log("Session saved to Supabase successfully:", data);
       return true;
     } catch (error) {
       console.error("Error saving session:", error);
-      // Fallback to localStorage
-      return this.saveToLocalStorage(sessionData);
+      return localSaved;
     }
   },
 
@@ -141,12 +179,19 @@ const TypingStats = {
   saveToLocalStorage(sessionData) {
     try {
       const existingData = JSON.parse(localStorage.getItem('typing_sessions') || '[]');
-      existingData.push({
+      const newSession = {
         ...sessionData,
         id: Date.now(),
         saved_at: new Date().toISOString(),
         source: 'localStorage'
-      });
+      };
+      
+      // Limit localStorage size (keep last 100 sessions)
+      existingData.push(newSession);
+      if (existingData.length > 100) {
+        existingData.splice(0, existingData.length - 100);
+      }
+      
       localStorage.setItem('typing_sessions', JSON.stringify(existingData));
       console.log("Session saved to localStorage");
       return true;
@@ -158,8 +203,8 @@ const TypingStats = {
 
   // Get user's typing history with fallback
   async getHistory(limit = 50) {
-    if (!supabase) {
-      console.warn("Supabase not initialized, using localStorage data");
+    if (!supabase || !isOnline) {
+      console.warn("Supabase not available or offline, using localStorage data");
       return this.getLocalHistory(limit);
     }
 
@@ -195,8 +240,8 @@ const TypingStats = {
 
   // Get statistics by planet with improved error handling
   async getStatsByPlanet() {
-    if (!supabase) {
-      console.warn("Supabase not initialized, using localStorage data");
+    if (!supabase || !isOnline) {
+      console.warn("Supabase not available or offline, using localStorage data");
       return this.getLocalStatsByPlanet();
     }
 
