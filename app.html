@@ -8,7 +8,6 @@
     <!-- Security Headers -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-XSS-Protection" content="1; mode=block">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
@@ -62,7 +61,7 @@
     <main id="main-content" class="main-content">
         <div class="app-container">
             <!-- Planet Selection -->
-            <section class="planet-selection">
+            <section id="planet-selection" class="planet-selection">
                 <h2>🌌 惑星を選択してタイピング練習を始めましょう</h2>
                 <p>各惑星には異なる難易度のテキストが用意されています</p>
                 
@@ -106,12 +105,12 @@
             </section>
 
             <!-- Typing Practice Section -->
-            <section class="typing-practice" style="display: none;">
+            <section id="typing-practice" class="typing-practice" style="display: none;">
                 <div class="practice-header">
                     <div class="planet-info">
-                        <img src="" alt="" class="planet-image-small">
+                        <img id="current-planet-image" src="" alt="" class="planet-image-small">
                         <div>
-                            <h3 class="planet-name">選択された惑星</h3>
+                            <h3 id="current-planet-name" class="planet-name">選択された惑星</h3>
                             <p class="planet-description">タイピング練習を開始します</p>
                         </div>
                     </div>
@@ -119,15 +118,15 @@
                     <div class="practice-stats">
                         <div class="stat-item">
                             <span class="stat-label">WPM</span>
-                            <span class="stat-value wpm-display">0</span>
+                            <span id="wpm" class="stat-value wpm-display">0</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-label">精度</span>
-                            <span class="stat-value accuracy-display">100%</span>
+                            <span id="accuracy" class="stat-value accuracy-display">100%</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-label">時間</span>
-                            <span class="stat-value timer-display">00:00</span>
+                            <span id="elapsed-time" class="stat-value timer-display">00:00</span>
                         </div>
                     </div>
                 </div>
@@ -150,38 +149,39 @@
                     </div>
                     
                     <div class="progress-bar">
-                        <div class="progress-fill" id="progress-bar"></div>
+                        <div class="progress-fill" id="progress-fill"></div>
                     </div>
                 </div>
 
                 <div class="practice-controls">
                     <button class="btn btn-primary" id="start-btn">開始</button>
+                    <button class="btn btn-secondary" id="pause-btn" style="display: none;">一時停止</button>
                     <button class="btn btn-secondary" id="reset-btn">リセット</button>
-                    <button class="btn btn-secondary" id="back-btn">戻る</button>
+                    <button class="btn btn-secondary" id="back-to-planets">戻る</button>
                 </div>
             </section>
 
             <!-- Results Section -->
-            <section class="results" style="display: none;">
+            <section id="results" class="results" style="display: none;">
                 <div class="results-content">
                     <h2>🎉 タイピング完了！</h2>
                     
                     <div class="result-stats">
                         <div class="result-stat">
                             <span class="result-label">WPM</span>
-                            <span class="result-value" id="result-wpm">0</span>
+                            <span class="result-value" id="final-wpm">0</span>
                         </div>
                         <div class="result-stat">
                             <span class="result-label">精度</span>
-                            <span class="result-value" id="result-accuracy">0%</span>
+                            <span class="result-value" id="final-accuracy">0%</span>
                         </div>
                         <div class="result-stat">
                             <span class="result-label">総文字数</span>
-                            <span class="result-value" id="result-total-typed">0</span>
+                            <span class="result-value" id="total-typed">0</span>
                         </div>
                         <div class="result-stat">
                             <span class="result-label">エラー数</span>
-                            <span class="result-value" id="result-total-errors">0</span>
+                            <span class="result-value" id="total-errors">0</span>
                         </div>
                         <div class="result-stat">
                             <span class="result-label">時間</span>
@@ -194,9 +194,9 @@
                     </div>
                     
                     <div class="result-actions">
-                        <button class="btn btn-primary" id="retry-btn">再挑戦</button>
-                        <button class="btn btn-secondary" id="new-planet-btn">別の惑星</button>
-                        <button class="btn btn-secondary" id="share-btn">結果を共有</button>
+                        <button class="btn btn-primary" id="retry-practice">再挑戦</button>
+                        <button class="btn btn-secondary" id="back-to-planets-from-results">別の惑星</button>
+                        <button class="btn btn-secondary" id="save-result">結果を保存</button>
                     </div>
                 </div>
             </section>

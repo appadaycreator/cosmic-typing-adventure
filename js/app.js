@@ -156,37 +156,53 @@ class CosmicTypingApp {
 
   setupEventListeners() {
     // Planet selection
-    this.elements.planetCards.forEach((card) => {
-      card.addEventListener("click", () => {
-        const planet = card.dataset.planet;
-        this.selectPlanet(planet);
+    if (this.elements.planetCards) {
+      this.elements.planetCards.forEach((card) => {
+        card.addEventListener("click", () => {
+          const planet = card.dataset.planet;
+          this.selectPlanet(planet);
+        });
       });
-    });
+    }
 
     // Practice controls
-    this.elements.startBtn.addEventListener("click", () =>
-      this.startPractice(),
-    );
-    this.elements.pauseBtn.addEventListener("click", () =>
-      this.pausePractice(),
-    );
-    this.elements.resetBtn.addEventListener("click", () =>
-      this.resetPractice(),
-    );
-    this.elements.backToPlanetsBtn.addEventListener("click", () =>
-      this.showPlanetSelection(),
-    );
+    if (this.elements.startBtn) {
+      this.elements.startBtn.addEventListener("click", () =>
+        this.startPractice(),
+      );
+    }
+    if (this.elements.pauseBtn) {
+      this.elements.pauseBtn.addEventListener("click", () =>
+        this.pausePractice(),
+      );
+    }
+    if (this.elements.resetBtn) {
+      this.elements.resetBtn.addEventListener("click", () =>
+        this.resetPractice(),
+      );
+    }
+    if (this.elements.backToPlanetsBtn) {
+      this.elements.backToPlanetsBtn.addEventListener("click", () =>
+        this.showPlanetSelection(),
+      );
+    }
 
     // Results controls
-    this.elements.saveResultBtn.addEventListener("click", () =>
-      this.saveResult(),
-    );
-    this.elements.retryPracticeBtn.addEventListener("click", () =>
-      this.retryPractice(),
-    );
-    this.elements.backToPlanetsFromResultsBtn.addEventListener("click", () =>
-      this.showPlanetSelection(),
-    );
+    if (this.elements.saveResultBtn) {
+      this.elements.saveResultBtn.addEventListener("click", () =>
+        this.saveResult(),
+      );
+    }
+    if (this.elements.retryPracticeBtn) {
+      this.elements.retryPracticeBtn.addEventListener("click", () =>
+        this.retryPractice(),
+      );
+    }
+    if (this.elements.backToPlanetsFromResultsBtn) {
+      this.elements.backToPlanetsFromResultsBtn.addEventListener("click", () =>
+        this.showPlanetSelection(),
+      );
+    }
 
     // Keyboard shortcuts
     document.addEventListener("keydown", (e) => {
