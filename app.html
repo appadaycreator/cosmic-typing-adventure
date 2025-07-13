@@ -641,7 +641,7 @@
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-sm text-gray-400">タイピング速度 +5%</span>
-                                <button class="bg-energy-green hover:bg-green-600 px-3 py-1 rounded text-sm font-bold transition-colors">
+                                <button data-upgrade="engine" class="bg-energy-green hover:bg-green-600 px-3 py-1 rounded text-sm font-bold transition-colors">
                                     強化 (100 XP)
                                 </button>
                             </div>
@@ -658,7 +658,7 @@
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-sm text-gray-400">正確率ボーナス +2%</span>
-                                <button class="bg-cosmic-cyan hover:bg-blue-500 px-3 py-1 rounded text-sm font-bold transition-colors">
+                                <button data-upgrade="fuel" class="bg-cosmic-cyan hover:bg-blue-500 px-3 py-1 rounded text-sm font-bold transition-colors">
                                     強化 (150 XP)
                                 </button>
                             </div>
@@ -675,7 +675,7 @@
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-sm text-gray-400">ミス時ペナルティ -10%</span>
-                                <button class="bg-planet-orange hover:bg-orange-600 px-3 py-1 rounded text-sm font-bold transition-colors">
+                                <button data-upgrade="shield" class="bg-planet-orange hover:bg-orange-600 px-3 py-1 rounded text-sm font-bold transition-colors">
                                     強化 (200 XP)
                                 </button>
                             </div>
@@ -1144,10 +1144,28 @@
             gameState.totalChars = input.length;
             gameState.currentPosition = input.length;
             
-            // Calculate WPM and accuracy
+            // Calculate WPM and accuracy with upgrade bonuses
             const timeElapsed = (Date.now() - gameState.startTime) / 1000 / 60; // minutes
-            gameState.wpm = timeElapsed > 0 ? Math.round((correct / 5) / timeElapsed) : 0;
-            gameState.accuracy = gameState.totalChars > 0 ? Math.round((correct / gameState.totalChars) * 100) : 100;
+            let baseWPM = timeElapsed > 0 ? (correct / 5) / timeElapsed : 0;
+            
+            // Apply speed multiplier from upgrades
+            if (window.shipUpgradeSystem) {
+                const speedBonus = window.shipUpgradeSystem.getUpgradeBonus('engine');
+                baseWPM *= (1 + speedBonus);
+            }
+            
+            gameState.wpm = Math.round(baseWPM);
+            
+            // Calculate accuracy with upgrade bonuses
+            let baseAccuracy = gameState.totalChars > 0 ? (correct / gameState.totalChars) * 100 : 100;
+            
+            // Apply accuracy bonus from upgrades
+            if (window.shipUpgradeSystem) {
+                const accuracyBonus = window.shipUpgradeSystem.getUpgradeBonus('fuel');
+                baseAccuracy += accuracyBonus;
+            }
+            
+            gameState.accuracy = Math.round(Math.min(100, baseAccuracy));
             
             // Update display
             displayText();
@@ -1707,6 +1725,17 @@
         
         // Initialize Achievement System
         window.achievementSystem = new AchievementSystem();
+        
+        // Initialize Language Manager
+        window.languageManager = new LanguageManager();
+        
+        // Initialize Ship Upgrade System
+        window.shipUpgradeSystem = new ShipUpgradeSystem();
+        
+        // Update upgrade display after initialization
+        if (window.shipUpgradeSystem) {
+            window.shipUpgradeSystem.updateUpgradeDisplay();
+        }
         
         console.log('Cosmic Typing Adventure - All systems operational! 🚀');
     </script>

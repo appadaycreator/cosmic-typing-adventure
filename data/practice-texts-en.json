@@ -1,0 +1,240 @@
+{
+  "planets": {
+    "earth": {
+      "name": "Earth",
+      "difficulty": 1,
+      "description": "Beginner - Basic typing practice",
+      "texts": [
+        {
+          "id": "earth_001",
+          "title": "Basic Information about Earth",
+          "content": "Earth is the third planet in the solar system. It is known as the only planet where life exists.",
+          "difficulty": 1,
+          "wordCount": 25,
+          "charCount": 50
+        },
+        {
+          "id": "earth_002",
+          "title": "Beautiful Blue Planet",
+          "content": "Our home planet Earth is a beautiful blue planet. The harmony of oceans and land creates a special appearance when viewed from space.",
+          "difficulty": 1,
+          "wordCount": 35,
+          "charCount": 70
+        },
+        {
+          "id": "earth_003",
+          "title": "Earth's Atmosphere",
+          "content": "Earth's atmosphere is mainly composed of nitrogen and oxygen, playing an important role in supporting life.",
+          "difficulty": 1,
+          "wordCount": 30,
+          "charCount": 60
+        },
+        {
+          "id": "earth_004",
+          "title": "Earth's Rotation",
+          "content": "Earth rotates once every 24 hours, creating day and night cycles.",
+          "difficulty": 1,
+          "wordCount": 20,
+          "charCount": 40
+        },
+        {
+          "id": "earth_005",
+          "title": "Earth's Revolution",
+          "content": "Earth revolves around the sun once every 365 days, creating the four seasons.",
+          "difficulty": 1,
+          "wordCount": 25,
+          "charCount": 50
+        }
+      ]
+    },
+    "mars": {
+      "name": "Mars",
+      "difficulty": 2,
+      "description": "Intermediate - Slightly challenging texts",
+      "texts": [
+        {
+          "id": "mars_001",
+          "title": "The Red Planet",
+          "content": "Mars is the fourth planet in the solar system and is known as the red planet.",
+          "difficulty": 2,
+          "wordCount": 20,
+          "charCount": 40
+        },
+        {
+          "id": "mars_002",
+          "title": "Surface of Mars",
+          "content": "The surface of Mars shows traces of water that once flowed there.",
+          "difficulty": 2,
+          "wordCount": 25,
+          "charCount": 50
+        },
+        {
+          "id": "mars_003",
+          "title": "Mars Exploration",
+          "content": "Mars rovers continue to observe day and night to unlock the secrets of this planet.",
+          "difficulty": 2,
+          "wordCount": 30,
+          "charCount": 60
+        },
+        {
+          "id": "mars_004",
+          "title": "Mars Atmosphere",
+          "content": "Mars has a very thin atmosphere, mainly composed of carbon dioxide.",
+          "difficulty": 2,
+          "wordCount": 25,
+          "charCount": 50
+        },
+        {
+          "id": "mars_005",
+          "title": "Mars Terrain",
+          "content": "Mars has Olympus Mons, the largest volcano in the solar system, and the massive Valles Marineris canyon.",
+          "difficulty": 2,
+          "wordCount": 35,
+          "charCount": 70
+        }
+      ]
+    },
+    "jupiter": {
+      "name": "Jupiter",
+      "difficulty": 3,
+      "description": "Advanced - Long text typing",
+      "texts": [
+        {
+          "id": "jupiter_001",
+          "title": "Largest Planet in Solar System",
+          "content": "Jupiter is the largest planet in the solar system and represents a typical gas giant.",
+          "difficulty": 3,
+          "wordCount": 25,
+          "charCount": 50
+        },
+        {
+          "id": "jupiter_002",
+          "title": "Great Red Spot",
+          "content": "Jupiter's Great Red Spot is a massive storm that has been raging for hundreds of years.",
+          "difficulty": 3,
+          "wordCount": 25,
+          "charCount": 50
+        },
+        {
+          "id": "jupiter_003",
+          "title": "Jupiter's Gravity",
+          "content": "Jupiter's strong gravity has a significant impact on the orbits of other celestial bodies in the solar system.",
+          "difficulty": 3,
+          "wordCount": 30,
+          "charCount": 60
+        },
+        {
+          "id": "jupiter_004",
+          "title": "Jupiter's Moons",
+          "content": "Jupiter has many moons, with Ganymede, Callisto, Io, and Europa known as the four major moons.",
+          "difficulty": 3,
+          "wordCount": 45,
+          "charCount": 90
+        },
+        {
+          "id": "jupiter_005",
+          "title": "Jupiter's Composition",
+          "content": "Jupiter is mainly composed of hydrogen and helium, with no solid surface like Earth.",
+          "difficulty": 3,
+          "wordCount": 35,
+          "charCount": 70
+        }
+      ]
+    },
+    "saturn": {
+      "name": "Saturn",
+      "difficulty": 4,
+      "description": "Expert - Technical terminology",
+      "texts": [
+        {
+          "id": "saturn_001",
+          "title": "Planet with Beautiful Rings",
+          "content": "Saturn, with its beautiful rings, continues to fascinate astronomers.",
+          "difficulty": 4,
+          "wordCount": 30,
+          "charCount": 60
+        },
+        {
+          "id": "saturn_002",
+          "title": "Saturn's Rings",
+          "content": "Saturn's rings are composed of countless ice particles that reflect sunlight and shine brightly.",
+          "difficulty": 4,
+          "wordCount": 35,
+          "charCount": 70
+        },
+        {
+          "id": "saturn_003",
+          "title": "Titan",
+          "content": "Saturn's moon Titan is the only place besides Earth where liquid lakes on the surface have been confirmed.",
+          "difficulty": 4,
+          "wordCount": 40,
+          "charCount": 80
+        },
+        {
+          "id": "saturn_004",
+          "title": "Saturn's Atmosphere",
+          "content": "Saturn's atmosphere, like Jupiter's, is mainly composed of hydrogen and helium, showing beautiful band patterns.",
+          "difficulty": 4,
+          "wordCount": 40,
+          "charCount": 80
+        },
+        {
+          "id": "saturn_005",
+          "title": "Saturn Exploration",
+          "content": "The Cassini probe observed Saturn for 13 years, bringing many important discoveries.",
+          "difficulty": 4,
+          "wordCount": 35,
+          "charCount": 70
+        }
+      ]
+    }
+  },
+  "categories": {
+    "basic": {
+      "name": "Basic Practice",
+      "description": "Basic typing practice texts",
+      "planets": ["earth"]
+    },
+    "intermediate": {
+      "name": "Intermediate Practice",
+      "description": "Slightly challenging text practice",
+      "planets": ["mars"]
+    },
+    "advanced": {
+      "name": "Advanced Practice",
+      "description": "Long text typing practice",
+      "planets": ["jupiter"]
+    },
+    "expert": {
+      "name": "Expert Practice",
+      "description": "Technical terminology practice",
+      "planets": ["saturn"]
+    }
+  },
+  "missions": {
+    "basic": {
+      "name": "Basic Mission",
+      "description": "Start your cosmic typing journey",
+      "difficulty": 1,
+      "xpReward": 50
+    },
+    "exploration": {
+      "name": "Exploration Mission",
+      "description": "Discover new planets through typing",
+      "difficulty": 2,
+      "xpReward": 100
+    },
+    "speed": {
+      "name": "Speed Mission",
+      "description": "Focus on typing speed",
+      "difficulty": 3,
+      "xpReward": 150
+    },
+    "accuracy": {
+      "name": "Accuracy Mission",
+      "description": "Focus on typing accuracy",
+      "difficulty": 4,
+      "xpReward": 200
+    }
+  }
+} 

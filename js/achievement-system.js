@@ -162,7 +162,7 @@ class AchievementSystem {
       
       // Play achievement sound
       if (window.audioManager) {
-        window.audioManager.playSound('achievement');
+        window.audioManager.playAchievement();
       }
     });
   }
