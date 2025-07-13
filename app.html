@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>タイピング練習 - Cosmic Typing Adventure</title>
+    <meta name="description" content="宇宙をテーマにしたタイピング練習アプリ">
+    <link rel="icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">
+                <a href="index.html" class="logo-link">
+                    <img src="images/logo.png" alt="Cosmic Typing Adventure" class="logo-img">
+                    <span class="logo-text">Cosmic Typing Adventure</span>
+                </a>
+            </h1>
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="how-to-use.html" class="nav-link">使い方</a></li>
+                    <li><a href="contact.html" class="nav-link">お問い合わせ</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <div class="app-container">
+                <!-- 惑星選択画面 -->
+                <section id="planet-selection" class="planet-selection">
+                    <h2 class="section-title">惑星を選択してください</h2>
+                    <div class="planets-grid">
+                        <div class="planet-card" data-planet="earth">
+                            <img src="images/planets/earth.png" alt="地球" class="planet-image">
+                            <h3 class="planet-name">地球</h3>
+                            <p class="planet-description">初心者向け - 基本的なタイピング練習</p>
+                        </div>
+                        <div class="planet-card" data-planet="mars">
+                            <img src="images/planets/mars.png" alt="火星" class="planet-image">
+                            <h3 class="planet-name">火星</h3>
+                            <p class="planet-description">中級者向け - 少し難しい文章</p>
+                        </div>
+                        <div class="planet-card" data-planet="jupiter">
+                            <img src="images/planets/jupiter.png" alt="木星" class="planet-image">
+                            <h3 class="planet-name">木星</h3>
+                            <p class="planet-description">上級者向け - 長文タイピング</p>
+                        </div>
+                        <div class="planet-card" data-planet="saturn">
+                            <img src="images/planets/saturn.png" alt="土星" class="planet-image">
+                            <h3 class="planet-name">土星</h3>
+                            <p class="planet-description">エキスパート向け - 専門用語</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- タイピング練習画面 -->
+                <section id="typing-practice" class="typing-practice hidden">
+                    <div class="practice-header">
+                        <div class="planet-info">
+                            <img id="current-planet-image" src="" alt="" class="planet-image-small">
+                            <h2 id="current-planet-name" class="planet-name">惑星名</h2>
+                        </div>
+                        <div class="practice-stats">
+                            <div class="stat-item">
+                                <span class="stat-label">速度</span>
+                                <span id="wpm" class="stat-value">0 WPM</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">正確性</span>
+                                <span id="accuracy" class="stat-value">100%</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">経過時間</span>
+                                <span id="elapsed-time" class="stat-value">0:00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="typing-area">
+                        <div class="text-display">
+                            <div id="text-display" class="text-content"></div>
+                        </div>
+                        <div class="input-area">
+                            <textarea id="typing-input" class="typing-input" placeholder="ここにタイピングしてください..." disabled></textarea>
+                        </div>
+                    </div>
+
+                    <div class="practice-controls">
+                        <button id="start-btn" class="btn btn-primary">開始</button>
+                        <button id="pause-btn" class="btn btn-secondary" disabled>一時停止</button>
+                        <button id="reset-btn" class="btn btn-secondary">リセット</button>
+                        <button id="back-to-planets" class="btn btn-outline">惑星選択に戻る</button>
+                    </div>
+
+                    <div class="progress-bar">
+                        <div id="progress-fill" class="progress-fill"></div>
+                    </div>
+                </section>
+
+                <!-- 結果画面 -->
+                <section id="results" class="results hidden">
+                    <h2 class="section-title">練習結果</h2>
+                    <div class="results-content">
+                        <div class="result-stats">
+                            <div class="result-stat">
+                                <span class="result-label">タイピング速度</span>
+                                <span id="final-wpm" class="result-value">0 WPM</span>
+                            </div>
+                            <div class="result-stat">
+                                <span class="result-label">正確性</span>
+                                <span id="final-accuracy" class="result-value">100%</span>
+                            </div>
+                            <div class="result-stat">
+                                <span class="result-label">総タイプ数</span>
+                                <span id="total-typed" class="result-value">0</span>
+                            </div>
+                            <div class="result-stat">
+                                <span class="result-label">ミスタイプ数</span>
+                                <span id="total-errors" class="result-value">0</span>
+                            </div>
+                        </div>
+                        <div class="result-actions">
+                            <button id="save-result" class="btn btn-primary">結果を保存</button>
+                            <button id="retry-practice" class="btn btn-secondary">再練習</button>
+                            <button id="back-to-planets-from-results" class="btn btn-outline">惑星選択に戻る</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="terms.html">利用規約</a>
+                    <a href="privacy.html">プライバシーポリシー</a>
+                    <a href="contact.html">お問い合わせ</a>
+                </div>
+                <p class="footer-copyright">&copy; 2024 Cosmic Typing Adventure. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/typing-engine.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html> 

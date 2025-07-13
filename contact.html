@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>お問い合わせ - Cosmic Typing Adventure</title>
+    <meta name="description" content="Cosmic Typing Adventureへのお問い合わせフォーム">
+    <link rel="icon" href="images/favicon.ico">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">
+                <a href="index.html" class="logo-link">
+                    <img src="images/logo.png" alt="Cosmic Typing Adventure" class="logo-img">
+                    <span class="logo-text">Cosmic Typing Adventure</span>
+                </a>
+            </h1>
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="app.html" class="nav-link">アプリ</a></li>
+                    <li><a href="how-to-use.html" class="nav-link">使い方</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <section class="contact">
+                <h1 class="page-title">お問い合わせ</h1>
+                <p class="contact-description">
+                    Cosmic Typing Adventureに関するご質問、ご意見、ご要望がございましたら、<br>
+                    以下のフォームからお気軽にお問い合わせください。
+                </p>
+
+                <div class="contact-content">
+                    <form id="contact-form" class="contact-form">
+                        <div class="form-group">
+                            <label for="name" class="form-label">お名前 <span class="required">*</span></label>
+                            <input type="text" id="name" name="name" class="form-input" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="form-label">メールアドレス <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" class="form-input" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subject" class="form-label">件名 <span class="required">*</span></label>
+                            <select id="subject" name="subject" class="form-select" required>
+                                <option value="">選択してください</option>
+                                <option value="general">一般的なお問い合わせ</option>
+                                <option value="bug">バグ報告</option>
+                                <option value="feature">機能要望</option>
+                                <option value="privacy">プライバシーに関するお問い合わせ</option>
+                                <option value="other">その他</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message" class="form-label">お問い合わせ内容 <span class="required">*</span></label>
+                            <textarea id="message" name="message" class="form-textarea" rows="6" required placeholder="お問い合わせ内容を詳しくお書きください。"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">お問い合わせの種類</label>
+                            <div class="checkbox-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="contact_type[]" value="app_usage">
+                                    <span class="checkbox-text">アプリの使い方について</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="contact_type[]" value="technical_issue">
+                                    <span class="checkbox-text">技術的な問題について</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="contact_type[]" value="suggestion">
+                                    <span class="checkbox-text">改善提案</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="contact_type[]" value="other">
+                                    <span class="checkbox-text">その他</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">緊急度</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="urgency" value="low" checked>
+                                    <span class="radio-text">低（1週間以内の回答で可）</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="urgency" value="medium">
+                                    <span class="radio-text">中（3日以内の回答希望）</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="urgency" value="high">
+                                    <span class="radio-text">高（1日以内の回答希望）</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="privacy-agreement" name="privacy_agreement" required>
+                                <span class="checkbox-text">
+                                    <a href="privacy.html" target="_blank">プライバシーポリシー</a>に同意します <span class="required">*</span>
+                                </span>
+                            </label>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">送信する</button>
+                            <button type="reset" class="btn btn-secondary">リセット</button>
+                        </div>
+                    </form>
+
+                    <div class="contact-info">
+                        <h3 class="section-title">その他のお問い合わせ方法</h3>
+                        <div class="contact-methods">
+                            <div class="contact-method">
+                                <h4 class="method-title">よくある質問</h4>
+                                <p class="method-description">
+                                    よくある質問については、<a href="how-to-use.html">使い方ページ</a>をご確認ください。
+                                </p>
+                            </div>
+                            <div class="contact-method">
+                                <h4 class="method-title">利用規約・プライバシーポリシー</h4>
+                                <p class="method-description">
+                                    <a href="terms.html">利用規約</a>や<a href="privacy.html">プライバシーポリシー</a>に関するお問い合わせも上記フォームからお受けします。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="terms.html">利用規約</a>
+                    <a href="privacy.html">プライバシーポリシー</a>
+                </div>
+                <p class="footer-copyright">&copy; 2024 Cosmic Typing Adventure. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/common.js"></script>
+    <script>
+        // フォーム送信処理
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // フォームデータの取得
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // 送信処理（実際の実装ではサーバーサイドに送信）
+            console.log('送信データ:', data);
+            
+            // 送信完了メッセージ
+            alert('お問い合わせを送信しました。ありがとうございます。');
+            this.reset();
+        });
+    </script>
+</body>
+</html> 
