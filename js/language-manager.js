@@ -284,3 +284,14 @@ class LanguageManager {
 
 // Global language manager instance
 window.LanguageManager = LanguageManager; 
+
+// 言語切り替えボタンの状態を更新する関数
+window.updateLanguageButtons = function() {
+    const langToggle = document.getElementById('langToggle');
+    if (langToggle) {
+        const currentLang = (window.languageManager && window.languageManager.getCurrentLanguage) ? window.languageManager.getCurrentLanguage() : (window.currentLanguage || 'ja');
+        langToggle.textContent = (currentLang === 'ja') ? 'EN' : '日本語';
+        langToggle.classList.toggle('active', currentLang === 'ja');
+    }
+    // 他の言語ボタンがあれば同様に更新
+}; 

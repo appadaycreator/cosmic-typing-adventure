@@ -492,4 +492,6 @@ class AudioManager {
 }
 
 // Global audio manager instance
-window.AudioManager = AudioManager; 
+if (typeof window !== 'undefined') {
+    window.AudioManager = AudioManager;
+} 
