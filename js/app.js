@@ -58,40 +58,67 @@ class CosmicTypingApp {
       ],
     };
 
-    // Supabase初期化＆テスト
-    this.initSupabaseAndTest();
+    // Initialize app
     this.init();
   }
 
-  async initSupabaseAndTest() {
-    const ok = await initializeSupabase();
-    if (!ok) {
-      alert(
-        "Supabaseの初期化に失敗しました。ネットワークや設定を確認してください。",
-      );
-      return;
-    }
-    // 簡易テスト: 履歴取得
-    if (
-      window.CosmicSupabase &&
-      window.CosmicSupabase.TypingStats &&
-      typeof window.CosmicSupabase.TypingStats.getHistory === "function"
-    ) {
-      window.CosmicSupabase.TypingStats.getHistory(1)
-        .then((data) => {
-          console.log("[Supabaseテスト] typing_sessionsサンプル:", data);
-        })
-        .catch((e) => {
-          console.error("[Supabaseテスト] 取得失敗:", e);
-        });
+  async init() {
+    try {
+      // Initialize Supabase first
+      await this.initSupabase();
+      
+      // Initialize DOM and other components
+      this.getDOMElements();
+      this.setupEventListeners();
+      this.initializeTypingEngine();
+      this.showPlanetSelection();
+      
+      console.log("CosmicTypingApp initialized successfully");
+    } catch (error) {
+      console.error("Failed to initialize CosmicTypingApp:", error);
+      // Continue with offline functionality
+      this.getDOMElements();
+      this.setupEventListeners();
+      this.initializeTypingEngine();
+      this.showPlanetSelection();
     }
   }
 
-  init() {
-    this.getDOMElements();
-    this.setupEventListeners();
-    this.initializeTypingEngine();
-    this.showPlanetSelection();
+  async initSupabase() {
+    try {
+      // Wait for DOM to be ready
+      if (document.readyState === 'loading') {
+        await new Promise(resolve => {
+          document.addEventListener('DOMContentLoaded', resolve);
+        });
+      }
+
+      // Initialize Supabase
+      const success = await initializeSupabase();
+      if (success) {
+        console.log("Supabase initialized successfully");
+        
+        // Test connection with fallback
+        await this.testSupabaseConnection();
+      } else {
+        console.warn("Supabase initialization failed, continuing with offline mode");
+      }
+    } catch (error) {
+      console.error("Supabase initialization error:", error);
+      // Continue with offline functionality
+    }
+  }
+
+  async testSupabaseConnection() {
+    try {
+      if (window.CosmicSupabase && window.CosmicSupabase.TypingStats) {
+        const history = await window.CosmicSupabase.TypingStats.getHistory(1);
+        console.log("[Supabaseテスト] 接続成功, 履歴サンプル:", history);
+      }
+    } catch (error) {
+      console.warn("[Supabaseテスト] 接続テスト失敗:", error);
+      // Continue with offline functionality
+    }
   }
 
   getDOMElements() {
@@ -210,215 +237,189 @@ class CosmicTypingApp {
   }
 
   loadPracticeText(planet) {
-    const texts = this.practiceTexts[planet] || [];
-    if (texts.length === 0) {
-      this.currentText = "この惑星の練習文章を読み込み中です...";
-      return;
-    }
+    // Try to load from API first, fallback to local texts
+    this.loadPracticeTextFromAPI(planet).catch(() => {
+      console.log("Using local practice texts for", planet);
+      const texts = this.practiceTexts[planet] || [];
+      if (texts.length > 0) {
+        this.currentText = texts[Math.floor(Math.random() * texts.length)];
+        this.elements.textDisplay.textContent = this.currentText;
+      } else {
+        this.currentText = "この惑星のテキストが見つかりませんでした。";
+        this.elements.textDisplay.textContent = this.currentText;
+      }
+    });
+  }
 
-    // Select random text
-    const randomIndex = Math.floor(Math.random() * texts.length);
-    this.currentText = texts[randomIndex];
-
-    // Display text
-    if (this.elements.textDisplay) {
+  async loadPracticeTextFromAPI(planet) {
+    if (window.CosmicSupabase && window.CosmicSupabase.PracticeTexts) {
+      const text = await window.CosmicSupabase.PracticeTexts.getRandomText(planet);
+      this.currentText = text;
       this.elements.textDisplay.textContent = this.currentText;
+    } else {
+      throw new Error("PracticeTexts not available");
     }
   }
 
   updatePlanetInfo(planet) {
-    const planetNames = {
-      earth: "地球",
-      mars: "火星",
-      jupiter: "木星",
-      saturn: "土星",
+    const planetInfo = {
+      earth: { name: "地球", image: "images/planets/earth.jpg" },
+      mars: { name: "火星", image: "images/planets/mars.jpg" },
+      jupiter: { name: "木星", image: "images/planets/jupiter.jpg" },
+      saturn: { name: "土星", image: "images/planets/saturn.jpg" },
     };
 
-    const planetImages = {
-      earth: "images/planets/earth.png",
-      mars: "images/planets/mars.png",
-      jupiter: "images/planets/jupiter.png",
-      saturn: "images/planets/saturn.png",
-    };
-
-    if (this.elements.currentPlanetName) {
-      this.elements.currentPlanetName.textContent =
-        planetNames[planet] || planet;
-    }
-
-    if (this.elements.currentPlanetImage) {
-      this.elements.currentPlanetImage.src = planetImages[planet] || "";
-      this.elements.currentPlanetImage.alt = planetNames[planet] || planet;
+    const info = planetInfo[planet];
+    if (info) {
+      this.elements.currentPlanetName.textContent = info.name;
+      if (this.elements.currentPlanetImage) {
+        this.elements.currentPlanetImage.src = info.image;
+        this.elements.currentPlanetImage.alt = info.name;
+      }
     }
   }
 
   showPlanetSelection() {
     this.hideAllSections();
-    this.elements.planetSelection.classList.remove("hidden");
-
-    // Reset typing engine
-    if (this.typingEngine) {
-      this.typingEngine.reset();
-    }
-
+    this.elements.planetSelection.style.display = "block";
     this.isPracticeActive = false;
     this.updateButtonStates();
   }
 
   showTypingPractice() {
     this.hideAllSections();
-    this.elements.typingPractice.classList.remove("hidden");
-
-    // Reset for new practice
-    this.resetPractice();
+    this.elements.typingPractice.style.display = "block";
+    this.typingEngine.reset();
+    this.updateButtonStates();
   }
 
   showResults(results) {
     this.hideAllSections();
-    this.elements.results.classList.remove("hidden");
+    this.elements.results.style.display = "block";
 
-    // Update result displays
-    this.elements.finalWpmDisplay.textContent = `${Math.round(results.wpm)} WPM`;
-    this.elements.finalAccuracyDisplay.textContent = `${Math.round(results.accuracy)}%`;
+    this.elements.finalWpmDisplay.textContent = results.wpm.toFixed(1);
+    this.elements.finalAccuracyDisplay.textContent = results.accuracy.toFixed(1);
     this.elements.totalTypedDisplay.textContent = results.totalTyped;
     this.elements.totalErrorsDisplay.textContent = results.totalErrors;
 
-    // Add celebration animation
-    this.elements.results.classList.add("completion-celebration");
-    setTimeout(() => {
-      this.elements.results.classList.remove("completion-celebration");
-    }, 500);
+    this.updateButtonStates();
   }
 
   hideAllSections() {
-    this.elements.planetSelection.classList.add("hidden");
-    this.elements.typingPractice.classList.add("hidden");
-    this.elements.results.classList.add("hidden");
+    this.elements.planetSelection.style.display = "none";
+    this.elements.typingPractice.style.display = "none";
+    this.elements.results.style.display = "none";
   }
 
   startPractice() {
-    if (!this.currentText) {
-      this.showMessage("練習文章が読み込まれていません。", "error");
-      return;
-    }
-
-    this.typingEngine.start(this.currentText);
-    this.isPracticeActive = true;
-    this.updateButtonStates();
-
-    // Focus on input
-    if (this.elements.typingInput) {
-      this.elements.typingInput.focus();
+    if (!this.isPracticeActive) {
+      this.isPracticeActive = true;
+      this.typingEngine.start();
+      this.updateButtonStates();
     }
   }
 
   pausePractice() {
-    if (this.typingEngine) {
-      this.typingEngine.pause();
+    if (this.isPracticeActive) {
       this.isPracticeActive = false;
+      this.typingEngine.pause();
       this.updateButtonStates();
     }
   }
 
   resetPractice() {
-    if (this.typingEngine) {
-      this.typingEngine.reset();
-    }
-
     this.isPracticeActive = false;
+    this.typingEngine.reset();
     this.updateButtonStates();
-
-    // Reload text
-    if (this.currentPlanet) {
-      this.loadPracticeText(this.currentPlanet);
-    }
   }
 
   retryPractice() {
+    this.loadPracticeText(this.currentPlanet);
     this.showTypingPractice();
   }
 
   updateButtonStates() {
-    if (this.elements.startBtn) {
-      this.elements.startBtn.disabled = this.isPracticeActive;
-    }
+    const startBtn = this.elements.startBtn;
+    const pauseBtn = this.elements.pauseBtn;
+    const resetBtn = this.elements.resetBtn;
 
-    if (this.elements.pauseBtn) {
-      this.elements.pauseBtn.disabled = !this.isPracticeActive;
+    if (this.isPracticeActive) {
+      startBtn.style.display = "none";
+      pauseBtn.style.display = "inline-block";
+      resetBtn.style.display = "inline-block";
+    } else {
+      startBtn.style.display = "inline-block";
+      pauseBtn.style.display = "none";
+      resetBtn.style.display = "inline-block";
     }
   }
 
   onTypingProgress(stats) {
     // Update real-time statistics
     if (this.elements.wpmDisplay) {
-      this.elements.wpmDisplay.textContent = `${Math.round(stats.wpm)} WPM`;
+      this.elements.wpmDisplay.textContent = stats.wpm.toFixed(1);
     }
-
     if (this.elements.accuracyDisplay) {
-      this.elements.accuracyDisplay.textContent = `${Math.round(stats.accuracy)}%`;
+      this.elements.accuracyDisplay.textContent = stats.accuracy.toFixed(1);
     }
-
-    // Update progress bar
-    if (this.elements.progressFill) {
-      this.elements.progressFill.style.width = `${stats.progress}%`;
+    if (this.elements.elapsedTimeDisplay) {
+      this.elements.elapsedTimeDisplay.textContent = stats.elapsedTime;
     }
   }
 
   onTypingComplete(results) {
     this.isPracticeActive = false;
     this.updateButtonStates();
-
-    // Show results
     this.showResults(results);
-
-    // Save results
-    this.saveResultsToStorage(results);
-
-    // Show success message
-    this.showMessage("練習完了！お疲れさまでした。", "success");
+    
+    // Auto-save results
+    this.saveResult();
   }
 
   onTypingError(error) {
-    console.error("Typing error:", error);
-    this.showMessage("タイピング中にエラーが発生しました。", "error");
+    console.error("Typing engine error:", error);
+    this.showMessage("タイピングエンジンでエラーが発生しました。", "error");
   }
 
-  saveResult() {
-    if (!this.currentPlanet) return;
+  async saveResult() {
+    if (!this.typingEngine || !this.currentPlanet) {
+      console.warn("No typing session to save");
+      return;
+    }
 
-    // Get current results from typing engine
-    const stats = this.typingEngine.getStats();
+    const results = this.typingEngine.getResults();
+    if (!results) {
+      console.warn("No results to save");
+      return;
+    }
 
     const sessionData = {
       planet: this.currentPlanet,
-      wpm: stats.wpm,
-      accuracy: stats.accuracy,
-      totalTyped: stats.totalTyped,
-      totalErrors: stats.totalErrors,
-      duration: stats.duration,
-      session_date: new Date().toISOString(),
+      wpm: results.wpm,
+      accuracy: results.accuracy,
+      totalTyped: results.totalTyped,
+      totalErrors: results.totalErrors,
+      duration: results.duration,
     };
 
-    // Try to save to Supabase first, fallback to localStorage
-    if (window.CosmicSupabase && window.CosmicSupabase.TypingStats) {
-      window.CosmicSupabase.TypingStats.saveSession(sessionData)
-        .then((success) => {
-          if (success) {
-            this.showMessage("結果を保存しました。", "success");
-          } else {
-            // Fallback to localStorage
-            this.saveResultsToStorage(sessionData);
-            this.showMessage("結果をローカルに保存しました。", "info");
-          }
-        })
-        .catch((error) => {
-          console.error("Error saving to Supabase:", error);
-          // Fallback to localStorage
-          this.saveResultsToStorage(sessionData);
-          this.showMessage("結果をローカルに保存しました。", "info");
-        });
-    } else {
-      // Fallback to localStorage
+    try {
+      let saved = false;
+      
+      // Try to save to Supabase first
+      if (window.CosmicSupabase && window.CosmicSupabase.TypingStats) {
+        saved = await window.CosmicSupabase.TypingStats.saveSession(sessionData);
+      }
+      
+      // Always save to localStorage as backup
+      this.saveResultsToStorage(sessionData);
+      
+      if (saved) {
+        this.showMessage("結果が保存されました！", "success");
+      } else {
+        this.showMessage("結果をローカルに保存しました。", "info");
+      }
+    } catch (error) {
+      console.error("Error saving results:", error);
       this.saveResultsToStorage(sessionData);
       this.showMessage("結果をローカルに保存しました。", "info");
     }
@@ -426,120 +427,128 @@ class CosmicTypingApp {
 
   saveResultsToStorage(results) {
     try {
-      const sessions = JSON.parse(
-        localStorage.getItem("cosmic_typing_sessions") || "[]",
+      const existingData = JSON.parse(
+        localStorage.getItem("typing_sessions") || "[]"
       );
-      sessions.push({
+      existingData.push({
         ...results,
-        planet: this.currentPlanet,
-        session_date: new Date().toISOString(),
+        id: Date.now(),
+        saved_at: new Date().toISOString(),
       });
 
       // Keep only last 100 sessions
-      if (sessions.length > 100) {
-        sessions.splice(0, sessions.length - 100);
+      if (existingData.length > 100) {
+        existingData.splice(0, existingData.length - 100);
       }
 
-      localStorage.setItem("cosmic_typing_sessions", JSON.stringify(sessions));
+      localStorage.setItem("typing_sessions", JSON.stringify(existingData));
+      console.log("Results saved to localStorage");
     } catch (error) {
       console.error("Error saving to localStorage:", error);
     }
   }
 
   showMessage(message, type = "info") {
-    if (window.CosmicUtils && window.CosmicUtils.showMessage) {
-      window.CosmicUtils.showMessage(message, type);
-    } else {
-      // Fallback alert
-      alert(message);
-    }
+    // Simple message display
+    const messageDiv = document.createElement("div");
+    messageDiv.className = `message message-${type}`;
+    messageDiv.textContent = message;
+    messageDiv.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      border-radius: 5px;
+      color: white;
+      z-index: 1000;
+      background-color: ${type === 'error' ? '#f44336' : type === 'success' ? '#4caf50' : '#2196f3'};
+    `;
+    
+    document.body.appendChild(messageDiv);
+    
+    setTimeout(() => {
+      if (messageDiv.parentNode) {
+        messageDiv.parentNode.removeChild(messageDiv);
+      }
+    }, 3000);
   }
 
-  // Load practice texts from external source
   async loadPracticeTextsFromAPI() {
-    if (window.CosmicSupabase && window.CosmicSupabase.PracticeTexts) {
-      try {
-        for (const planet of ["earth", "mars", "jupiter", "saturn"]) {
-          const texts =
-            await window.CosmicSupabase.PracticeTexts.getTextsByPlanet(planet);
-          if (texts.length > 0) {
-            this.practiceTexts[planet] = texts.map((text) => text.content);
+    try {
+      if (window.CosmicSupabase && window.CosmicSupabase.PracticeTexts) {
+        const planets = ["earth", "mars", "jupiter", "saturn"];
+        for (const planet of planets) {
+          const texts = await window.CosmicSupabase.PracticeTexts.getTextsByPlanet(planet);
+          if (texts && texts.length > 0) {
+            this.practiceTexts[planet] = texts.map(t => t.content || t);
           }
         }
-      } catch (error) {
-        console.warn("Failed to load practice texts from API:", error);
+        console.log("Practice texts loaded from API");
       }
+    } catch (error) {
+      console.warn("Failed to load practice texts from API:", error);
     }
   }
 
-  // Get user statistics
   async getUserStats() {
-    if (window.CosmicSupabase && window.CosmicSupabase.TypingStats) {
-      try {
+    try {
+      if (window.CosmicSupabase && window.CosmicSupabase.TypingStats) {
         const stats = await window.CosmicSupabase.TypingStats.getOverallStats();
         return stats;
-      } catch (error) {
-        console.warn("Failed to load stats from API:", error);
-        return this.getLocalStats();
       }
-    } else {
-      return this.getLocalStats();
+    } catch (error) {
+      console.error("Error fetching user stats:", error);
     }
+    return this.getLocalStats();
   }
 
   getLocalStats() {
     try {
       const sessions = JSON.parse(
-        localStorage.getItem("cosmic_typing_sessions") || "[]",
+        localStorage.getItem("typing_sessions") || "[]"
       );
-
+      
       if (sessions.length === 0) {
         return {
           totalSessions: 0,
           avgWpm: 0,
           avgAccuracy: 0,
-          totalTyped: 0,
-          totalErrors: 0,
           bestWpm: 0,
           bestAccuracy: 0,
         };
       }
 
-      // Calculate stats in one pass
-      const stats = sessions.reduce(
-        (acc, session) => {
-          acc.totalWpm += session.wpm;
-          acc.totalAccuracy += session.accuracy;
-          acc.totalTyped += session.totalTyped;
-          acc.totalErrors += session.totalErrors;
-          acc.bestWpm = Math.max(acc.bestWpm, session.wpm);
-          acc.bestAccuracy = Math.max(acc.bestAccuracy, session.accuracy);
-          return acc;
-        },
-        {
-          totalSessions: sessions.length,
-          totalWpm: 0,
-          totalAccuracy: 0,
-          totalTyped: 0,
-          totalErrors: 0,
-          bestWpm: 0,
-          bestAccuracy: 0,
-        },
-      );
+      const stats = {
+        totalSessions: sessions.length,
+        totalWpm: 0,
+        totalAccuracy: 0,
+        bestWpm: 0,
+        bestAccuracy: 0,
+      };
 
-      // Calculate averages
+      sessions.forEach((session) => {
+        stats.totalWpm += session.wpm;
+        stats.totalAccuracy += session.accuracy;
+        
+        if (session.wpm > stats.bestWpm) {
+          stats.bestWpm = session.wpm;
+        }
+        
+        if (session.accuracy > stats.bestAccuracy) {
+          stats.bestAccuracy = session.accuracy;
+        }
+      });
+
       stats.avgWpm = stats.totalWpm / stats.totalSessions;
       stats.avgAccuracy = stats.totalAccuracy / stats.totalSessions;
 
       return stats;
     } catch (error) {
-      console.error("Error getting local stats:", error);
+      console.error("Error calculating local stats:", error);
       return {
         totalSessions: 0,
         avgWpm: 0,
         avgAccuracy: 0,
-        totalTyped: 0,
-        totalErrors: 0,
         bestWpm: 0,
         bestAccuracy: 0,
       };
@@ -547,21 +556,7 @@ class CosmicTypingApp {
   }
 }
 
-// Initialize app when DOM is loaded
-document.addEventListener("DOMContentLoaded", function () {
-  // Wait for all dependencies to load
-  if (typeof TypingEngine !== "undefined") {
-    window.cosmicApp = new CosmicTypingApp();
-  } else {
-    // Wait for typing engine to load
-    const checkDependencies = setInterval(() => {
-      if (typeof TypingEngine !== "undefined") {
-        clearInterval(checkDependencies);
-        window.cosmicApp = new CosmicTypingApp();
-      }
-    }, 100);
-  }
+// Initialize app when DOM is ready
+document.addEventListener("DOMContentLoaded", () => {
+  window.cosmicTypingApp = new CosmicTypingApp();
 });
-
-// Export for global access
-window.CosmicTypingApp = CosmicTypingApp;
