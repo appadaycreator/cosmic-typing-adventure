@@ -3,1609 +3,296 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cosmic Typing Adventure - メインゲーム</title>
-    <meta name="description" content="宇宙船操縦、惑星探索、タイピング練習、WPM計測、スキル向上を一体化した革新的なタイピング学習プラットフォーム">
+    <title>Cosmic Typing Adventure - 宇宙タイピング冒険</title>
     
-    <!-- CDN Libraries -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Security Headers -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    
+    <!-- SEO and Accessibility -->
+    <meta name="description" content="宇宙テーマのタイピング練習ゲーム。楽しくタイピングスキルを向上させましょう！">
+    <meta name="keywords" content="タイピング, 練習, ゲーム, 宇宙, スキル向上">
+    <meta name="author" content="Cosmic Typing Adventure">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Cosmic Typing Adventure">
+    <meta property="og:description" content="宇宙テーマのタイピング練習ゲーム">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://cosmic-typing-adventure.com">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="images/icons/favicon.ico">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js for statistics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-TXQGZRF9');</script>
-    <!-- End Google Tag Manager -->
-    
-    <style>
-        :root {
-            --cosmic-bg: #0a0a1a;
-            --nebula-purple: #4c1d95;
-            --nebula-blue: #1e3a8a;
-            --star-cyan: #06b6d4;
-            --planet-orange: #f97316;
-            --ship-silver: #e5e7eb;
-            --energy-green: #10b981;
-        }
-        
-        body {
-            font-family: 'Exo 2', sans-serif;
-            background: var(--cosmic-bg);
-            color: var(--ship-silver);
-            overflow-x: hidden;
-        }
-        
-        .cosmic-bg {
-            background: linear-gradient(135deg, var(--cosmic-bg) 0%, var(--nebula-purple) 50%, var(--nebula-blue) 100%);
-            position: relative;
-        }
-        
-        .cosmic-bg::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                radial-gradient(2px 2px at 20px 30px, #fff, transparent),
-                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
-                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
-                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
-                radial-gradient(2px 2px at 160px 30px, #fff, transparent);
-            background-repeat: repeat;
-            background-size: 200px 100px;
-            animation: twinkle 3s ease-in-out infinite alternate;
-        }
-        
-        @keyframes twinkle {
-            0% { opacity: 0.8; }
-            100% { opacity: 1; }
-        }
-        
-        .font-orbitron {
-            font-family: 'Orbitron', monospace;
-        }
-        
-        .text-cosmic-cyan {
-            color: var(--star-cyan);
-        }
-        
-        .text-planet-orange {
-            color: var(--planet-orange);
-        }
-        
-        .text-energy-green {
-            color: var(--energy-green);
-        }
-        
-        .bg-cosmic-card {
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(96, 165, 250, 0.3);
-        }
-        
-        .spaceship-pulse {
-            animation: shipPulse 2s ease-in-out infinite;
-        }
-        
-        @keyframes shipPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
-        }
-        
-        .warp-effect {
-            animation: warpSpeed 0.5s ease-out;
-        }
-        
-        @keyframes warpSpeed {
-            0% { transform: translateX(-50px); opacity: 0; }
-            100% { transform: translateX(0); opacity: 1; }
-        }
-        
-        .typing-display {
-            font-family: 'Courier New', monospace;
-            font-size: var(--font-size, 1.2rem);
-            line-height: 1.8;
-            letter-spacing: 0.1em;
-        }
-        
-        .correct-char {
-            color: var(--energy-green);
-            background-color: rgba(16, 185, 129, 0.2);
-        }
-        
-        .incorrect-char {
-            color: #ef4444;
-            background-color: rgba(239, 68, 68, 0.2);
-        }
-        
-        .current-char {
-            background-color: var(--star-cyan);
-            color: var(--cosmic-bg);
-            animation: cursorBlink 1s infinite;
-        }
-        
-        @keyframes cursorBlink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0.3; }
-        }
-        
-        .planet-discovered {
-            animation: planetGlow 1s ease-in-out;
-        }
-        
-        @keyframes planetGlow {
-            0% { box-shadow: 0 0 0 rgba(249, 115, 22, 0.7); }
-            50% { box-shadow: 0 0 30px rgba(249, 115, 22, 0.7); }
-            100% { box-shadow: 0 0 0 rgba(249, 115, 22, 0.7); }
-        }
-        
-        .progress-bar {
-            background: linear-gradient(90deg, var(--energy-green) 0%, var(--star-cyan) 100%);
-        }
-        
-        .mobile-menu {
-            transform: translateX(100%);
-            transition: transform 0.3s ease-in-out;
-        }
-        
-        .mobile-menu.open {
-            transform: translateX(0);
-        }
-        
-        @media (max-width: 768px) {
-            .typing-display {
-                font-size: calc(var(--font-size, 1.2rem) * 0.8);
-            }
-        }
-        
-        /* Font size classes */
-        .font-size-xs { --font-size: 0.8rem; }
-        .font-size-sm { --font-size: 1rem; }
-        .font-size-md { --font-size: 1.2rem; }
-        .font-size-lg { --font-size: 1.5rem; }
-        .font-size-xl { --font-size: 1.8rem; }
-    </style>
 </head>
-<body class="cosmic-bg min-h-screen">
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQGZRF9"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-
+<body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">メインコンテンツにスキップ</a>
+    
     <!-- Header -->
-    <header class="bg-cosmic-card border-b border-blue-500 relative z-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
-                <div class="flex items-center space-x-3">
-                    <i class="fas fa-rocket text-cosmic-cyan text-2xl spaceship-pulse"></i>
-                    <h1 class="font-orbitron font-bold text-xl text-cosmic-cyan">Cosmic Typing</h1>
-                </div>
-
-                <!-- Desktop Navigation -->
-                <nav class="hidden md:flex space-x-8">
-                    <button onclick="showSection('game')" class="nav-btn text-white hover:text-cosmic-cyan transition-colors">
-                        <i class="fas fa-gamepad mr-2"></i>ゲーム
-                    </button>
-                    <button onclick="showSection('stats')" class="nav-btn text-white hover:text-cosmic-cyan transition-colors">
-                        <i class="fas fa-chart-line mr-2"></i>統計
-                    </button>
-                    <button onclick="showSection('fleet')" class="nav-btn text-white hover:text-cosmic-cyan transition-colors">
-                        <i class="fas fa-space-shuttle mr-2"></i>艦隊
-                    </button>
-                    <button onclick="showSection('settings')" class="nav-btn text-white hover:text-cosmic-cyan transition-colors">
-                        <i class="fas fa-cog mr-2"></i>設定
-                    </button>
-                </nav>
-
-                <!-- User Info & Mobile Menu Toggle -->
-                <div class="flex items-center space-x-4">
-                    <div class="hidden sm:flex items-center space-x-3 bg-cosmic-card px-3 py-1 rounded-lg">
-                        <i class="fas fa-star text-planet-orange"></i>
-                        <span class="text-sm font-orbitron" id="userLevel">Lv.1</span>
-                        <span class="text-xs text-gray-400" id="userXP">0 XP</span>
-                    </div>
-                    <button onclick="toggleMobileMenu()" class="md:hidden text-white">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                    <button onclick="toggleLanguage()" class="text-cosmic-cyan hover:text-white transition-colors">
-                        <i class="fas fa-globe mr-1"></i><span id="langToggle">EN</span>
-                    </button>
-                </div>
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <h1>🚀 Cosmic Typing Adventure</h1>
             </div>
-        </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">ホーム</a></li>
+                <li><a href="how-to-use.html" class="nav-link">使い方</a></li>
+                <li><a href="contact.html" class="nav-link">お問い合わせ</a></li>
+            </ul>
+        </nav>
     </header>
 
-    <!-- Mobile Menu -->
-    <div id="mobileMenu" class="mobile-menu fixed top-16 right-0 w-80 h-full bg-cosmic-card z-40 border-l border-blue-500">
-        <nav class="p-6 space-y-4">
-            <button onclick="showSection('game'); closeMobileMenu()" class="w-full text-left p-3 hover:bg-blue-900 rounded-lg transition-colors">
-                <i class="fas fa-gamepad mr-3 text-cosmic-cyan"></i>ゲーム
-            </button>
-            <button onclick="showSection('stats'); closeMobileMenu()" class="w-full text-left p-3 hover:bg-blue-900 rounded-lg transition-colors">
-                <i class="fas fa-chart-line mr-3 text-cosmic-cyan"></i>統計
-            </button>
-            <button onclick="showSection('fleet'); closeMobileMenu()" class="w-full text-left p-3 hover:bg-blue-900 rounded-lg transition-colors">
-                <i class="fas fa-space-shuttle mr-3 text-cosmic-cyan"></i>艦隊
-            </button>
-            <button onclick="showSection('settings'); closeMobileMenu()" class="w-full text-left p-3 hover:bg-blue-900 rounded-lg transition-colors">
-                <i class="fas fa-cog mr-3 text-cosmic-cyan"></i>設定
-            </button>
-        </nav>
-    </div>
-
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
-        
-        <!-- Game Section -->
-        <section id="gameSection" class="section-content">
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+    <main id="main-content" class="main-content">
+        <div class="app-container">
+            <!-- Planet Selection -->
+            <section class="planet-selection">
+                <h2>🌌 惑星を選択してタイピング練習を始めましょう</h2>
+                <p>各惑星には異なる難易度のテキストが用意されています</p>
                 
-                <!-- Left Sidebar - Ship Status -->
-                <div class="lg:col-span-1 space-y-4">
-                    <!-- Ship Status -->
-                    <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
-                        <h3 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-4 flex items-center">
-                            <i class="fas fa-rocket mr-2"></i>宇宙船ステータス
-                        </h3>
-                        
-                        <div class="space-y-4">
-                            <!-- Speed -->
-                            <div>
-                                <div class="flex justify-between text-sm mb-1">
-                                    <span>スピード</span>
-                                    <span id="currentWPM" class="text-energy-green font-bold">0 WPM</span>
-                                </div>
-                                <div class="w-full bg-gray-700 rounded-full h-3">
-                                    <div id="speedBar" class="progress-bar h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
-                                </div>
-                            </div>
-                            
-                            <!-- Fuel (Accuracy) -->
-                            <div>
-                                <div class="flex justify-between text-sm mb-1">
-                                    <span>燃料効率</span>
-                                    <span id="currentAccuracy" class="text-cosmic-cyan font-bold">100%</span>
-                                </div>
-                                <div class="w-full bg-gray-700 rounded-full h-3">
-                                    <div id="fuelBar" class="bg-cosmic-cyan h-3 rounded-full transition-all duration-300" style="width: 100%"></div>
-                                </div>
-                            </div>
-                            
-                            <!-- Shields (Combo) -->
-                            <div>
-                                <div class="flex justify-between text-sm mb-1">
-                                    <span>シールド</span>
-                                    <span id="currentCombo" class="text-planet-orange font-bold">0x</span>
-                                </div>
-                                <div class="w-full bg-gray-700 rounded-full h-3">
-                                    <div id="shieldBar" class="bg-planet-orange h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
-                                </div>
-                            </div>
+                <div class="planets-grid">
+                    <div class="planet-card" data-planet="mercury">
+                        <img src="images/planets/mercury.jpg" alt="水星" class="planet-image" loading="lazy">
+                        <h3 class="planet-name">水星 (Mercury)</h3>
+                        <p class="planet-description">短い文章で基本を練習。初心者向け。</p>
+                    </div>
+                    
+                    <div class="planet-card" data-planet="venus">
+                        <img src="images/planets/venus.jpg" alt="金星" class="planet-image" loading="lazy">
+                        <h3 class="planet-name">金星 (Venus)</h3>
+                        <p class="planet-description">中程度の難易度。実践的な文章。</p>
+                    </div>
+                    
+                    <div class="planet-card" data-planet="earth">
+                        <img src="images/planets/earth.jpg" alt="地球" class="planet-image" loading="lazy">
+                        <h3 class="planet-name">地球 (Earth)</h3>
+                        <p class="planet-description">標準的な難易度。バランスの取れた練習。</p>
+                    </div>
+                    
+                    <div class="planet-card" data-planet="mars">
+                        <img src="images/planets/mars.jpg" alt="火星" class="planet-image" loading="lazy">
+                        <h3 class="planet-name">火星 (Mars)</h3>
+                        <p class="planet-description">上級者向け。複雑な文章と専門用語。</p>
+                    </div>
+                    
+                    <div class="planet-card" data-planet="jupiter">
+                        <img src="images/planets/jupiter.jpg" alt="木星" class="planet-image" loading="lazy">
+                        <h3 class="planet-name">木星 (Jupiter)</h3>
+                        <p class="planet-description">エキスパート向け。長文と高度な語彙。</p>
+                    </div>
+                    
+                    <div class="planet-card" data-planet="saturn">
+                        <img src="images/planets/saturn.jpg" alt="土星" class="planet-image" loading="lazy">
+                        <h3 class="planet-name">土星 (Saturn)</h3>
+                        <p class="planet-description">マスター向け。最高難易度の挑戦。</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Typing Practice Section -->
+            <section class="typing-practice" style="display: none;">
+                <div class="practice-header">
+                    <div class="planet-info">
+                        <img src="" alt="" class="planet-image-small">
+                        <div>
+                            <h3 class="planet-name">選択された惑星</h3>
+                            <p class="planet-description">タイピング練習を開始します</p>
                         </div>
                     </div>
                     
-                    <!-- Mission Progress -->
-                    <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
-                        <h3 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-4 flex items-center">
-                            <i class="fas fa-globe mr-2"></i>探索進行度
-                        </h3>
-                        
-                        <div class="space-y-3">
-                            <div class="flex justify-between text-sm">
-                                <span>現在の星系</span>
-                                <span id="currentSystem" class="text-planet-orange font-bold">太陽系</span>
-                            </div>
-                            <div class="flex justify-between text-sm">
-                                <span>発見した惑星</span>
-                                <span id="planetsDiscovered" class="text-energy-green font-bold">0/12</span>
-                            </div>
-                            <div class="w-full bg-gray-700 rounded-full h-2">
-                                <div id="explorationBar" class="bg-energy-green h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
-                            </div>
+                    <div class="practice-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">WPM</span>
+                            <span class="stat-value wpm-display">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">精度</span>
+                            <span class="stat-value accuracy-display">100%</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">時間</span>
+                            <span class="stat-value timer-display">00:00</span>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Main Game Area -->
-                <div class="lg:col-span-2 space-y-6">
-                    <!-- Game Mode Selection -->
-                    <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
-                        <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-4 text-center">ミッション選択</h3>
-                        
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                            <button onclick="startMission('basic')" class="mission-btn bg-blue-900 hover:bg-blue-800 p-4 rounded-lg transition-colors border border-blue-500">
-                                <i class="fas fa-graduation-cap text-2xl text-cosmic-cyan mb-2"></i>
-                                <div class="font-bold">基礎訓練</div>
-                                <div class="text-sm text-gray-400">基本的なタイピング練習</div>
-                            </button>
-                            
-                            <button onclick="startMission('exploration')" class="mission-btn bg-purple-900 hover:bg-purple-800 p-4 rounded-lg transition-colors border border-purple-500">
-                                <i class="fas fa-rocket text-2xl text-planet-orange mb-2"></i>
-                                <div class="font-bold">惑星探索</div>
-                                <div class="text-sm text-gray-400">新しい惑星を発見</div>
-                            </button>
-                            
-                            <button onclick="startMission('speed')" class="mission-btn bg-green-900 hover:bg-green-800 p-4 rounded-lg transition-colors border border-green-500">
-                                <i class="fas fa-bolt text-2xl text-energy-green mb-2"></i>
-                                <div class="font-bold">高速航行</div>
-                                <div class="text-sm text-gray-400">スピード重視の訓練</div>
-                            </button>
-                            
-                            <button onclick="startMission('accuracy')" class="mission-btn bg-red-900 hover:bg-red-800 p-4 rounded-lg transition-colors border border-red-500">
-                                <i class="fas fa-crosshairs text-2xl text-red-400 mb-2"></i>
-                                <div class="font-bold">精密制御</div>
-                                <div class="text-sm text-gray-400">正確性を重視した訓練</div>
-                            </button>
+
+                <div class="typing-area">
+                    <div class="text-display">
+                        <div class="text-content" id="text-display">
+                            惑星を選択してタイピング練習を開始してください。
                         </div>
                     </div>
                     
-                    <!-- Typing Interface -->
-                    <div id="typingInterface" class="bg-cosmic-card rounded-xl p-6 border border-blue-500 hidden">
-                        <!-- Timer and Stats -->
-                        <div class="flex justify-between items-center mb-6">
-                            <div class="text-center">
-                                <div class="text-2xl font-orbitron font-bold text-cosmic-cyan" id="gameTimer">60</div>
-                                <div class="text-sm text-gray-400">秒</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-xl font-bold text-energy-green" id="liveWPM">0</div>
-                                <div class="text-sm text-gray-400">WPM</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-xl font-bold text-cosmic-cyan" id="liveAccuracy">100%</div>
-                                <div class="text-sm text-gray-400">正確率</div>
-                            </div>
-                        </div>
-                        
-                        <!-- Text Display -->
-                        <div id="textDisplay" class="typing-display bg-gray-900 p-6 rounded-lg mb-4 border border-gray-600 min-h-32">
-                            <!-- Text will be dynamically inserted here -->
-                        </div>
-                        
-                        <!-- Input Area -->
-                        <div class="relative">
-                            <textarea 
-                                id="typingInput" 
-                                class="w-full bg-gray-800 text-white p-4 rounded-lg border border-gray-600 focus:border-cosmic-cyan focus:outline-none resize-none" 
-                                rows="3" 
-                                placeholder="ここに入力してください..."
-                                disabled
-                            ></textarea>
-                        </div>
-                        
-                        <!-- Game Controls -->
-                        <div class="flex justify-center space-x-4 mt-4">
-                            <button onclick="startTyping()" id="startBtn" class="bg-energy-green hover:bg-green-600 px-6 py-2 rounded-lg font-bold transition-colors">
-                                <i class="fas fa-play mr-2"></i>開始
-                            </button>
-                            <button onclick="pauseTyping()" id="pauseBtn" class="bg-planet-orange hover:bg-orange-600 px-6 py-2 rounded-lg font-bold transition-colors hidden">
-                                <i class="fas fa-pause mr-2"></i>一時停止
-                            </button>
-                            <button onclick="resetTyping()" id="resetBtn" class="bg-gray-600 hover:bg-gray-700 px-6 py-2 rounded-lg font-bold transition-colors">
-                                <i class="fas fa-redo mr-2"></i>リセット
-                            </button>
-                        </div>
+                    <div class="input-area">
+                        <textarea 
+                            class="typing-input" 
+                            id="typing-input" 
+                            placeholder="ここにタイピングしてください..."
+                            disabled
+                            aria-label="タイピング入力エリア"
+                        ></textarea>
                     </div>
                     
-                    <!-- Results Panel -->
-                    <div id="resultsPanel" class="bg-cosmic-card rounded-xl p-6 border border-blue-500 hidden">
-                        <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-4 text-center">ミッション完了!</h3>
-                        
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-energy-green" id="finalWPM">0</div>
-                                <div class="text-sm text-gray-400">WPM</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-cosmic-cyan" id="finalAccuracy">0%</div>
-                                <div class="text-sm text-gray-400">正確率</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-planet-orange" id="finalCombo">0x</div>
-                                <div class="text-sm text-gray-400">最大コンボ</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-purple-400" id="earnedXP">0</div>
-                                <div class="text-sm text-gray-400">獲得XP</div>
-                            </div>
-                        </div>
-                        
-                        <div class="flex justify-center space-x-4">
-                            <button onclick="shareResults()" class="bg-cosmic-cyan hover:bg-blue-500 px-6 py-2 rounded-lg font-bold transition-colors">
-                                <i class="fas fa-share mr-2"></i>結果をシェア
-                            </button>
-                            <button onclick="playAgain()" class="bg-energy-green hover:bg-green-600 px-6 py-2 rounded-lg font-bold transition-colors">
-                                <i class="fas fa-play mr-2"></i>もう一度
-                            </button>
-                        </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-bar"></div>
                     </div>
                 </div>
-                
-                <!-- Right Sidebar - Discovery -->
-                <div class="lg:col-span-1 space-y-4">
-                    <!-- Recent Discoveries -->
-                    <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
-                        <h3 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-4 flex items-center">
-                            <i class="fas fa-telescope mr-2"></i>最近の発見
-                        </h3>
-                        
-                        <div id="discoveryList" class="space-y-3">
-                            <div class="text-sm text-gray-400 text-center py-4">
-                                まだ発見はありません<br>
-                                タイピングで宇宙を探索しよう！
-                            </div>
+
+                <div class="practice-controls">
+                    <button class="btn btn-primary" id="start-btn">開始</button>
+                    <button class="btn btn-secondary" id="reset-btn">リセット</button>
+                    <button class="btn btn-secondary" id="back-btn">戻る</button>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results" style="display: none;">
+                <div class="results-content">
+                    <h2>🎉 タイピング完了！</h2>
+                    
+                    <div class="result-stats">
+                        <div class="result-stat">
+                            <span class="result-label">WPM</span>
+                            <span class="result-value" id="result-wpm">0</span>
+                        </div>
+                        <div class="result-stat">
+                            <span class="result-label">精度</span>
+                            <span class="result-value" id="result-accuracy">0%</span>
+                        </div>
+                        <div class="result-stat">
+                            <span class="result-label">総文字数</span>
+                            <span class="result-value" id="result-total-typed">0</span>
+                        </div>
+                        <div class="result-stat">
+                            <span class="result-label">エラー数</span>
+                            <span class="result-value" id="result-total-errors">0</span>
+                        </div>
+                        <div class="result-stat">
+                            <span class="result-label">時間</span>
+                            <span class="result-value" id="result-duration">0秒</span>
+                        </div>
+                        <div class="result-stat">
+                            <span class="result-label">CPM</span>
+                            <span class="result-value" id="result-cpm">0</span>
                         </div>
                     </div>
                     
-                    <!-- Achievements -->
-                    <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
-                        <h3 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-4 flex items-center">
-                            <i class="fas fa-trophy mr-2"></i>実績
-                        </h3>
-                        
-                        <div id="achievementList" class="space-y-2">
-                            <div class="achievement-item p-2 bg-gray-800 rounded flex items-center space-x-3 opacity-50">
-                                <i class="fas fa-medal text-gray-500"></i>
-                                <div class="text-sm">
-                                    <div class="font-bold text-gray-500">初回航行</div>
-                                    <div class="text-xs text-gray-600">最初のタイピングを完了</div>
-                                </div>
-                            </div>
-                            <div class="achievement-item p-2 bg-gray-800 rounded flex items-center space-x-3 opacity-50">
-                                <i class="fas fa-rocket text-gray-500"></i>
-                                <div class="text-sm">
-                                    <div class="font-bold text-gray-500">スピードパイロット</div>
-                                    <div class="text-xs text-gray-600">50 WPMを達成</div>
-                                </div>
-                            </div>
-                            <div class="achievement-item p-2 bg-gray-800 rounded flex items-center space-x-3 opacity-50">
-                                <i class="fas fa-globe text-gray-500"></i>
-                                <div class="text-sm">
-                                    <div class="font-bold text-gray-500">惑星発見者</div>
-                                    <div class="text-xs text-gray-600">最初の惑星を発見</div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="result-actions">
+                        <button class="btn btn-primary" id="retry-btn">再挑戦</button>
+                        <button class="btn btn-secondary" id="new-planet-btn">別の惑星</button>
+                        <button class="btn btn-secondary" id="share-btn">結果を共有</button>
                     </div>
                 </div>
-            </div>
-        </section>
-        
-        <!-- Statistics Section -->
-        <section id="statsSection" class="section-content hidden">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                
-                <!-- Performance Overview -->
-                <div class="lg:col-span-2">
-                    <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500 mb-6">
-                        <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-6">パフォーマンス推移</h3>
-                        <div class="chart-container" style="height: 400px; width: 100%;">
-                            <canvas id="performanceChart"></canvas>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
-                        <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-6">キー別統計</h3>
-                        <div class="chart-container" style="height: 300px; width: 100%;">
-                            <canvas id="keyStatsChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Statistics Summary -->
-                <div class="space-y-6">
-                    <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
-                        <h3 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-4">総合統計</h3>
-                        
-                        <div class="space-y-4">
-                            <div class="flex justify-between">
-                                <span>最高WPM</span>
-                                <span class="font-bold text-energy-green" id="bestWPM">0</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span>平均WPM</span>
-                                <span class="font-bold text-cosmic-cyan" id="avgWPM">0</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span>最高正確率</span>
-                                <span class="font-bold text-planet-orange" id="bestAccuracy">0%</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span>総練習時間</span>
-                                <span class="font-bold text-purple-400" id="totalTime">0分</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span>セッション数</span>
-                                <span class="font-bold text-gray-300" id="totalSessions">0</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
-                        <h3 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-4">探索記録</h3>
-                        
-                        <div class="space-y-4">
-                            <div class="flex justify-between">
-                                <span>発見した惑星</span>
-                                <span class="font-bold text-energy-green" id="totalPlanets">0</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span>探索した星系</span>
-                                <span class="font-bold text-cosmic-cyan" id="totalSystems">1</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span>獲得経験値</span>
-                                <span class="font-bold text-planet-orange" id="totalXP">0</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span>現在のレベル</span>
-                                <span class="font-bold text-purple-400" id="currentLevel">1</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
-                        <h3 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-4">苦手キー分析</h3>
-                        <div id="weakKeys" class="space-y-2">
-                            <div class="text-sm text-gray-400 text-center py-4">
-                                データが不足しています<br>
-                                もっと練習しましょう！
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Fleet Section -->
-        <section id="fleetSection" class="section-content hidden">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                
-                <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
-                    <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-6">保有宇宙船</h3>
-                    
-                    <div class="space-y-4">
-                        <div class="ship-card bg-gray-800 p-4 rounded-lg border border-blue-500 border-l-4 border-l-energy-green">
-                            <div class="flex justify-between items-start mb-2">
-                                <h4 class="font-bold text-energy-green">スターターシップ</h4>
-                                <span class="text-xs bg-energy-green text-black px-2 py-1 rounded">ACTIVE</span>
-                            </div>
-                            <div class="text-sm text-gray-400 mb-3">基本的な練習用宇宙船</div>
-                            <div class="grid grid-cols-2 gap-2 text-sm">
-                                <div>スピード: +0%</div>
-                                <div>燃料効率: +0%</div>
-                                <div>シールド: +0%</div>
-                                <div>XP倍率: x1.0</div>
-                            </div>
-                        </div>
-                        
-                        <div class="ship-card bg-gray-800 p-4 rounded-lg border border-gray-600 opacity-50">
-                            <div class="flex justify-between items-start mb-2">
-                                <h4 class="font-bold text-gray-500">スピードクルーザー</h4>
-                                <span class="text-xs bg-gray-600 text-gray-400 px-2 py-1 rounded">LOCKED</span>
-                            </div>
-                            <div class="text-sm text-gray-500 mb-3">高速移動に特化した宇宙船</div>
-                            <div class="grid grid-cols-2 gap-2 text-sm text-gray-500">
-                                <div>スピード: +15%</div>
-                                <div>燃料効率: -5%</div>
-                                <div>シールド: +0%</div>
-                                <div>XP倍率: x1.2</div>
-                            </div>
-                            <div class="text-xs text-planet-orange mt-2">解放条件: 平均WPM 40以上</div>
-                        </div>
-                        
-                        <div class="ship-card bg-gray-800 p-4 rounded-lg border border-gray-600 opacity-50">
-                            <div class="flex justify-between items-start mb-2">
-                                <h4 class="font-bold text-gray-500">エクスプローラー</h4>
-                                <span class="text-xs bg-gray-600 text-gray-400 px-2 py-1 rounded">LOCKED</span>
-                            </div>
-                            <div class="text-sm text-gray-500 mb-3">探索に最適化された宇宙船</div>
-                            <div class="grid grid-cols-2 gap-2 text-sm text-gray-500">
-                                <div>スピード: +5%</div>
-                                <div>燃料効率: +20%</div>
-                                <div>シールド: +10%</div>
-                                <div>XP倍率: x1.5</div>
-                            </div>
-                            <div class="text-xs text-planet-orange mt-2">解放条件: 惑星5個発見</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
-                    <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-6">宇宙船強化</h3>
-                    
-                    <div class="space-y-6">
-                        <!-- Engine Upgrade -->
-                        <div class="upgrade-section">
-                            <div class="flex justify-between items-center mb-2">
-                                <h4 class="font-bold text-white">エンジン</h4>
-                                <span class="text-sm text-gray-400">Lv. <span id="engineLevel">1</span>/5</span>
-                            </div>
-                            <div class="w-full bg-gray-700 rounded-full h-2 mb-2">
-                                <div id="engineProgress" class="bg-energy-green h-2 rounded-full" style="width: 20%"></div>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-400">タイピング速度 +5%</span>
-                                <button class="bg-energy-green hover:bg-green-600 px-3 py-1 rounded text-sm font-bold transition-colors">
-                                    強化 (100 XP)
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Fuel System Upgrade -->
-                        <div class="upgrade-section">
-                            <div class="flex justify-between items-center mb-2">
-                                <h4 class="font-bold text-white">燃料システム</h4>
-                                <span class="text-sm text-gray-400">Lv. <span id="fuelLevel">1</span>/5</span>
-                            </div>
-                            <div class="w-full bg-gray-700 rounded-full h-2 mb-2">
-                                <div id="fuelProgress" class="bg-cosmic-cyan h-2 rounded-full" style="width: 20%"></div>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-400">正確率ボーナス +2%</span>
-                                <button class="bg-cosmic-cyan hover:bg-blue-500 px-3 py-1 rounded text-sm font-bold transition-colors">
-                                    強化 (150 XP)
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Shield Upgrade -->
-                        <div class="upgrade-section">
-                            <div class="flex justify-between items-center mb-2">
-                                <h4 class="font-bold text-white">シールド</h4>
-                                <span class="text-sm text-gray-400">Lv. <span id="shieldLevel">1</span>/5</span>
-                            </div>
-                            <div class="w-full bg-gray-700 rounded-full h-2 mb-2">
-                                <div id="shieldProgress" class="bg-planet-orange h-2 rounded-full" style="width: 20%"></div>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-gray-400">ミス時ペナルティ -10%</span>
-                                <button class="bg-planet-orange hover:bg-orange-600 px-3 py-1 rounded text-sm font-bold transition-colors">
-                                    強化 (200 XP)
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Settings Section -->
-        <section id="settingsSection" class="section-content hidden">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                
-                <!-- Game Settings -->
-                <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
-                    <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-6">ゲーム設定</h3>
-                    
-                    <div class="space-y-6">
-                        <!-- Language -->
-                        <div>
-                            <label class="block text-sm font-bold mb-2">言語 / Language</label>
-                            <select id="languageSelect" class="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-cosmic-cyan focus:outline-none">
-                                <option value="ja">日本語</option>
-                                <option value="en">English</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Font Size -->
-                        <div>
-                            <label class="block text-sm font-bold mb-2">文字サイズ</label>
-                            <select id="fontSizeSelect" class="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-cosmic-cyan focus:outline-none">
-                                <option value="xs">極小</option>
-                                <option value="sm">小</option>
-                                <option value="md" selected>標準</option>
-                                <option value="lg">大</option>
-                                <option value="xl">特大</option>
-                            </select>
-                        </div>
-                        
-                        <!-- Sound Effects -->
-                        <div>
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="soundEffects" class="w-4 h-4 text-cosmic-cyan bg-gray-800 border border-gray-600 rounded focus:ring-cosmic-cyan">
-                                <span>効果音を有効にする</span>
-                            </label>
-                        </div>
-                        
-                        <!-- Background Music -->
-                        <div>
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="backgroundMusic" class="w-4 h-4 text-cosmic-cyan bg-gray-800 border border-gray-600 rounded focus:ring-cosmic-cyan">
-                                <span>BGMを有効にする</span>
-                            </label>
-                        </div>
-                        
-                        <!-- Auto-save -->
-                        <div>
-                            <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="autoSave" checked class="w-4 h-4 text-cosmic-cyan bg-gray-800 border border-gray-600 rounded focus:ring-cosmic-cyan">
-                                <span>自動保存を有効にする</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Account & Data -->
-                <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
-                    <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-6">アカウント・データ管理</h3>
-                    
-                    <div class="space-y-6">
-                        <!-- User Profile -->
-                        <div>
-                            <label class="block text-sm font-bold mb-2">パイロット名</label>
-                            <input type="text" id="pilotName" value="宇宙探険家" class="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-cosmic-cyan focus:outline-none">
-                        </div>
-                        
-                        <!-- Export Data -->
-                        <div>
-                            <h4 class="font-bold mb-2">データのエクスポート</h4>
-                            <button onclick="exportData()" class="bg-cosmic-cyan hover:bg-blue-500 px-4 py-2 rounded-lg font-bold transition-colors w-full">
-                                <i class="fas fa-download mr-2"></i>データをダウンロード
-                            </button>
-                        </div>
-                        
-                        <!-- Import Data -->
-                        <div>
-                            <h4 class="font-bold mb-2">データのインポート</h4>
-                            <input type="file" id="importFile" accept=".json" class="hidden">
-                            <button onclick="document.getElementById('importFile').click()" class="bg-energy-green hover:bg-green-600 px-4 py-2 rounded-lg font-bold transition-colors w-full">
-                                <i class="fas fa-upload mr-2"></i>データをアップロード
-                            </button>
-                        </div>
-                        
-                        <!-- Reset Data -->
-                        <div>
-                            <h4 class="font-bold mb-2 text-red-400">データのリセット</h4>
-                            <button onclick="resetAllData()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-bold transition-colors w-full">
-                                <i class="fas fa-exclamation-triangle mr-2"></i>全データを削除
-                            </button>
-                            <p class="text-xs text-gray-400 mt-1">※この操作は取り消せません</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+            </section>
+        </div>
     </main>
 
-    <!-- JavaScript -->
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 Cosmic Typing Adventure. All rights reserved.</p>
+            <nav class="footer-nav">
+                <a href="privacy.html">プライバシーポリシー</a>
+                <a href="terms.html">利用規約</a>
+                <a href="contact.html">お問い合わせ</a>
+            </nav>
+        </div>
+    </footer>
+
+    <!-- Security Status Indicator -->
+    <div id="security-status" class="security-status" style="display: none;">
+        <span class="security-indicator"></span>
+        <span class="security-text">セキュリティ保護中</span>
+    </div>
+
+    <!-- Error Messages -->
+    <div id="error-messages" class="error-messages" style="display: none;">
+        <div class="error-message">
+            <span class="error-icon">⚠️</span>
+            <span class="error-text"></span>
+            <button class="error-close">×</button>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" class="loading-spinner" style="display: none;">
+        <div class="spinner"></div>
+        <p>読み込み中...</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/security-utils.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/typing-engine.js"></script>
+    <script src="js/app.js"></script>
+    
+    <!-- Security initialization -->
     <script>
-        // Global Variables
-        let currentLanguage = 'ja';
-        let currentFontSize = 'md';
-        let gameState = {
-            isPlaying: false,
-            isPaused: false,
-            currentText: '',
-            currentPosition: 0,
-            startTime: null,
-            endTime: null,
-            timer: null,
-            timeLimit: 60,
-            wpm: 0,
-            accuracy: 100,
-            combo: 0,
-            maxCombo: 0,
-            correctChars: 0,
-            incorrectChars: 0,
-            totalChars: 0
-        };
-        
-        let userStats = {
-            level: 1,
-            xp: 0,
-            totalSessions: 0,
-            totalTime: 0,
-            bestWPM: 0,
-            avgWPM: 0,
-            bestAccuracy: 0,
-            planetsDiscovered: 0,
-            weakKeys: {},
-            achievements: [],
-            ships: ['starter'],
-            activeShip: 'starter',
-            upgrades: {
-                engine: 1,
-                fuel: 1,
-                shield: 1
-            }
-        };
-        
-        // Sample texts for typing practice
-        const practiceTexts = {
-            basic: [
-                "こんにちは。今日はいい天気ですね。",
-                "プログラミングは楽しいです。",
-                "宇宙には無数の星があります。",
-                "Hello world. This is a basic typing test.",
-                "The quick brown fox jumps over the lazy dog."
-            ],
-            exploration: [
-                "宇宙船は静かに星々の間を航行している。遠くに青い惑星が見える。",
-                "新しい太陽系を発見した。三つの恒星が複雑な軌道を描いている。",
-                "この惑星には豊富な水と酸素がある。生命体の存在が期待される。",
-                "The spaceship glides silently through the cosmic void, searching for new worlds.",
-                "Distant galaxies spiral in the darkness, each containing billions of stars."
-            ],
-            speed: [
-                "速い茶色のキツネが怠惰な犬を飛び越える。",
-                "今すぐタイピング速度を向上させよう。",
-                "Quick typing skills are essential for modern computing.",
-                "Fast fingers make light work of lengthy documents."
-            ],
-            accuracy: [
-                "正確性を重視したタイピング練習。一文字一文字丁寧に入力しましょう。",
-                "プログラミングではミスが致命的になることがあります。",
-                "Precision in typing prevents errors in code and communication.",
-                "Accuracy trumps speed when quality matters most."
-            ]
-        };
-        
-        // Planets that can be discovered
-        const planets = [
-            { name: "アクアリア", type: "水の惑星", rarity: "common" },
-            { name: "フレイムワールド", type: "火山惑星", rarity: "common" },
-            { name: "アイスクリスタル", type: "氷の惑星", rarity: "common" },
-            { name: "ネビュラロック", type: "岩石惑星", rarity: "uncommon" },
-            { name: "ガスジャイアント", type: "ガス惑星", rarity: "uncommon" },
-            { name: "クリスタルワールド", type: "水晶惑星", rarity: "rare" },
-            { name: "プラズマコア", type: "プラズマ惑星", rarity: "rare" },
-            { name: "ヴォイドシード", type: "暗黒惑星", rarity: "legendary" },
-            { name: "セレスティア", type: "天界の惑星", rarity: "legendary" }
-        ];
-        
-        // Initialize app
+        // Initialize security features
         document.addEventListener('DOMContentLoaded', function() {
-            loadUserData();
-            updateUI();
-            setupEventListeners();
-            initializeCharts();
-            
-            // Load language preference
-            const savedLang = localStorage.getItem('cosmicTyping_language');
-            if (savedLang) {
-                currentLanguage = savedLang;
-                document.getElementById('languageSelect').value = savedLang;
-                updateLanguage();
+            // Show security status if security features are available
+            if (window.SecurityUtils && window.SecurityMonitoring) {
+                const securityStatus = document.getElementById('security-status');
+                if (securityStatus) {
+                    securityStatus.style.display = 'block';
+                }
             }
             
-            // Load font size preference
-            const savedFontSize = localStorage.getItem('cosmicTyping_fontSize');
-            if (savedFontSize) {
-                currentFontSize = savedFontSize;
-                document.getElementById('fontSizeSelect').value = savedFontSize;
-                updateFontSize();
-            }
+            // Setup error handling
+            window.addEventListener('error', function(event) {
+                console.error('Application error:', event.error);
+                showErrorMessage('アプリケーションエラーが発生しました。ページを再読み込みしてください。');
+            });
             
-            console.log('Cosmic Typing Adventure initialized!');
+            // Setup unhandled promise rejection handling
+            window.addEventListener('unhandledrejection', function(event) {
+                console.error('Unhandled promise rejection:', event.reason);
+                showErrorMessage('予期しないエラーが発生しました。');
+            });
         });
         
-        // Setup event listeners
-        function setupEventListeners() {
-            // Language change
-            document.getElementById('languageSelect').addEventListener('change', function() {
-                currentLanguage = this.value;
-                localStorage.setItem('cosmicTyping_language', currentLanguage);
-                updateLanguage();
-            });
+        // Error message display function
+        function showErrorMessage(message) {
+            const errorContainer = document.getElementById('error-messages');
+            const errorText = errorContainer.querySelector('.error-text');
             
-            // Font size change
-            document.getElementById('fontSizeSelect').addEventListener('change', function() {
-                currentFontSize = this.value;
-                localStorage.setItem('cosmicTyping_fontSize', currentFontSize);
-                updateFontSize();
-            });
-            
-            // Typing input
-            document.getElementById('typingInput').addEventListener('input', handleTypingInput);
-            document.getElementById('typingInput').addEventListener('keydown', handleKeyDown);
-            
-            // Import file
-            document.getElementById('importFile').addEventListener('change', importData);
-            
-            // Auto-save
-            setInterval(saveUserData, 10000); // Save every 10 seconds
-        }
-        
-        // Update font size
-        function updateFontSize() {
-            document.body.className = document.body.className.replace(/font-size-\w+/, '');
-            document.body.classList.add(`font-size-${currentFontSize}`);
-        }
-        
-        // Navigation functions
-        function showSection(sectionName) {
-            // Hide all sections
-            const sections = document.querySelectorAll('.section-content');
-            sections.forEach(section => section.classList.add('hidden'));
-            
-            // Show selected section
-            document.getElementById(sectionName + 'Section').classList.remove('hidden');
-            
-            // Update navigation
-            const navButtons = document.querySelectorAll('.nav-btn');
-            navButtons.forEach(btn => btn.classList.remove('text-cosmic-cyan'));
-            
-            // Special handling for stats section
-            if (sectionName === 'stats') {
-                setTimeout(updateCharts, 100);
-            }
-            
-            console.log(`Switched to ${sectionName} section`);
-        }
-        
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobileMenu');
-            menu.classList.toggle('open');
-        }
-        
-        function closeMobileMenu() {
-            const menu = document.getElementById('mobileMenu');
-            menu.classList.remove('open');
-        }
-        
-        function toggleLanguage() {
-            currentLanguage = currentLanguage === 'ja' ? 'en' : 'ja';
-            document.getElementById('languageSelect').value = currentLanguage;
-            localStorage.setItem('cosmicTyping_language', currentLanguage);
-            updateLanguage();
-        }
-        
-        function updateLanguage() {
-            const langToggle = document.getElementById('langToggle');
-            langToggle.textContent = currentLanguage === 'ja' ? 'EN' : '日本語';
-            
-            // Here you would update all text content based on language
-            // For now, keeping it simple
-            console.log(`Language changed to ${currentLanguage}`);
-        }
-        
-        // Mission functions
-        function startMission(type) {
-            console.log(`Starting mission: ${type}`);
-            
-            // Hide mission selection
-            const missionBtns = document.querySelectorAll('.mission-btn');
-            missionBtns.forEach(btn => btn.style.display = 'none');
-            
-            // Show typing interface
-            document.getElementById('typingInterface').classList.remove('hidden');
-            
-            // Select random text based on mission type
-            const texts = practiceTexts[type] || practiceTexts.basic;
-            gameState.currentText = texts[Math.floor(Math.random() * texts.length)];
-            
-            // Display text
-            displayText();
-            
-            // Enable input
-            document.getElementById('typingInput').disabled = false;
-            document.getElementById('typingInput').focus();
-        }
-        
-        function displayText() {
-            const textDisplay = document.getElementById('textDisplay');
-            let html = '';
-            
-            for (let i = 0; i < gameState.currentText.length; i++) {
-                const char = gameState.currentText[i];
-                let className = '';
+            if (errorContainer && errorText) {
+                errorText.textContent = message;
+                errorContainer.style.display = 'block';
                 
-                if (i < gameState.currentPosition) {
-                    className = 'correct-char';
-                } else if (i === gameState.currentPosition) {
-                    className = 'current-char';
-                }
-                
-                html += `<span class="${className}">${char === ' ' ? '&nbsp;' : char}</span>`;
-            }
-            
-            textDisplay.innerHTML = html;
-        }
-        
-        function startTyping() {
-            if (!gameState.isPlaying) {
-                gameState.isPlaying = true;
-                gameState.startTime = Date.now();
-                gameState.timer = setInterval(updateTimer, 100);
-                
-                document.getElementById('startBtn').classList.add('hidden');
-                document.getElementById('pauseBtn').classList.remove('hidden');
-                document.getElementById('typingInput').disabled = false;
-                document.getElementById('typingInput').focus();
-                
-                console.log('Typing started!');
+                // Auto-hide after 5 seconds
+                setTimeout(() => {
+                    errorContainer.style.display = 'none';
+                }, 5000);
             }
         }
         
-        function pauseTyping() {
-            if (gameState.isPlaying && !gameState.isPaused) {
-                gameState.isPaused = true;
-                clearInterval(gameState.timer);
-                document.getElementById('typingInput').disabled = true;
-                document.getElementById('pauseBtn').textContent = '再開';
-                console.log('Typing paused');
-            } else if (gameState.isPaused) {
-                gameState.isPaused = false;
-                gameState.timer = setInterval(updateTimer, 100);
-                document.getElementById('typingInput').disabled = false;
-                document.getElementById('typingInput').focus();
-                document.getElementById('pauseBtn').textContent = '一時停止';
-                console.log('Typing resumed');
-            }
-        }
-        
-        function resetTyping() {
-            // Reset game state
-            gameState.isPlaying = false;
-            gameState.isPaused = false;
-            gameState.currentPosition = 0;
-            gameState.startTime = null;
-            gameState.endTime = null;
-            gameState.wpm = 0;
-            gameState.accuracy = 100;
-            gameState.combo = 0;
-            gameState.correctChars = 0;
-            gameState.incorrectChars = 0;
-            gameState.totalChars = 0;
-            
-            if (gameState.timer) {
-                clearInterval(gameState.timer);
-                gameState.timer = null;
-            }
-            
-            // Reset UI
-            document.getElementById('gameTimer').textContent = gameState.timeLimit;
-            document.getElementById('typingInput').value = '';
-            document.getElementById('typingInput').disabled = true;
-            document.getElementById('startBtn').classList.remove('hidden');
-            document.getElementById('pauseBtn').classList.add('hidden');
-            document.getElementById('pauseBtn').textContent = '一時停止';
-            
-            // Show mission selection again
-            const missionBtns = document.querySelectorAll('.mission-btn');
-            missionBtns.forEach(btn => btn.style.display = 'block');
-            
-            document.getElementById('typingInterface').classList.add('hidden');
-            document.getElementById('resultsPanel').classList.add('hidden');
-            
-            updateShipStatus();
-            displayText();
-            
-            console.log('Typing reset');
-        }
-        
-        function handleTypingInput(event) {
-            if (!gameState.isPlaying || gameState.isPaused) return;
-            
-            const input = event.target.value;
-            const expectedText = gameState.currentText.slice(0, input.length);
-            
-            // Check accuracy
-            let correct = 0;
-            let incorrect = 0;
-            
-            for (let i = 0; i < input.length; i++) {
-                if (i < gameState.currentText.length && input[i] === gameState.currentText[i]) {
-                    correct++;
-                    
-                    // Update combo
-                    if (i >= gameState.currentPosition) {
-                        gameState.combo++;
-                        gameState.maxCombo = Math.max(gameState.maxCombo, gameState.combo);
-                    }
-                } else {
-                    incorrect++;
-                    gameState.combo = 0; // Reset combo on mistake
-                    
-                    // Track weak keys
-                    const wrongChar = gameState.currentText[i];
-                    if (wrongChar && wrongChar !== ' ') {
-                        userStats.weakKeys[wrongChar] = (userStats.weakKeys[wrongChar] || 0) + 1;
-                    }
-                }
-            }
-            
-            gameState.correctChars = correct;
-            gameState.incorrectChars = incorrect;
-            gameState.totalChars = input.length;
-            gameState.currentPosition = input.length;
-            
-            // Calculate WPM and accuracy
-            const timeElapsed = (Date.now() - gameState.startTime) / 1000 / 60; // minutes
-            gameState.wpm = timeElapsed > 0 ? Math.round((correct / 5) / timeElapsed) : 0;
-            gameState.accuracy = gameState.totalChars > 0 ? Math.round((correct / gameState.totalChars) * 100) : 100;
-            
-            // Update display
-            displayText();
-            updateShipStatus();
-            updateLiveStats();
-            
-            // Check if text is completed
-            if (input.length >= gameState.currentText.length) {
-                completeTyping();
-            }
-        }
-        
-        function handleKeyDown(event) {
-            // Start typing automatically on first keypress
-            if (!gameState.isPlaying && !gameState.isPaused) {
-                startTyping();
-            }
-        }
-        
-        function updateTimer() {
-            const elapsed = (Date.now() - gameState.startTime) / 1000;
-            const remaining = Math.max(0, gameState.timeLimit - elapsed);
-            
-            document.getElementById('gameTimer').textContent = Math.ceil(remaining);
-            
-            if (remaining <= 0) {
-                completeTyping();
-            }
-        }
-        
-        function updateLiveStats() {
-            document.getElementById('liveWPM').textContent = gameState.wpm;
-            document.getElementById('liveAccuracy').textContent = gameState.accuracy + '%';
-        }
-        
-        function updateShipStatus() {
-            // Update WPM (Speed)
-            document.getElementById('currentWPM').textContent = gameState.wpm + ' WPM';
-            const speedPercent = Math.min(100, (gameState.wpm / 100) * 100);
-            document.getElementById('speedBar').style.width = speedPercent + '%';
-            
-            // Update Accuracy (Fuel)
-            document.getElementById('currentAccuracy').textContent = gameState.accuracy + '%';
-            document.getElementById('fuelBar').style.width = gameState.accuracy + '%';
-            
-            // Update Combo (Shield)
-            document.getElementById('currentCombo').textContent = gameState.combo + 'x';
-            const shieldPercent = Math.min(100, (gameState.combo / 20) * 100);
-            document.getElementById('shieldBar').style.width = shieldPercent + '%';
-        }
-        
-        function completeTyping() {
-            gameState.isPlaying = false;
-            gameState.endTime = Date.now();
-            
-            if (gameState.timer) {
-                clearInterval(gameState.timer);
-                gameState.timer = null;
-            }
-            
-            // Calculate final stats
-            const timeElapsed = (gameState.endTime - gameState.startTime) / 1000;
-            const finalWPM = Math.round((gameState.correctChars / 5) / (timeElapsed / 60));
-            const finalAccuracy = Math.round((gameState.correctChars / gameState.totalChars) * 100);
-            
-            // Calculate XP earned
-            let earnedXP = Math.round(finalWPM * (finalAccuracy / 100) * (gameState.maxCombo / 10 + 1));
-            
-            // Update user stats
-            userStats.totalSessions++;
-            userStats.totalTime += Math.round(timeElapsed);
-            userStats.bestWPM = Math.max(userStats.bestWPM, finalWPM);
-            userStats.avgWPM = Math.round((userStats.avgWPM * (userStats.totalSessions - 1) + finalWPM) / userStats.totalSessions);
-            userStats.bestAccuracy = Math.max(userStats.bestAccuracy, finalAccuracy);
-            userStats.xp += earnedXP;
-            
-            // Level up check
-            const requiredXP = userStats.level * 1000;
-            if (userStats.xp >= requiredXP) {
-                userStats.level++;
-                userStats.xp -= requiredXP;
-                showLevelUpEffect();
-            }
-            
-            // Chance to discover a planet
-            if (Math.random() < 0.3 && finalWPM > 20) { // 30% chance if WPM > 20
-                discoverPlanet();
-            }
-            
-            // Show results
-            document.getElementById('finalWPM').textContent = finalWPM;
-            document.getElementById('finalAccuracy').textContent = finalAccuracy + '%';
-            document.getElementById('finalCombo').textContent = gameState.maxCombo + 'x';
-            document.getElementById('earnedXP').textContent = earnedXP;
-            
-            document.getElementById('typingInterface').classList.add('hidden');
-            document.getElementById('resultsPanel').classList.remove('hidden');
-            
-            // Save progress
-            saveUserData();
-            updateUI();
-            
-            console.log(`Typing completed! WPM: ${finalWPM}, Accuracy: ${finalAccuracy}%, XP: ${earnedXP}`);
-        }
-        
-        function discoverPlanet() {
-            const availablePlanets = planets.filter(p => !userStats.planetsDiscovered.includes(p.name));
-            if (availablePlanets.length === 0) return;
-            
-            // Select planet based on rarity
-            let selectedPlanet;
-            const rand = Math.random();
-            
-            if (rand < 0.5) {
-                selectedPlanet = availablePlanets.find(p => p.rarity === 'common');
-            } else if (rand < 0.8) {
-                selectedPlanet = availablePlanets.find(p => p.rarity === 'uncommon');
-            } else if (rand < 0.95) {
-                selectedPlanet = availablePlanets.find(p => p.rarity === 'rare');
-            } else {
-                selectedPlanet = availablePlanets.find(p => p.rarity === 'legendary');
-            }
-            
-            if (!selectedPlanet) {
-                selectedPlanet = availablePlanets[Math.floor(Math.random() * availablePlanets.length)];
-            }
-            
-            // Add to discovered planets
-            if (!userStats.planetsDiscovered) {
-                userStats.planetsDiscovered = [];
-            }
-            userStats.planetsDiscovered.push(selectedPlanet.name);
-            
-            // Show discovery notification
-            showPlanetDiscovery(selectedPlanet);
-            
-            console.log(`Discovered planet: ${selectedPlanet.name}`);
-        }
-        
-        function showPlanetDiscovery(planet) {
-            const discoveryList = document.getElementById('discoveryList');
-            
-            // Clear placeholder text
-            if (discoveryList.children[0]?.classList.contains('text-gray-400')) {
-                discoveryList.innerHTML = '';
-            }
-            
-            const discovery = document.createElement('div');
-            discovery.className = 'discovery-item p-3 bg-gray-800 rounded-lg border border-planet-orange planet-discovered';
-            discovery.innerHTML = `
-                <div class="flex items-center space-x-3">
-                    <i class="fas fa-globe text-planet-orange text-xl"></i>
-                    <div>
-                        <div class="font-bold text-planet-orange">${planet.name}</div>
-                        <div class="text-xs text-gray-400">${planet.type}</div>
-                        <div class="text-xs text-${planet.rarity === 'legendary' ? 'purple' : planet.rarity === 'rare' ? 'yellow' : 'gray'}-400">${planet.rarity}</div>
-                    </div>
-                </div>
-            `;
-            
-            discoveryList.insertBefore(discovery, discoveryList.firstChild);
-            
-            // Keep only last 5 discoveries visible
-            while (discoveryList.children.length > 5) {
-                discoveryList.removeChild(discoveryList.lastChild);
-            }
-        }
-        
-        function showLevelUpEffect() {
-            // You can add visual effects here
-            console.log(`Level up! Now level ${userStats.level}`);
-        }
-        
-        function playAgain() {
-            resetTyping();
-        }
-        
-        function shareResults() {
-            const wpm = document.getElementById('finalWPM').textContent;
-            const accuracy = document.getElementById('finalAccuracy').textContent;
-            const text = `🚀 Cosmic Typing Adventure 🚀\n\nタイピング速度: ${wpm} WPM\n正確率: ${accuracy}\n\n宇宙を探索しながらタイピングスキルを向上させよう！\n\n#CosmicTypingAdventure #タイピング練習`;
-            
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Cosmic Typing Adventure - 結果',
-                    text: text,
-                    url: window.location.href
-                });
-            } else {
-                // Fallback to copy to clipboard
-                navigator.clipboard.writeText(text).then(() => {
-                    alert('結果をクリップボードにコピーしました！');
-                });
-            }
-        }
-        
-        function updateUI() {
-            // Update user level and XP
-            document.getElementById('userLevel').textContent = `Lv.${userStats.level}`;
-            document.getElementById('userXP').textContent = `${userStats.xp} XP`;
-            
-            // Update exploration progress
-            const totalPlanets = planets.length;
-            const discovered = userStats.planetsDiscovered ? userStats.planetsDiscovered.length : 0;
-            document.getElementById('planetsDiscovered').textContent = `${discovered}/${totalPlanets}`;
-            
-            const explorationPercent = (discovered / totalPlanets) * 100;
-            document.getElementById('explorationBar').style.width = explorationPercent + '%';
-            
-            // Update stats section
-            document.getElementById('bestWPM').textContent = userStats.bestWPM;
-            document.getElementById('avgWPM').textContent = userStats.avgWPM;
-            document.getElementById('bestAccuracy').textContent = userStats.bestAccuracy + '%';
-            document.getElementById('totalTime').textContent = Math.round(userStats.totalTime / 60) + '分';
-            document.getElementById('totalSessions').textContent = userStats.totalSessions;
-            document.getElementById('totalPlanets').textContent = discovered;
-            document.getElementById('totalXP').textContent = userStats.xp;
-            document.getElementById('currentLevel').textContent = userStats.level;
-            
-            // Update weak keys
-            updateWeakKeysDisplay();
-        }
-        
-        function updateWeakKeysDisplay() {
-            const weakKeysDiv = document.getElementById('weakKeys');
-            const sortedKeys = Object.entries(userStats.weakKeys)
-                .sort(([,a], [,b]) => b - a)
-                .slice(0, 5);
-            
-            if (sortedKeys.length === 0) {
-                weakKeysDiv.innerHTML = `
-                    <div class="text-sm text-gray-400 text-center py-4">
-                        データが不足しています<br>
-                        もっと練習しましょう！
-                    </div>
-                `;
-                return;
-            }
-            
-            weakKeysDiv.innerHTML = sortedKeys.map(([key, count]) => `
-                <div class="flex justify-between text-sm">
-                    <span class="font-mono bg-gray-800 px-2 py-1 rounded">${key}</span>
-                    <span class="text-red-400">${count}回ミス</span>
-                </div>
-            `).join('');
-        }
-        
-        function initializeCharts() {
-            // Performance Chart
-            const performanceCtx = document.getElementById('performanceChart');
-            if (performanceCtx) {
-                new Chart(performanceCtx, {
-                    type: 'line',
-                    data: {
-                        labels: ['1日前', '2日前', '3日前', '4日前', '5日前', '6日前', '今日'],
-                        datasets: [{
-                            label: 'WPM',
-                            data: [30, 32, 35, 38, 40, 42, 45],
-                            borderColor: '#06b6d4',
-                            backgroundColor: 'rgba(6, 182, 212, 0.1)',
-                            tension: 0.4
-                        }, {
-                            label: '正確率 (%)',
-                            data: [85, 87, 90, 88, 92, 94, 96],
-                            borderColor: '#10b981',
-                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                            tension: 0.4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                labels: {
-                                    color: '#e5e7eb'
-                                }
-                            }
-                        },
-                        scales: {
-                            x: {
-                                ticks: {
-                                    color: '#9ca3af'
-                                },
-                                grid: {
-                                    color: 'rgba(156, 163, 175, 0.2)'
-                                }
-                            },
-                            y: {
-                                beginAtZero: true,
-                                max: 100,
-                                ticks: {
-                                    color: '#9ca3af',
-                                    stepSize: 20
-                                },
-                                grid: {
-                                    color: 'rgba(156, 163, 175, 0.2)'
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-            
-            // Key Stats Chart
-            const keyStatsCtx = document.getElementById('keyStatsChart');
-            if (keyStatsCtx) {
-                new Chart(keyStatsCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-                        datasets: [{
-                            label: '入力回数',
-                            data: [120, 110, 98, 105, 89, 95, 100, 85, 78],
-                            backgroundColor: '#3b82f6'
-                        }, {
-                            label: 'ミス回数',
-                            data: [5, 8, 12, 3, 15, 7, 6, 18, 22],
-                            backgroundColor: '#ef4444'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                labels: {
-                                    color: '#e5e7eb'
-                                }
-                            }
-                        },
-                        scales: {
-                            x: {
-                                ticks: {
-                                    color: '#9ca3af'
-                                },
-                                grid: {
-                                    color: 'rgba(156, 163, 175, 0.2)'
-                                }
-                            },
-                            y: {
-                                beginAtZero: true,
-                                max: 100,
-                                ticks: {
-                                    color: '#9ca3af',
-                                    stepSize: 20
-                                },
-                                grid: {
-                                    color: 'rgba(156, 163, 175, 0.2)'
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-        }
-        
-        function updateCharts() {
-            // Re-initialize charts with current data
-            // This is a simplified version - in a real app, you'd update the existing charts
-            initializeCharts();
-        }
-        
-        function saveUserData() {
-            try {
-                localStorage.setItem('cosmicTyping_userData', JSON.stringify(userStats));
-                console.log('User data saved successfully');
-            } catch (error) {
-                console.error('Failed to save user data:', error);
-            }
-        }
-        
-        function loadUserData() {
-            try {
-                const savedData = localStorage.getItem('cosmicTyping_userData');
-                if (savedData) {
-                    const parsedData = JSON.parse(savedData);
-                    userStats = { ...userStats, ...parsedData };
-                    console.log('User data loaded successfully');
-                }
-            } catch (error) {
-                console.error('Failed to load user data:', error);
-            }
-        }
-        
-        function exportData() {
-            const dataStr = JSON.stringify(userStats, null, 2);
-            const dataBlob = new Blob([dataStr], {type: 'application/json'});
-            const url = URL.createObjectURL(dataBlob);
-            
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'cosmic_typing_data.json';
-            link.click();
-            
-            URL.revokeObjectURL(url);
-            console.log('Data exported successfully');
-        }
-        
-        function importData(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const importedData = JSON.parse(e.target.result);
-                    userStats = { ...userStats, ...importedData };
-                    saveUserData();
-                    updateUI();
-                    alert('データのインポートが完了しました！');
-                    console.log('Data imported successfully');
-                } catch (error) {
-                    alert('無効なファイル形式です。');
-                    console.error('Failed to import data:', error);
-                }
-            };
-            reader.readAsText(file);
-        }
-        
-        function resetAllData() {
-            if (confirm('本当に全データを削除しますか？この操作は取り消せません。')) {
-                localStorage.removeItem('cosmicTyping_userData');
-                userStats = {
-                    level: 1,
-                    xp: 0,
-                    totalSessions: 0,
-                    totalTime: 0,
-                    bestWPM: 0,
-                    avgWPM: 0,
-                    bestAccuracy: 0,
-                    planetsDiscovered: 0,
-                    weakKeys: {},
-                    achievements: [],
-                    ships: ['starter'],
-                    activeShip: 'starter',
-                    upgrades: {
-                        engine: 1,
-                        fuel: 1,
-                        shield: 1
-                    }
-                };
-                updateUI();
-                alert('全データを削除しました。');
-                console.log('All data reset');
-            }
-        }
-        
-        // Close mobile menu when clicking outside
+        // Close error message
         document.addEventListener('click', function(event) {
-            const mobileMenu = document.getElementById('mobileMenu');
-            const menuButton = event.target.closest('[onclick="toggleMobileMenu()"]');
-            
-            if (!mobileMenu.contains(event.target) && !menuButton && mobileMenu.classList.contains('open')) {
-                closeMobileMenu();
+            if (event.target.classList.contains('error-close')) {
+                const errorContainer = document.getElementById('error-messages');
+                if (errorContainer) {
+                    errorContainer.style.display = 'none';
+                }
             }
         });
-        
-        // Keyboard shortcuts
-        document.addEventListener('keydown', function(event) {
-            // Only process shortcuts when not typing
-            if (document.getElementById('typingInput') === document.activeElement) return;
-            
-            switch(event.key) {
-                case '1':
-                    showSection('game');
-                    break;
-                case '2':
-                    showSection('stats');
-                    break;
-                case '3':
-                    showSection('fleet');
-                    break;
-                case '4':
-                    showSection('settings');
-                    break;
-                case 'Escape':
-                    if (gameState.isPlaying) {
-                        pauseTyping();
-                    }
-                    break;
-            }
-        });
-        
-        console.log('Cosmic Typing Adventure - All systems operational! 🚀');
     </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-// Typing Engine for Cosmic Typing Adventure - Optimized Version
+// Typing Engine for Cosmic Typing Adventure - Security Enhanced Version
 
 class TypingEngine {
     constructor() {
@@ -37,6 +37,10 @@ class TypingEngine {
         this.updateThrottle = 100; // ms
         this.lastUpdate = 0;
         
+        // Security features
+        this.securityEnabled = true;
+        this.inputValidation = true;
+        
         // Debounced update function
         this.debouncedUpdate = this.debounce(this.updateDisplays.bind(this), 50);
     }
@@ -58,6 +62,11 @@ class TypingEngine {
     init(elements) {
         this.elements = { ...this.elements, ...elements };
         this.setupEventListeners();
+        
+        // Initialize security if available
+        if (window.SecurityUtils) {
+            this.securityEnabled = true;
+        }
     }
     
     // Setup event listeners with performance optimization
@@ -71,14 +80,22 @@ class TypingEngine {
         this.elements.typingInput.addEventListener('blur', this.handleBlur.bind(this));
     }
     
-    // Start typing session
+    // Start typing session with security validation
     start() {
         if (!this.elements.textDisplay || !this.elements.textDisplay.textContent) {
             console.warn('No text to type');
             return;
         }
         
-        this.currentText = this.elements.textDisplay.textContent;
+        // Validate and sanitize text content
+        try {
+            this.currentText = this.validateAndSanitizeText(this.elements.textDisplay.textContent);
+        } catch (error) {
+            console.error('Text validation failed:', error.message);
+            this.handleSecurityError('Invalid text content', error);
+            return;
+        }
+        
         this.typedText = '';
         this.currentIndex = 0;
         this.errors.clear(); // Clear Map instead of array
@@ -97,6 +114,37 @@ class TypingEngine {
         if (this.elements.typingInput) {
             this.elements.typingInput.disabled = false;
             this.elements.typingInput.focus();
+        }
+    }
+    
+    // Validate and sanitize text content
+    validateAndSanitizeText(text) {
+        if (!this.securityEnabled || !window.SecurityUtils) {
+            return text;
+        }
+        
+        try {
+            return window.SecurityUtils.validateTypingText(text);
+        } catch (error) {
+            throw new Error(`Text validation failed: ${error.message}`);
+        }
+    }
+    
+    // Handle security errors
+    handleSecurityError(type, error) {
+        if (window.SecurityMonitoring) {
+            window.SecurityMonitoring.logSecurityEvent({
+                type: type,
+                details: { error: error.message }
+            });
+        }
+        
+        if (this.callbacks.onError) {
+            this.callbacks.onError({
+                type: 'security',
+                message: error.message,
+                timestamp: new Date().toISOString()
+            });
         }
     }
     
@@ -138,11 +186,22 @@ class TypingEngine {
         }
     }
     
-    // Handle input events with performance optimization
+    // Handle input events with security validation
     handleInput(event) {
         if (!this.isActive) return;
         
         const input = event.target.value;
+        
+        // Security validation for input
+        if (this.securityEnabled && this.inputValidation) {
+            try {
+                this.validateInput(input);
+            } catch (error) {
+                this.handleSecurityError('suspicious_input', error);
+                return;
+            }
+        }
+        
         const expectedChar = this.currentText[this.currentIndex];
         
         if (input.length > this.typedText.length) {
@@ -178,6 +237,28 @@ class TypingEngine {
         } else if (input.length < this.typedText.length) {
             // Character deleted (backspace)
             this.handleBackspace(input.length);
+        }
+    }
+    
+    // Validate input for security
+    validateInput(input) {
+        if (!this.securityEnabled || !window.SecurityUtils) {
+            return;
+        }
+        
+        // Check for suspicious patterns
+        if (window.SecurityMonitoring && window.SecurityMonitoring.detectSuspiciousActivity(input)) {
+            throw new Error('Suspicious input detected');
+        }
+        
+        // Validate input length
+        if (input.length > this.currentText.length * 2) {
+            throw new Error('Input length exceeds reasonable limit');
+        }
+        
+        // Check for XSS patterns
+        if (window.XSSProtection && window.XSSProtection.detectXSS(input)) {
+            throw new Error('Potentially harmful content detected');
         }
     }
     
@@ -251,7 +332,7 @@ class TypingEngine {
         }
     }
     
-    // Display text with performance optimization
+    // Display text with security and performance optimization
     displayText() {
         if (!this.elements.textDisplay) return;
         
@@ -278,14 +359,29 @@ class TypingEngine {
             }
         }
         
-        this.elements.textDisplay.innerHTML = html;
+        // Safe innerHTML assignment with security
+        if (this.securityEnabled && window.XSSProtection) {
+            try {
+                window.XSSProtection.safeInnerHTML(this.elements.textDisplay, html);
+            } catch (error) {
+                this.handleSecurityError('xss_prevention', error);
+                // Fallback to safe display
+                this.elements.textDisplay.textContent = text;
+            }
+        } else {
+            this.elements.textDisplay.innerHTML = html;
+        }
     }
     
     // Escape HTML for security
     escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
+        if (!this.securityEnabled || !window.XSSProtection) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        return window.XSSProtection.sanitizeForDisplay(text);
     }
     
     // Update progress with throttling
@@ -401,9 +497,9 @@ class TypingEngine {
         };
     }
     
-    // Get final results
+    // Get final results with security validation
     getResults() {
-        return {
+        const results = {
             wpm: this.wpm,
             accuracy: this.accuracy,
             totalTyped: this.totalTyped,
@@ -412,6 +508,23 @@ class TypingEngine {
             cpm: this.getCpm(),
             errorRate: this.getErrorRate()
         };
+        
+        // Validate results if security is enabled
+        if (this.securityEnabled && window.DataValidation) {
+            try {
+                return window.DataValidation.validateTypingSession({
+                    text: this.currentText,
+                    wpm: results.wpm,
+                    accuracy: results.accuracy,
+                    duration: results.duration
+                });
+            } catch (error) {
+                this.handleSecurityError('invalid_results', error);
+                return results; // Return original results if validation fails
+            }
+        }
+        
+        return results;
     }
     
     // Set callbacks
@@ -471,6 +584,23 @@ class TypingEngine {
             commonErrors: Array.from(errorTypes.entries())
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, 5)
+        };
+    }
+    
+    // Security configuration
+    setSecurityConfig(config) {
+        this.securityEnabled = config.securityEnabled !== undefined ? config.securityEnabled : this.securityEnabled;
+        this.inputValidation = config.inputValidation !== undefined ? config.inputValidation : this.inputValidation;
+    }
+    
+    // Get security status
+    getSecurityStatus() {
+        return {
+            securityEnabled: this.securityEnabled,
+            inputValidation: this.inputValidation,
+            securityUtilsAvailable: !!window.SecurityUtils,
+            xssProtectionAvailable: !!window.XSSProtection,
+            securityMonitoringAvailable: !!window.SecurityMonitoring
         };
     }
 }
