@@ -6,7 +6,7 @@
   "display": "standalone",
   "background_color": "#1a1a2e",
   "theme_color": "#1a1a2e",
-  "orientation": "portrait-primary",
+  "orientation": "any",
   "scope": "/",
   "lang": "ja",
   "categories": ["education", "productivity", "games"],

@@ -952,6 +952,17 @@
         function toggleMobileMenu() {
             const menu = document.getElementById('mobileMenu');
             menu.classList.toggle('open');
+            
+            // Use mobile optimizer if available
+            if (window.mobileOptimizer && window.mobileOptimizer.isMobileDevice()) {
+                // Additional mobile-specific menu handling
+                if (menu.classList.contains('open')) {
+                    // Prevent body scroll when menu is open
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = '';
+                }
+            }
         }
         
         function closeMobileMenu() {
@@ -1594,9 +1605,14 @@
         }
         
         function updateCharts() {
-            // Re-initialize charts with current data
-            // This is a simplified version - in a real app, you'd update the existing charts
-            initializeCharts();
+            // Use performance optimizer for chart updates
+            if (window.performanceOptimizer) {
+                window.performanceOptimizer.batchUpdate(() => {
+                    initializeCharts();
+                });
+            } else {
+                initializeCharts();
+            }
         }
         
         function saveUserData() {
@@ -1732,6 +1748,15 @@
         // Initialize Ship Upgrade System
         window.shipUpgradeSystem = new ShipUpgradeSystem();
         
+        // Initialize PWA Installer
+        window.pwaInstaller = new PWAInstaller();
+        
+        // Initialize Mobile Optimizer
+        window.mobileOptimizer = new MobileOptimizer();
+        
+        // Initialize Performance Optimizer
+        window.performanceOptimizer = new PerformanceOptimizer();
+        
         // Update upgrade display after initialization
         if (window.shipUpgradeSystem) {
             window.shipUpgradeSystem.updateUpgradeDisplay();
@@ -1739,5 +1764,10 @@
         
         console.log('Cosmic Typing Adventure - All systems operational! 🚀');
     </script>
+    
+    <!-- Additional Scripts -->
+    <script src="js/pwa-installer.js"></script>
+    <script src="js/mobile-optimizer.js"></script>
+    <script src="js/performance-optimizer.js"></script>
 </body>
 </html>
