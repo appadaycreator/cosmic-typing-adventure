@@ -100,6 +100,18 @@
       </div>
 
       <div class="test-section">
+        <h2>🔧 Core Tests</h2>
+        <p>コアシステムのテスト（DOM整合性、LocalStorage、データ構造など）</p>
+        <button class="test-button" onclick="runCoreTests()">
+          Run Core Tests
+        </button>
+        <button class="test-button" onclick="clearCoreResults()">
+          Clear Results
+        </button>
+        <div id="core-results" class="test-results"></div>
+      </div>
+
+      <div class="test-section">
         <h2>📝 Unit Tests</h2>
         <p>ロジック部分のテスト（TypingEngine、統計計算、Supabase連携など）</p>
         <button class="test-button" onclick="runUnitTests()">
@@ -147,14 +159,51 @@
     <script src="../js/common.js"></script>
     <script src="../js/supabase-config.js"></script>
     <script src="../js/typing-engine.js"></script>
+    <script src="../js/core-debugger.js"></script>
     <script src="../js/app.js"></script>
 
     <!-- Load test scripts -->
+    <script src="core-tests.js"></script>
     <script src="unit-tests.js"></script>
     <script src="e2e-tests.js"></script>
 
     <script>
       // Test runner functions
+      function runCoreTests() {
+        const resultsDiv = document.getElementById("core-results");
+        resultsDiv.innerHTML = "🧪 Running core tests...\n";
+
+        // Capture console output
+        const originalLog = console.log;
+        const originalError = console.error;
+        let output = "";
+
+        console.log = function (...args) {
+          output += args.join(" ") + "\n";
+          originalLog.apply(console, args);
+        };
+
+        console.error = function (...args) {
+          output += "❌ " + args.join(" ") + "\n";
+          originalError.apply(console, args);
+        };
+
+        // Run tests
+        setTimeout(() => {
+          if (window.coreTests) {
+            window.coreTests.runAllTests().then(() => {
+              resultsDiv.innerHTML = output;
+              console.log = originalLog;
+              console.error = originalError;
+            });
+          } else {
+            resultsDiv.innerHTML = "❌ Core tests not available";
+            console.log = originalLog;
+            console.error = originalError;
+          }
+        }, 100);
+      }
+
       function runUnitTests() {
         const resultsDiv = document.getElementById("unit-results");
         resultsDiv.innerHTML = "🧪 Running unit tests...\n";
@@ -257,6 +306,10 @@
           console.log = originalLog;
           console.error = originalError;
         });
+      }
+
+      function clearCoreResults() {
+        document.getElementById("core-results").innerHTML = "";
       }
 
       function clearUnitResults() {

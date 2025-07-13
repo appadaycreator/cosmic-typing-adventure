@@ -1980,16 +1980,53 @@
         }
         
         function loadUserData() {
-            try {
-                const savedData = localStorage.getItem('cosmicTyping_userData');
-                if (savedData) {
-                    const parsedData = JSON.parse(savedData);
-                    userStats = { ...userStats, ...parsedData };
-                    console.log('User data loaded successfully');
+            return window.coreDebugger?.safeExecute(() => {
+                try {
+                    const savedData = localStorage.getItem('cosmicTyping_userData');
+                    if (savedData) {
+                        const parsedData = JSON.parse(savedData);
+                        
+                        // Validate data structure
+                        const schema = {
+                            level: 'number',
+                            xp: 'number',
+                            totalSessions: 'number',
+                            totalTime: 'number',
+                            bestWPM: 'number',
+                            avgWPM: 'number',
+                            bestAccuracy: 'number',
+                            planetsDiscovered: 'object'
+                        };
+                        
+                        if (window.coreDebugger?.validateData(parsedData, schema)) {
+                            userStats = { ...userStats, ...parsedData };
+                            console.log('User data loaded successfully');
+                        } else {
+                            console.warn('User data validation failed, using defaults');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Failed to load user data:', error);
+                    if (window.coreDebugger) {
+                        window.coreDebugger.logError('User Data Load Failed', {
+                            error: error.message,
+                            stack: error.stack
+                        });
+                    }
                 }
-            } catch (error) {
-                console.error('Failed to load user data:', error);
-            }
+            }, null, 'Load User Data') || (() => {
+                console.warn('Core debugger not available, using fallback');
+                try {
+                    const savedData = localStorage.getItem('cosmicTyping_userData');
+                    if (savedData) {
+                        const parsedData = JSON.parse(savedData);
+                        userStats = { ...userStats, ...parsedData };
+                        console.log('User data loaded successfully (fallback)');
+                    }
+                } catch (error) {
+                    console.error('Failed to load user data (fallback):', error);
+                }
+            })();
         }
         
         function exportData() {
@@ -2121,26 +2158,48 @@
         // Initialize Animation Manager
         window.animationManager = new AnimationManager();
         
-        // Load user data and apply upgrades
-        loadUserData();
-        if (window.shipUpgradeSystem) {
-            window.shipUpgradeSystem.updateUpgradeDisplay();
+        // Initialize core debugger and run initial tests
+        if (window.coreDebugger) {
+            window.coreDebugger.safeExecute(() => {
+                // Load user data and apply upgrades
+                loadUserData();
+                if (window.shipUpgradeSystem) {
+                    window.shipUpgradeSystem.updateUpgradeDisplay();
+                }
+                
+                // Apply language settings
+                if (window.languageManager) {
+                    window.languageManager.updateAllTexts();
+                }
+                
+                // Start ambient music
+                if (window.audioManager) {
+                    window.audioManager.playMusic('ambient');
+                }
+                
+                console.log('Cosmic Typing Adventure - All systems operational! 🚀');
+            }, null, 'App Initialization');
+        } else {
+            // Fallback initialization
+            loadUserData();
+            if (window.shipUpgradeSystem) {
+                window.shipUpgradeSystem.updateUpgradeDisplay();
+            }
+            
+            if (window.languageManager) {
+                window.languageManager.updateAllTexts();
+            }
+            
+            if (window.audioManager) {
+                window.audioManager.playMusic('ambient');
+            }
+            
+            console.log('Cosmic Typing Adventure - All systems operational! 🚀');
         }
-        
-        // Apply language settings
-        if (window.languageManager) {
-            window.languageManager.updateAllTexts();
-        }
-        
-        // Start ambient music
-        if (window.audioManager) {
-            window.audioManager.playMusic('ambient');
-        }
-        
-        console.log('Cosmic Typing Adventure - All systems operational! 🚀');
     </script>
     
     <!-- Additional Scripts -->
+    <script src="js/core-debugger.js"></script>
     <script src="js/audio-manager.js"></script>
     <script src="js/achievement-system.js"></script>
     <script src="js/language-manager.js"></script>
