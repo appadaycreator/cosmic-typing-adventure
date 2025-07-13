@@ -343,6 +343,41 @@
                                 <div class="text-sm text-gray-400">正確性を重視した訓練</div>
                             </button>
                         </div>
+                        
+                        <!-- Time Attack Modes -->
+                        <div class="mt-6">
+                            <h4 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-3">タイムアタック</h4>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                <button data-time-attack="30" class="time-attack-btn bg-yellow-900 hover:bg-yellow-800 p-3 rounded-lg transition-colors border border-yellow-500">
+                                    <div class="text-center">
+                                        <div class="text-xl mb-1">⚡</div>
+                                        <div class="font-bold text-sm">30秒</div>
+                                        <div class="text-xs text-gray-400">スプリント</div>
+                                    </div>
+                                </button>
+                                <button data-time-attack="60" class="time-attack-btn bg-orange-900 hover:bg-orange-800 p-3 rounded-lg transition-colors border border-orange-500">
+                                    <div class="text-center">
+                                        <div class="text-xl mb-1">⏱️</div>
+                                        <div class="font-bold text-sm">1分</div>
+                                        <div class="text-xs text-gray-400">クイック</div>
+                                    </div>
+                                </button>
+                                <button data-time-attack="180" class="time-attack-btn bg-red-900 hover:bg-red-800 p-3 rounded-lg transition-colors border border-red-500">
+                                    <div class="text-center">
+                                        <div class="text-xl mb-1">🏃</div>
+                                        <div class="font-bold text-sm">3分</div>
+                                        <div class="text-xs text-gray-400">マラソン</div>
+                                    </div>
+                                </button>
+                                <button data-time-attack="300" class="time-attack-btn bg-purple-900 hover:bg-purple-800 p-3 rounded-lg transition-colors border border-purple-500">
+                                    <div class="text-center">
+                                        <div class="text-xl mb-1">🏁</div>
+                                        <div class="font-bold text-sm">5分</div>
+                                        <div class="text-xs text-gray-400">エンドレス</div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- Typing Interface -->
@@ -428,6 +463,109 @@
                             </button>
                         </div>
                     </div>
+                    
+                    <!-- Time Attack Interface -->
+                    <div id="timeAttackInterface" class="bg-cosmic-card rounded-xl p-6 border border-blue-500 hidden">
+                        <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-4 text-center">タイムアタック</h3>
+                        
+                        <!-- Timer and Progress -->
+                        <div class="flex justify-between items-center mb-6">
+                            <div class="text-center">
+                                <div class="text-3xl font-orbitron font-bold text-cosmic-cyan" id="timeAttackTimer">01:00</div>
+                                <div class="text-sm text-gray-400">残り時間</div>
+                            </div>
+                            <div class="flex-1 mx-4">
+                                <div class="bg-gray-700 rounded-full h-2">
+                                    <div id="timeAttackProgress" class="bg-cosmic-cyan h-2 rounded-full transition-all duration-1000" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Real-time Stats -->
+                        <div class="grid grid-cols-3 gap-4 mb-6">
+                            <div class="text-center">
+                                <div class="text-xl font-bold text-energy-green" id="timeAttackWPM">0</div>
+                                <div class="text-sm text-gray-400">WPM</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-xl font-bold text-cosmic-cyan" id="timeAttackAccuracy">100%</div>
+                                <div class="text-sm text-gray-400">正確率</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-xl font-bold text-planet-orange" id="timeAttackCombo">0</div>
+                                <div class="text-sm text-gray-400">コンボ</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Text Display -->
+                        <div id="timeAttackTextDisplay" class="typing-display bg-gray-900 p-6 rounded-lg mb-4 border border-gray-600 min-h-32">
+                            <!-- Text will be dynamically inserted here -->
+                        </div>
+                        
+                        <!-- Input Area -->
+                        <div class="relative">
+                            <textarea 
+                                id="timeAttackInput" 
+                                class="w-full bg-gray-800 text-white p-4 rounded-lg border border-gray-600 focus:border-cosmic-cyan focus:outline-none resize-none" 
+                                rows="3" 
+                                placeholder="ここに入力してください..."
+                                disabled
+                            ></textarea>
+                        </div>
+                        
+                        <!-- Controls -->
+                        <div class="flex justify-center space-x-4 mt-4">
+                            <button onclick="resetTimeAttack()" class="bg-gray-600 hover:bg-gray-700 px-6 py-2 rounded-lg font-bold transition-colors">
+                                <i class="fas fa-redo mr-2"></i>リセット
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Time Attack Results -->
+                    <div id="timeAttackResults" class="bg-cosmic-card rounded-xl p-6 border border-blue-500 hidden">
+                        <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-4 text-center">タイムアタック完了!</h3>
+                        
+                        <!-- Performance Rating -->
+                        <div class="text-center mb-6">
+                            <div class="text-4xl font-bold mb-2" id="performanceRating">A級</div>
+                            <div class="text-sm text-gray-400">パフォーマンス評価</div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-4 mb-6">
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-energy-green" id="finalWPM">0</div>
+                                <div class="text-sm text-gray-400">WPM</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-cosmic-cyan" id="finalAccuracy">0%</div>
+                                <div class="text-sm text-gray-400">正確率</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-planet-orange" id="finalCombo">0</div>
+                                <div class="text-sm text-gray-400">最大コンボ</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-purple-400" id="timeUsed">0秒</div>
+                                <div class="text-sm text-gray-400">使用時間</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-yellow-400" id="totalTyped">0</div>
+                                <div class="text-sm text-gray-400">入力文字数</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-center space-x-4">
+                            <button onclick="shareTimeAttackResults()" class="bg-cosmic-cyan hover:bg-blue-500 px-6 py-2 rounded-lg font-bold transition-colors">
+                                <i class="fas fa-share mr-2"></i>結果をシェア
+                            </button>
+                            <button onclick="playTimeAttackAgain()" class="bg-energy-green hover:bg-green-600 px-6 py-2 rounded-lg font-bold transition-colors">
+                                <i class="fas fa-play mr-2"></i>もう一度
+                            </button>
+                            <button onclick="backToMissionSelection()" class="bg-planet-orange hover:bg-orange-600 px-6 py-2 rounded-lg font-bold transition-colors">
+                                <i class="fas fa-arrow-left mr-2"></i>戻る
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Right Sidebar - Discovery -->
@@ -506,6 +644,35 @@
                             <div class="flex justify-between">
                                 <span>最高WPM</span>
                                 <span class="font-bold text-energy-green" id="bestWPM">0</span>
+                            </div>
+                            
+                            <!-- Analytics Tabs -->
+                            <div class="mt-6">
+                                <h4 class="font-orbitron font-bold text-md text-cosmic-cyan mb-3">詳細分析</h4>
+                                <div class="grid grid-cols-2 gap-2 mb-4">
+                                    <button data-analytics="daily" class="bg-cosmic-card hover:bg-cosmic-hover p-2 rounded border border-cosmic-border text-sm transition-colors">
+                                        日別統計
+                                    </button>
+                                    <button data-analytics="weekly" class="bg-cosmic-card hover:bg-cosmic-hover p-2 rounded border border-cosmic-border text-sm transition-colors">
+                                        週別統計
+                                    </button>
+                                    <button data-analytics="monthly" class="bg-cosmic-card hover:bg-cosmic-hover p-2 rounded border border-cosmic-border text-sm transition-colors">
+                                        月別統計
+                                    </button>
+                                    <button data-analytics="keys" class="bg-cosmic-card hover:bg-cosmic-hover p-2 rounded border border-cosmic-border text-sm transition-colors">
+                                        キー分析
+                                    </button>
+                                    <button data-analytics="progress" class="bg-cosmic-card hover:bg-cosmic-hover p-2 rounded border border-cosmic-border text-sm transition-colors">
+                                        進歩トレンド
+                                    </button>
+                                </div>
+                                
+                                <!-- Analytics Content -->
+                                <div id="dailyAnalytics" class="analytics-content hidden"></div>
+                                <div id="weeklyAnalytics" class="analytics-content hidden"></div>
+                                <div id="monthlyAnalytics" class="analytics-content hidden"></div>
+                                <div id="keyAnalysis" class="analytics-content hidden"></div>
+                                <div id="progressTrends" class="analytics-content hidden"></div>
                             </div>
                             <div class="flex justify-between">
                                 <span>平均WPM</span>
@@ -1204,6 +1371,20 @@
                         if (window.audioManager) {
                             window.audioManager.playCorrect();
                         }
+                        
+                        // Create typing effect
+                        if (window.animationManager) {
+                            const rect = event.target.getBoundingClientRect();
+                            const x = rect.left + (i * 8); // Approximate character position
+                            const y = rect.top;
+                            window.animationManager.createTypingEffect(input[i], x, y, true);
+                        }
+                        
+                        // Create combo effect
+                        if (window.animationManager && gameState.combo % 10 === 0) {
+                            const rect = event.target.getBoundingClientRect();
+                            window.animationManager.createComboEffect(gameState.combo, rect.left, rect.top);
+                        }
                     }
                 } else {
                     incorrect++;
@@ -1212,6 +1393,14 @@
                     // Play error sound
                     if (window.audioManager) {
                         window.audioManager.playError();
+                    }
+                    
+                    // Create error effect
+                    if (window.animationManager) {
+                        const rect = event.target.getBoundingClientRect();
+                        const x = rect.left + (i * 8);
+                        const y = rect.top;
+                        window.animationManager.createTypingEffect(input[i], x, y, false);
                     }
                     
                     // Track weak keys
@@ -1387,6 +1576,11 @@
             }
             userStats.planetsDiscovered.push(selectedPlanet.name);
             
+            // Create planet discovery animation
+            if (window.animationManager) {
+                window.animationManager.createPlanetDiscoveryEffect(selectedPlanet.name);
+            }
+            
             // Show discovery notification
             showPlanetDiscovery(selectedPlanet);
             
@@ -1433,23 +1627,28 @@
                 window.audioManager.playLevelUp();
             }
             
-            // Show level up notification
-            const notification = document.createElement('div');
-            notification.className = 'level-up-notification fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-cosmic-card border-2 border-energy-green rounded-lg p-6 z-50 text-center';
-            notification.innerHTML = `
-                <div class="text-energy-green text-4xl mb-2">🎉</div>
-                <div class="text-energy-green text-xl font-bold mb-2">レベルアップ！</div>
-                <div class="text-white">レベル ${userStats.level} に到達しました！</div>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Remove after 3 seconds
-            setTimeout(() => {
-                if (document.body.contains(notification)) {
-                    document.body.removeChild(notification);
-                }
-            }, 3000);
+            // Create level up animation
+            if (window.animationManager) {
+                window.animationManager.createLevelUpEffect(userStats.level);
+            } else {
+                // Fallback notification
+                const notification = document.createElement('div');
+                notification.className = 'level-up-notification fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-cosmic-card border-2 border-energy-green rounded-lg p-6 z-50 text-center';
+                notification.innerHTML = `
+                    <div class="text-energy-green text-4xl mb-2">🎉</div>
+                    <div class="text-energy-green text-xl font-bold mb-2">レベルアップ！</div>
+                    <div class="text-white">レベル ${userStats.level} に到達しました！</div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    if (document.body.contains(notification)) {
+                        document.body.removeChild(notification);
+                    }
+                }, 3000);
+            }
         }
         
         function playAgain() {
@@ -1484,6 +1683,8 @@
             // Hide results panel and show game section
             document.getElementById('resultsPanel').classList.add('hidden');
             document.getElementById('typingInterface').classList.add('hidden');
+            document.getElementById('timeAttackInterface').classList.add('hidden');
+            document.getElementById('timeAttackResults').classList.add('hidden');
             
             // Ensure mission selection is visible
             const gameSection = document.getElementById('gameSection');
@@ -1493,6 +1694,88 @@
             
             // Show notification
             console.log('New mission selection ready');
+        }
+        
+        // Time Attack Functions
+        function resetTimeAttack() {
+            if (window.timeAttackMode) {
+                window.timeAttackMode.resetTimeAttack();
+            }
+        }
+        
+        function shareTimeAttackResults() {
+            const wpm = document.getElementById('finalWPM').textContent;
+            const accuracy = document.getElementById('finalAccuracy').textContent;
+            const rating = document.getElementById('performanceRating').textContent;
+            
+            const text = `タイムアタック結果: ${rating} | WPM: ${wpm} | 正確率: ${accuracy}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Cosmic Typing Adventure - タイムアタック結果',
+                    text: text
+                });
+            } else {
+                navigator.clipboard.writeText(text);
+                alert('結果をクリップボードにコピーしました！');
+            }
+        }
+        
+        function playTimeAttackAgain() {
+            document.getElementById('timeAttackResults').classList.add('hidden');
+            if (window.timeAttackMode) {
+                const lastDuration = window.timeAttackMode.duration;
+                window.timeAttackMode.startTimeAttack(lastDuration);
+            }
+        }
+        
+        function backToMissionSelection() {
+            document.getElementById('timeAttackResults').classList.add('hidden');
+            document.getElementById('timeAttackInterface').classList.add('hidden');
+            showPlanetSelection();
+        }
+        
+        // Animation Functions
+        function toggleAnimations() {
+            if (window.animationManager) {
+                window.animationManager.toggleAnimations();
+            }
+        }
+        
+        function createTypingEffect(char, x, y, isCorrect) {
+            if (window.animationManager) {
+                window.animationManager.createTypingEffect(char, x, y, isCorrect);
+            }
+        }
+        
+        function createComboEffect(combo, x, y) {
+            if (window.animationManager) {
+                window.animationManager.createComboEffect(combo, x, y);
+            }
+        }
+        
+        function createLevelUpEffect(level) {
+            if (window.animationManager) {
+                window.animationManager.createLevelUpEffect(level);
+            }
+        }
+        
+        function createPlanetDiscoveryEffect(planetName) {
+            if (window.animationManager) {
+                window.animationManager.createPlanetDiscoveryEffect(planetName);
+            }
+        }
+        
+        function createAchievementEffect(achievement) {
+            if (window.animationManager) {
+                window.animationManager.createAchievementEffect(achievement);
+            }
+        }
+        
+        function createUpgradeEffect(upgradeType) {
+            if (window.animationManager) {
+                window.animationManager.createUpgradeEffect(upgradeType);
+            }
         }
         
         function shareResults() {
@@ -1829,6 +2112,15 @@
         // Initialize Performance Optimizer
         window.performanceOptimizer = new PerformanceOptimizer();
         
+        // Initialize Time Attack Mode
+        window.timeAttackMode = new TimeAttackMode();
+        
+        // Initialize Advanced Analytics
+        window.advancedAnalytics = new AdvancedAnalytics();
+        
+        // Initialize Animation Manager
+        window.animationManager = new AnimationManager();
+        
         // Load user data and apply upgrades
         loadUserData();
         if (window.shipUpgradeSystem) {
@@ -1856,5 +2148,8 @@
     <script src="js/pwa-installer.js"></script>
     <script src="js/mobile-optimizer.js"></script>
     <script src="js/performance-optimizer.js"></script>
+    <script src="js/time-attack-mode.js"></script>
+    <script src="js/advanced-analytics.js"></script>
+    <script src="js/animation-manager.js"></script>
 </body>
 </html>
