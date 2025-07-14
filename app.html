@@ -315,7 +315,7 @@
                 <!-- Main Game Area -->
                 <div class="lg:col-span-2 space-y-6">
                     <!-- Game Mode Selection -->
-                    <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
+                    <div id="missionSelection" class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
                         <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-4 text-center">ミッション選択</h3>
                         
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
@@ -954,8 +954,27 @@
         </section>
     </main>
 
-    <!-- JavaScript -->
+    <!-- Ship Upgrade Systemを最初に読み込む -->
+    <script src="js/ship-upgrade-system.js"></script>
+    <!-- Achievement Systemを最初に読み込む -->
+    <script src="js/achievement-system.js"></script>
+    <!-- Audio Managerを最初に読み込む -->
     <script src="js/audio-manager.js"></script>
+    <!-- Language Managerを最初に読み込む -->
+    <script src="js/language-manager.js"></script>
+    <!-- PWA Installerを最初に読み込む -->
+    <script src="js/pwa-installer.js"></script>
+    <!-- Mobile Optimizerを最初に読み込む -->
+    <script src="js/mobile-optimizer.js"></script>
+    <!-- Performance Optimizerを最初に読み込む -->
+    <script src="js/performance-optimizer.js"></script>
+    <!-- Time Attack Modeを最初に読み込む -->
+    <script src="js/time-attack-mode.js"></script>
+    <!-- Advanced Analyticsを最初に読み込む -->
+    <script src="js/advanced-analytics.js"></script>
+    <!-- Animation Managerを最初に読み込む -->
+    <script src="js/animation-manager.js"></script>
+    <!-- 既存の初期化スクリプト -->
     <script>
         // Global Variables
         let currentLanguage = 'ja';
@@ -2133,7 +2152,7 @@
         window.audioManager = new AudioManager();
         
         // Initialize Achievement System
-        window.achievementSystem = new AchievementSystem();
+        window.achievementSystem = new AchievementSystem(userStats);
         
         // Initialize Language Manager
         window.languageManager = new LanguageManager();

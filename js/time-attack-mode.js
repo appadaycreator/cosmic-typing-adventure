@@ -328,18 +328,35 @@ class TimeAttackMode {
     }
 
     startTypingSession() {
-        // Enable typing input
-        const typingInput = document.getElementById('typingInput');
+        // タイムアタック用テキストを取得
+        let texts = [];
+        if (window.languageManager && window.languageManager.practiceTexts && window.languageManager.practiceTexts.ja) {
+            const earth = window.languageManager.practiceTexts.ja.planets.earth;
+            if (earth && earth.texts) {
+                texts = earth.texts.map(t => t.content || t.text).filter(Boolean);
+            }
+        }
+        if (texts.length === 0) {
+            texts = ["Let's type!"];
+        }
+        const randomText = texts[Math.floor(Math.random() * texts.length)];
+        this.sessionData.currentText = randomText;
+
+        // テキスト表示
+        const textDisplay = document.getElementById('timeAttackTextDisplay');
+        if (textDisplay) {
+            textDisplay.textContent = randomText;
+        }
+
+        // 入力欄を有効化し、フォーカス
+        const typingInput = document.getElementById('timeAttackInput');
         if (typingInput) {
+            typingInput.value = '';
             typingInput.disabled = false;
             typingInput.focus();
-        }
-        
-        // Set up typing event listener
-        if (typingInput) {
-            typingInput.addEventListener('input', (e) => {
-                this.handleTypingInput(e);
-            });
+            typingInput.removeEventListener('input', this._boundHandleTypingInput);
+            this._boundHandleTypingInput = this.handleTypingInput.bind(this);
+            typingInput.addEventListener('input', this._boundHandleTypingInput);
         }
     }
 

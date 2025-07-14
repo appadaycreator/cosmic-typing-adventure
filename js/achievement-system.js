@@ -1,7 +1,7 @@
 // Achievement System for Cosmic Typing Adventure
 
 class AchievementSystem {
-  constructor() {
+  constructor(userStats) {
     this.achievements = {
       firstTyping: {
         id: 'firstTyping',
@@ -86,7 +86,9 @@ class AchievementSystem {
     };
     
     this.loadAchievements();
-    this.checkAchievements();
+    if (userStats) {
+      this.checkAchievements(userStats);
+    }
   }
 
   loadAchievements() {
