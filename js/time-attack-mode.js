@@ -330,13 +330,19 @@ class TimeAttackMode {
     startTypingSession() {
         // タイムアタック用テキストを取得
         let texts = [];
-        if (window.languageManager && window.languageManager.practiceTexts && window.languageManager.practiceTexts.ja) {
-            const earth = window.languageManager.practiceTexts.ja.planets.earth;
-            if (earth && earth.texts) {
-                texts = earth.texts.map(t => t.content || t.text).filter(Boolean);
-            }
+        if (
+            window.languageManager &&
+            window.languageManager.practiceTexts &&
+            window.languageManager.practiceTexts.ja &&
+            window.languageManager.practiceTexts.ja.planets &&
+            window.languageManager.practiceTexts.ja.planets.earth &&
+            Array.isArray(window.languageManager.practiceTexts.ja.planets.earth.texts)
+        ) {
+            texts = window.languageManager.practiceTexts.ja.planets.earth.texts
+                .map(t => t.content || t.text)
+                .filter(Boolean);
         }
-        if (texts.length === 0) {
+        if (!Array.isArray(texts) || texts.length === 0) {
             texts = ["Let's type!"];
         }
         const randomText = texts[Math.floor(Math.random() * texts.length)];
@@ -354,7 +360,10 @@ class TimeAttackMode {
             typingInput.value = '';
             typingInput.disabled = false;
             typingInput.focus();
-            typingInput.removeEventListener('input', this._boundHandleTypingInput);
+            // 既存のイベントリスナーを必ずremove
+            if (this._boundHandleTypingInput) {
+                typingInput.removeEventListener('input', this._boundHandleTypingInput);
+            }
             this._boundHandleTypingInput = this.handleTypingInput.bind(this);
             typingInput.addEventListener('input', this._boundHandleTypingInput);
         }
@@ -416,12 +425,12 @@ class TimeAttackMode {
     resetTimeAttack() {
         this.isActive = false;
         this.remainingTime = this.duration;
-        
+
         if (this.timer) {
             clearInterval(this.timer);
             this.timer = null;
         }
-        
+
         // Reset session data
         this.sessionData = {
             wpm: 0,
@@ -431,29 +440,49 @@ class TimeAttackMode {
             combo: 0,
             maxCombo: 0
         };
-        
+
         // Reset UI
         this.updateTimeDisplay();
         this.updateSessionStats();
-        
+        // 残り時間表示も初期値にリセット
+        const timeDisplay = document.getElementById('timeAttackTimer');
+        if (timeDisplay) {
+            const minutes = Math.floor(this.duration / 60);
+            const seconds = this.duration % 60;
+            timeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        // テキスト欄・入力欄もリセット
+        const textDisplay = document.getElementById('timeAttackTextDisplay');
+        if (textDisplay) {
+            textDisplay.textContent = '';
+        }
+        const typingInput = document.getElementById('timeAttackInput');
+        if (typingInput) {
+            typingInput.value = '';
+            typingInput.disabled = true;
+            if (this._boundHandleTypingInput) {
+                typingInput.removeEventListener('input', this._boundHandleTypingInput);
+            }
+        }
+
         // Show mission selection
         const missionSection = document.getElementById('missionSelection');
         if (missionSection) {
             missionSection.classList.remove('hidden');
         }
-        
+
         // Hide time attack interfaces
         const timeAttackInterface = document.getElementById('timeAttackInterface');
         const resultsPanel = document.getElementById('timeAttackResults');
-        
+
         if (timeAttackInterface) {
             timeAttackInterface.classList.add('hidden');
         }
-        
+
         if (resultsPanel) {
             resultsPanel.classList.add('hidden');
         }
-        
+
         console.log('Time attack reset');
     }
 

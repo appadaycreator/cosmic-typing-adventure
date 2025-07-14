@@ -1875,11 +1875,18 @@
             `).join('');
         }
         
+        // Chart.jsインスタンス管理用グローバル変数
+        let performanceChartInstance = null;
+        let keyStatsChartInstance = null;
+        
         function initializeCharts() {
             // Performance Chart
             const performanceCtx = document.getElementById('performanceChart');
             if (performanceCtx) {
-                new Chart(performanceCtx, {
+                if (performanceChartInstance) {
+                    performanceChartInstance.destroy();
+                }
+                performanceChartInstance = new Chart(performanceCtx, {
                     type: 'line',
                     data: {
                         labels: ['1日前', '2日前', '3日前', '4日前', '5日前', '6日前', '今日'],
@@ -1928,11 +1935,13 @@
                     }
                 });
             }
-            
             // Key Stats Chart
             const keyStatsCtx = document.getElementById('keyStatsChart');
             if (keyStatsCtx) {
-                new Chart(keyStatsCtx, {
+                if (keyStatsChartInstance) {
+                    keyStatsChartInstance.destroy();
+                }
+                keyStatsChartInstance = new Chart(keyStatsCtx, {
                     type: 'bar',
                     data: {
                         labels: ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
