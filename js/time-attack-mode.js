@@ -44,6 +44,11 @@ class TimeAttackMode {
         if (!Number.isFinite(duration) || duration <= 0) {
             duration = 60;
         }
+        // 入力欄を必ず有効化
+        const typingInput = document.getElementById('timeAttackInput');
+        if (typingInput) {
+            typingInput.disabled = false;
+        }
         this.duration = duration;
         this.remainingTime = duration;
         this.isActive = true;
