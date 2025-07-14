@@ -506,13 +506,13 @@ const initSecurity = () => {
 };
 
 // Export security utilities for global access
-window.SecurityUtils = SecurityUtils;
-window.XSSProtection = XSSProtection;
-window.CSRFProtection = CSRFProtection;
-window.CSPUtils = CSPUtils;
-window.DataValidation = DataValidation;
-window.SecurityMonitoring = SecurityMonitoring;
-window.initSecurity = initSecurity;
+// window.SecurityUtils = SecurityUtils;
+// window.XSSProtection = XSSProtection;
+// window.CSRFProtection = CSRFProtection;
+// window.CSPUtils = CSPUtils;
+// window.DataValidation = DataValidation;
+// window.SecurityMonitoring = SecurityMonitoring;
+// window.initSecurity = initSecurity;
 
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {

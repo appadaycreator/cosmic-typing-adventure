@@ -655,8 +655,4 @@ class TypingTextUtils {
         
         return '';
     }
-}
-
-// Export for global access
-window.TypingEngine = TypingEngine;
-window.TypingTextUtils = TypingTextUtils; 
+} 

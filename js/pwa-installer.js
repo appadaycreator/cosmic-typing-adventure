@@ -372,7 +372,4 @@ class PWAInstaller {
         this.deferredPrompt = null;
         this.showInstallButton();
     }
-}
-
-// Global PWA installer instance
-window.PWAInstaller = PWAInstaller; 
+} 

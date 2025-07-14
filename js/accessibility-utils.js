@@ -523,14 +523,14 @@ const initAccessibility = () => {
 };
 
 // Export accessibility utilities for global access
-window.ScreenReaderUtils = ScreenReaderUtils;
-window.KeyboardNavigationUtils = KeyboardNavigationUtils;
-window.ColorContrastUtils = ColorContrastUtils;
-window.MotionUtils = MotionUtils;
-window.TextScalingUtils = TextScalingUtils;
-window.AccessibilityPreferences = AccessibilityPreferences;
-window.AccessibilityTesting = AccessibilityTesting;
-window.initAccessibility = initAccessibility;
+// window.ScreenReaderUtils = ScreenReaderUtils;
+// window.KeyboardNavigationUtils = KeyboardNavigationUtils;
+// window.ColorContrastUtils = ColorContrastUtils;
+// window.MotionUtils = MotionUtils;
+// window.TextScalingUtils = TextScalingUtils;
+// window.AccessibilityPreferences = AccessibilityPreferences;
+// window.AccessibilityTesting = AccessibilityTesting;
+// window.initAccessibility = initAccessibility;
 
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {

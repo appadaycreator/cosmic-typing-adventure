@@ -558,7 +558,4 @@ class AdvancedAnalytics {
             console.log('All analytics data cleared');
         }
     }
-}
-
-// Global advanced analytics instance
-window.AdvancedAnalytics = AdvancedAnalytics; 
+} 

@@ -528,7 +528,4 @@ class TimeAttackMode {
     isTimeAttackActive() {
         return this.isActive;
     }
-}
-
-// Global time attack mode instance
-window.TimeAttackMode = TimeAttackMode; 
+} 

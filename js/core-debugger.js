@@ -396,7 +396,4 @@ class CoreDebugger {
             }
         };
     }
-}
-
-// Global core debugger instance
-window.coreDebugger = new CoreDebugger(); 
+} 

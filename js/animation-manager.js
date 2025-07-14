@@ -536,7 +536,4 @@ class AnimationManager {
         
         console.log('All animations cleared');
     }
-}
-
-// Global animation manager instance
-window.AnimationManager = AnimationManager; 
+} 

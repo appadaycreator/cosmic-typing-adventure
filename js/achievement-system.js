@@ -205,7 +205,4 @@ class AchievementSystem {
       percentage: Math.round((this.getUnlockedCount() / this.getTotalCount()) * 100)
     };
   }
-}
-
-// Global achievement system instance
-window.AchievementSystem = AchievementSystem; 
+} 

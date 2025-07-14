@@ -386,17 +386,17 @@ const initUtils = () => {
 };
 
 // Export utilities for global access
-window.CosmicUtils = {
-    PerformanceUtils,
-    ImageUtils,
-    DOMUtils,
-    StorageUtils,
-    NetworkUtils,
-    AnimationUtils,
-    ErrorUtils,
-    AccessibilityUtils,
-    initUtils
-};
+// window.CosmicUtils = {
+//     PerformanceUtils,
+//     ImageUtils,
+//     DOMUtils,
+//     StorageUtils,
+//     NetworkUtils,
+//     AnimationUtils,
+//     ErrorUtils,
+//     AccessibilityUtils,
+//     initUtils
+// };
 
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {

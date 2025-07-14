@@ -29,7 +29,4 @@ class LanguageManager {
             return planet.texts[randomIndex];
         }
     }
-}
-
-// グローバル定義
-window.LanguageManager = LanguageManager; 
+} 

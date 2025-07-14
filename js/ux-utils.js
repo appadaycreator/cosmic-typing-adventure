@@ -590,13 +590,13 @@ const initUX = () => {
 };
 
 // Export UX utilities for global access
-window.ProgressiveEnhancement = ProgressiveEnhancement;
-window.UserPreferences = UserPreferences;
-window.FeedbackUtils = FeedbackUtils;
-window.LoadingUtils = LoadingUtils;
-window.KeyboardShortcuts = KeyboardShortcuts;
-window.ErrorHandling = ErrorHandling;
-window.initUX = initUX;
+// window.ProgressiveEnhancement = ProgressiveEnhancement;
+// window.UserPreferences = UserPreferences;
+// window.FeedbackUtils = FeedbackUtils;
+// window.LoadingUtils = LoadingUtils;
+// window.KeyboardShortcuts = KeyboardShortcuts;
+// window.ErrorHandling = ErrorHandling;
+// window.initUX = initUX;
 
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {

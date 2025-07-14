@@ -489,9 +489,4 @@ class AudioManager {
             }
         }
     }
-}
-
-// Global audio manager instance
-if (typeof window !== 'undefined') {
-    window.AudioManager = AudioManager;
 } 

@@ -399,7 +399,4 @@ class PerformanceOptimizer {
             }
         });
     }
-}
-
-// Global performance optimizer instance
-window.PerformanceOptimizer = PerformanceOptimizer; 
+} 

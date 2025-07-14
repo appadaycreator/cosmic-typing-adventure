@@ -383,7 +383,4 @@ class ShipUpgradeSystem {
         
         return stats;
     }
-}
-
-// Global ship upgrade system instance
-window.ShipUpgradeSystem = ShipUpgradeSystem; 
+} 

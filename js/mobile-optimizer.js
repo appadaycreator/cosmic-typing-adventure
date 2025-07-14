@@ -341,7 +341,4 @@ class MobileOptimizer {
             orientation: window.orientation || 'unknown'
         };
     }
-}
-
-// Global mobile optimizer instance
-window.MobileOptimizer = MobileOptimizer; 
+} 

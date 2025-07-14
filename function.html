@@ -1,3 +1,34 @@
+<!--
+【window直下のグローバル公開方針・現状整理・今後の設計方針】
+
+■ 現状のグローバル公開一覧
+- window.app（CosmicTypingAppインスタンス）
+- window.startMission（ミッション開始用関数）
+- window.CosmicUtils（共通ユーティリティ群）
+- window.ProgressiveEnhancement, window.UserPreferences, window.FeedbackUtils, window.LoadingUtils, window.KeyboardShortcuts, window.ErrorHandling, window.initUX（UXユーティリティ群）
+- window.AudioManager（オーディオ管理クラス）
+- window.SecurityUtils, window.XSSProtection, window.CSRFProtection, window.CSPUtils, window.DataValidation, window.SecurityMonitoring, window.initSecurity（セキュリティ系）
+- window.CosmicSupabase（Supabase連携ラッパー）
+- window.TypingEngine, window.TypingTextUtils（タイピングエンジン）
+- window.LanguageManager（言語管理）
+- window.ScreenReaderUtils, window.KeyboardNavigationUtils, window.ColorContrastUtils, window.MotionUtils, window.TextScalingUtils, window.AccessibilityPreferences, window.AccessibilityTesting, window.initAccessibility（アクセシビリティ系）
+- window.AdvancedAnalytics（分析）
+- window.MobileOptimizer（モバイル最適化）
+- window.AnimationManager（アニメーション管理）
+- window.AchievementSystem（実績管理）
+- window.coreDebugger（デバッガ）
+- window.PWAInstaller（PWAインストーラ）
+- window.ShipUpgradeSystem（船アップグレード）
+- window.PerformanceOptimizer（パフォーマンス最適化）
+- window.TimeAttackMode（タイムアタックモード）
+
+■ 今後の設計方針
+- window直下へのグローバル展開は「UIから直接呼び出す必要があるもの」「外部からのデバッグ・テスト用途」「他モジュール間での明示的な連携が必要なもの」のみに限定する。
+- それ以外は各クラス・モジュール内で完結させ、必要に応じてimport/requireや依存注入で連携する。
+- 既存のグローバル公開は段階的に整理・縮小し、最終的にはwindow.app（CosmicTypingAppインスタンス）と最低限のAPIのみをグローバル公開する形を目指す。
+- 具体的な整理・縮小案やリファクタリング方針は今後の段階で随時function.htmlに追記する。
+
+-->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
