@@ -328,19 +328,20 @@ class TimeAttackMode {
     }
 
     startTypingSession() {
-        // タイムアタック用テキストを取得
+        // 全惑星のテキストを集約
         let texts = [];
         if (
             window.languageManager &&
             window.languageManager.practiceTexts &&
             window.languageManager.practiceTexts.ja &&
-            window.languageManager.practiceTexts.ja.planets &&
-            window.languageManager.practiceTexts.ja.planets.earth &&
-            Array.isArray(window.languageManager.practiceTexts.ja.planets.earth.texts)
+            window.languageManager.practiceTexts.ja.planets
         ) {
-            texts = window.languageManager.practiceTexts.ja.planets.earth.texts
-                .map(t => t.content || t.text)
-                .filter(Boolean);
+            const planets = window.languageManager.practiceTexts.ja.planets;
+            Object.values(planets).forEach(planet => {
+                if (Array.isArray(planet.texts)) {
+                    texts = texts.concat(planet.texts.map(t => t.content || t.text).filter(Boolean));
+                }
+            });
         }
         if (!Array.isArray(texts) || texts.length === 0) {
             texts = ["Let's type!"];
