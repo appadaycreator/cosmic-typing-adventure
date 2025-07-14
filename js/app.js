@@ -2,6 +2,7 @@
 
 class CosmicTypingApp {
   constructor() {
+    this.languageManager = new LanguageManager();
     this.currentPlanet = null;
     this.typingEngine = null;
     this.currentText = "";
@@ -36,28 +37,7 @@ class CosmicTypingApp {
     };
 
     // Practice texts for each planet
-    this.practiceTexts = {
-      earth: [
-        "地球は太陽系の第三惑星です。生命が存在する唯一の惑星として知られています。",
-        "私たちの故郷である地球は、美しい青い惑星です。海と陸地が調和した姿は、宇宙から見ると特別な存在です。",
-        "地球の大気は主に窒素と酸素で構成されており、生命を支える重要な役割を果たしています。",
-      ],
-      mars: [
-        "火星は太陽系の第四惑星で、赤い惑星として知られています。",
-        "火星の表面には、かつて水が流れていた痕跡が残されています。",
-        "火星探査機は、この惑星の秘密を解き明かすために日夜観測を続けています。",
-      ],
-      jupiter: [
-        "木星は太陽系最大の惑星で、ガス惑星の代表的な存在です。",
-        "木星の大赤斑は、数百年にわたって続いている巨大な嵐です。",
-        "木星の強い重力は、太陽系の他の天体の軌道に大きな影響を与えています。",
-      ],
-      saturn: [
-        "土星は美しい環を持つ惑星として、天文学者たちを魅了し続けています。",
-        "土星の環は、無数の氷の粒子で構成されており、太陽の光を反射して輝きます。",
-        "土星の衛星タイタンは、地球以外で唯一、表面に液体の湖が存在することが確認されています。",
-      ],
-    };
+    // ローカルpracticeTextsの定義は削除
 
     // Initialize app
     this.init();
@@ -254,38 +234,10 @@ class CosmicTypingApp {
   }
 
   loadPracticeText(planet) {
-    // Try to load from API first, fallback to local texts
-    this.loadPracticeTextFromAPI(planet).catch(() => {
-      console.log("Using local practice texts for", planet);
-      const texts = this.practiceTexts[planet] || [];
-      if (texts.length > 0) {
-        this.currentText = texts[Math.floor(Math.random() * texts.length)];
-        this.elements.textDisplay.textContent = this.currentText;
-        // ローマ字表記を下に追加
-        let romanized = window.wanakana ? window.wanakana.toRomaji(this.currentText) : this.currentText;
-        let romanElem = document.getElementById('romanized-text');
-        if (!romanElem) {
-          romanElem = document.createElement('div');
-          romanElem.id = 'romanized-text';
-          romanElem.style.fontSize = '0.9em';
-          romanElem.style.color = '#888';
-          romanElem.style.marginTop = '0.3em';
-          this.elements.textDisplay.parentNode.insertBefore(romanElem, this.elements.textDisplay.nextSibling);
-        }
-        romanElem.textContent = romanized;
-      } else {
-        this.currentText = "この惑星のテキストが見つかりませんでした。";
-        this.elements.textDisplay.textContent = this.currentText;
-        let romanElem = document.getElementById('romanized-text');
-        if (romanElem) romanElem.textContent = '';
-      }
-    });
-  }
-
-  async loadPracticeTextFromAPI(planet) {
-    if (window.CosmicSupabase && window.CosmicSupabase.PracticeTexts) {
-      const text = await window.CosmicSupabase.PracticeTexts.getRandomText(planet);
-      this.currentText = text;
+    // LanguageManagerからテキスト取得
+    const textObj = this.languageManager.getPracticeText(planet);
+    if (textObj) {
+      this.currentText = textObj.content || textObj.text || textObj;
       this.elements.textDisplay.textContent = this.currentText;
       // ローマ字表記を下に追加
       let romanized = window.wanakana ? window.wanakana.toRomaji(this.currentText) : this.currentText;
@@ -300,7 +252,10 @@ class CosmicTypingApp {
       }
       romanElem.textContent = romanized;
     } else {
-      throw new Error("PracticeTexts not available");
+      this.currentText = "この惑星のテキストが見つかりませんでした。";
+      this.elements.textDisplay.textContent = this.currentText;
+      let romanElem = document.getElementById('romanized-text');
+      if (romanElem) romanElem.textContent = '';
     }
   }
 
@@ -529,7 +484,7 @@ class CosmicTypingApp {
         for (const planet of planets) {
           const texts = await window.CosmicSupabase.PracticeTexts.getTextsByPlanet(planet);
           if (texts && texts.length > 0) {
-            this.practiceTexts[planet] = texts.map(t => t.content || t);
+            // ローカルpracticeTextsの定義は削除
           }
         }
         console.log("Practice texts loaded from API");
