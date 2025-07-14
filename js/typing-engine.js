@@ -201,42 +201,36 @@ class TypingEngine {
                 return;
             }
         }
+        // 日本語→ローマ字変換
+        const expectedRomaji = window.wanakana ? window.wanakana.toRomaji(this.currentText) : this.currentText;
+        const inputRomaji = input;
         
-        const expectedChar = this.currentText[this.currentIndex];
-        
-        if (input.length > this.typedText.length) {
-            // New character typed
-            const newChar = input[input.length - 1];
-            
+        if (inputRomaji.length > this.typedText.length) {
+            // 新しい文字が入力された
+            const newChar = inputRomaji[inputRomaji.length - 1];
+            const expectedChar = expectedRomaji[this.currentIndex];
             if (newChar === expectedChar) {
-                // Correct character
+                // 正しい文字
                 this.typedText += newChar;
                 this.currentIndex++;
                 this.totalTyped++;
-                
-                // Remove error if it was previously marked
                 this.removeError(this.currentIndex - 1);
             } else {
-                // Incorrect character
+                // 間違った文字
                 this.addError(this.currentIndex, expectedChar, newChar);
                 this.totalErrors++;
-                
-                // Still advance to prevent getting stuck
                 this.currentIndex++;
                 this.typedText += newChar;
                 this.totalTyped++;
             }
-            
             this.updateProgress();
-            this.debouncedUpdate(); // Use debounced update
-            
-            // Check if typing is complete
-            if (this.currentIndex >= this.currentText.length) {
+            this.debouncedUpdate();
+            if (this.currentIndex >= expectedRomaji.length) {
                 this.complete();
             }
-        } else if (input.length < this.typedText.length) {
-            // Character deleted (backspace)
-            this.handleBackspace(input.length);
+        } else if (inputRomaji.length < this.typedText.length) {
+            // バックスペース
+            this.handleBackspace(inputRomaji.length);
         }
     }
     
@@ -323,10 +317,10 @@ class TypingEngine {
     recalculateErrors() {
         this.errors.clear();
         this.totalErrors = 0;
-        
+        const expectedRomaji = window.wanakana ? window.wanakana.toRomaji(this.currentText) : this.currentText;
         for (let i = 0; i < this.typedText.length; i++) {
-            if (this.typedText[i] !== this.currentText[i]) {
-                this.addError(i, this.currentText[i], this.typedText[i]);
+            if (this.typedText[i] !== expectedRomaji[i]) {
+                this.addError(i, expectedRomaji[i], this.typedText[i]);
                 this.totalErrors++;
             }
         }

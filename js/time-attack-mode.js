@@ -336,6 +336,14 @@ class TimeAttackMode {
         return xp;
     }
 
+    // 簡易ローマ字変換（ひらがな・カタカナのみ対応、実用上は外部ライブラリ推奨）
+    romanizeJapanese(text) {
+        if (window.wanakana) {
+            return window.wanakana.toRomaji(text);
+        }
+        return text;
+    }
+
     startTypingSession() {
         // 全惑星のテキストを集約
         let texts = [];
@@ -361,7 +369,20 @@ class TimeAttackMode {
         // テキスト表示
         const textDisplay = document.getElementById('timeAttackTextDisplay');
         if (textDisplay) {
+            // 日本語テキスト
             textDisplay.textContent = randomText;
+            // ローマ字表記を下に追加
+            let romanized = this.romanizeJapanese(randomText);
+            let romanElem = document.getElementById('timeAttackRomanized');
+            if (!romanElem) {
+                romanElem = document.createElement('div');
+                romanElem.id = 'timeAttackRomanized';
+                romanElem.style.fontSize = '0.9em';
+                romanElem.style.color = '#888';
+                romanElem.style.marginTop = '0.3em';
+                textDisplay.parentNode.insertBefore(romanElem, textDisplay.nextSibling);
+            }
+            romanElem.textContent = romanized;
         }
 
         // 入力欄を有効化し、フォーカス
@@ -384,31 +405,31 @@ class TimeAttackMode {
         
         const input = event.target.value;
         const expectedText = this.sessionData.currentText || '';
-        
-        // Update session data
-        this.sessionData.totalTyped = input.length;
-        
-        // Calculate errors
+
+        // 日本語→ローマ字変換
+        const expectedRomaji = window.wanakana ? window.wanakana.toRomaji(expectedText) : expectedText;
+
+        // 入力長さ分だけ比較
         let errors = 0;
         for (let i = 0; i < input.length; i++) {
-            if (i < expectedText.length && input[i] !== expectedText[i]) {
+            if (i < expectedRomaji.length && input[i] !== expectedRomaji[i]) {
                 errors++;
             }
         }
+        this.sessionData.totalTyped = input.length;
         this.sessionData.totalErrors = errors;
-        
-        // Update combo
+
+        // コンボ・リアルタイム統計などはそのまま
         if (errors === 0 && input.length > 0) {
             this.sessionData.combo++;
             this.sessionData.maxCombo = Math.max(this.sessionData.maxCombo, this.sessionData.combo);
         } else {
             this.sessionData.combo = 0;
         }
-        
-        // Update real-time stats
+
         this.updateRealTimeStats();
-        
-        // Play sounds
+
+        // サウンド
         if (window.audioManager) {
             if (errors === 0) {
                 window.audioManager.playKeySuccess();

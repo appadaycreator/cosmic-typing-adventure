@@ -6,6 +6,7 @@ class CosmicTypingApp {
     this.typingEngine = null;
     this.currentText = "";
     this.isPracticeActive = false;
+    this.userInput = '';
 
     // DOM elements
     this.elements = {
@@ -260,9 +261,23 @@ class CosmicTypingApp {
       if (texts.length > 0) {
         this.currentText = texts[Math.floor(Math.random() * texts.length)];
         this.elements.textDisplay.textContent = this.currentText;
+        // ローマ字表記を下に追加
+        let romanized = window.wanakana ? window.wanakana.toRomaji(this.currentText) : this.currentText;
+        let romanElem = document.getElementById('romanized-text');
+        if (!romanElem) {
+          romanElem = document.createElement('div');
+          romanElem.id = 'romanized-text';
+          romanElem.style.fontSize = '0.9em';
+          romanElem.style.color = '#888';
+          romanElem.style.marginTop = '0.3em';
+          this.elements.textDisplay.parentNode.insertBefore(romanElem, this.elements.textDisplay.nextSibling);
+        }
+        romanElem.textContent = romanized;
       } else {
         this.currentText = "この惑星のテキストが見つかりませんでした。";
         this.elements.textDisplay.textContent = this.currentText;
+        let romanElem = document.getElementById('romanized-text');
+        if (romanElem) romanElem.textContent = '';
       }
     });
   }
@@ -272,6 +287,18 @@ class CosmicTypingApp {
       const text = await window.CosmicSupabase.PracticeTexts.getRandomText(planet);
       this.currentText = text;
       this.elements.textDisplay.textContent = this.currentText;
+      // ローマ字表記を下に追加
+      let romanized = window.wanakana ? window.wanakana.toRomaji(this.currentText) : this.currentText;
+      let romanElem = document.getElementById('romanized-text');
+      if (!romanElem) {
+        romanElem = document.createElement('div');
+        romanElem.id = 'romanized-text';
+        romanElem.style.fontSize = '0.9em';
+        romanElem.style.color = '#888';
+        romanElem.style.marginTop = '0.3em';
+        this.elements.textDisplay.parentNode.insertBefore(romanElem, this.elements.textDisplay.nextSibling);
+      }
+      romanElem.textContent = romanized;
     } else {
       throw new Error("PracticeTexts not available");
     }
@@ -306,6 +333,8 @@ class CosmicTypingApp {
     this.hideAllSections();
     this.elements.typingPractice.style.display = "block";
     this.typingEngine.reset();
+    // ローマ字表記もリセット・再表示
+    this.updateRomanizedText();
     this.updateButtonStates();
   }
 
@@ -331,6 +360,8 @@ class CosmicTypingApp {
     if (!this.isPracticeActive) {
       this.isPracticeActive = true;
       this.typingEngine.start();
+      // ローマ字表記も再表示
+      this.updateRomanizedText();
       this.updateButtonStates();
     }
   }
@@ -346,6 +377,8 @@ class CosmicTypingApp {
   resetPractice() {
     this.isPracticeActive = false;
     this.typingEngine.reset();
+    // ローマ字表記もリセット・再表示
+    this.updateRomanizedText();
     this.updateButtonStates();
   }
 
@@ -569,6 +602,43 @@ class CosmicTypingApp {
         bestAccuracy: 0,
       };
     }
+  }
+
+  // キーボード入力監視
+  handleGlobalKeydown(e) {
+    if (!this.isPracticeActive) return;
+    if (e.key.length === 1) {
+      this.userInput += e.key;
+    } else if (e.key === 'Backspace') {
+      this.userInput = this.userInput.slice(0, -1);
+    }
+    this.updateRomanizedText();
+  }
+
+  // ローマ字表記をtextDisplayの下に必ず表示＋色付け
+  updateRomanizedText() {
+    if (!this.elements.textDisplay) return;
+    const text = this.elements.textDisplay.textContent;
+    let romanized = window.wanakana ? window.wanakana.toRomaji(text) : text;
+    let romanElem = document.getElementById('romanized-text');
+    if (!romanElem) {
+      romanElem = document.createElement('div');
+      romanElem.id = 'romanized-text';
+      romanElem.style.fontSize = '0.9em';
+      romanElem.style.marginTop = '0.3em';
+      this.elements.textDisplay.parentNode.insertBefore(romanElem, this.elements.textDisplay.nextSibling);
+    }
+    // 色付け
+    let color = '#888';
+    if (this.userInput.length > 0) {
+      if (romanized.startsWith(this.userInput)) {
+        color = '#10b981'; // 緑
+      } else {
+        color = '#ef4444'; // 赤
+      }
+    }
+    romanElem.style.color = color;
+    romanElem.textContent = romanized;
   }
 }
 
