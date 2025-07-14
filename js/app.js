@@ -608,8 +608,6 @@ window.startMission = function(missionType) {
     console.error('CosmicTypingAppインスタンスが初期化されていません');
     return;
   }
-  // missionTypeに応じて惑星やモードを切り替え
-  // 例: 'basic', 'exploration', 'speed', 'accuracy' など
-  window.app.selectPlanet(missionType); // 惑星名やモード名を渡す
+  window.app.selectPlanet(missionType);
   window.app.showTypingPractice();
 };
