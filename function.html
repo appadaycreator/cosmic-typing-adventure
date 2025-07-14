@@ -1,32 +1,75 @@
 <!--
-【window直下のグローバル公開方針・現状整理・今後の設計方針】
+【主要クラスの現状の責務・役割まとめ】
 
-■ 現状のグローバル公開一覧
-- window.app（CosmicTypingAppインスタンス）
-- window.startMission（ミッション開始用関数）
-- window.CosmicUtils（共通ユーティリティ群）
-- window.ProgressiveEnhancement, window.UserPreferences, window.FeedbackUtils, window.LoadingUtils, window.KeyboardShortcuts, window.ErrorHandling, window.initUX（UXユーティリティ群）
-- window.AudioManager（オーディオ管理クラス）
-- window.SecurityUtils, window.XSSProtection, window.CSRFProtection, window.CSPUtils, window.DataValidation, window.SecurityMonitoring, window.initSecurity（セキュリティ系）
-- window.CosmicSupabase（Supabase連携ラッパー）
-- window.TypingEngine, window.TypingTextUtils（タイピングエンジン）
-- window.LanguageManager（言語管理）
-- window.ScreenReaderUtils, window.KeyboardNavigationUtils, window.ColorContrastUtils, window.MotionUtils, window.TextScalingUtils, window.AccessibilityPreferences, window.AccessibilityTesting, window.initAccessibility（アクセシビリティ系）
-- window.AdvancedAnalytics（分析）
-- window.MobileOptimizer（モバイル最適化）
-- window.AnimationManager（アニメーション管理）
-- window.AchievementSystem（実績管理）
-- window.coreDebugger（デバッガ）
-- window.PWAInstaller（PWAインストーラ）
-- window.ShipUpgradeSystem（船アップグレード）
-- window.PerformanceOptimizer（パフォーマンス最適化）
-- window.TimeAttackMode（タイムアタックモード）
+■ CosmicTypingApp
+- アプリ全体の状態管理（現在の惑星、練習状態、ユーザー入力など）
+- DOM要素の取得・管理
+- イベントリスナーのセットアップ
+- TypingEngineの初期化・管理
+- 惑星選択・練習画面遷移・リザルト表示などUI制御
+- startMission等のUI連携関数の実体
 
-■ 今後の設計方針
-- window直下へのグローバル展開は「UIから直接呼び出す必要があるもの」「外部からのデバッグ・テスト用途」「他モジュール間での明示的な連携が必要なもの」のみに限定する。
-- それ以外は各クラス・モジュール内で完結させ、必要に応じてimport/requireや依存注入で連携する。
-- 既存のグローバル公開は段階的に整理・縮小し、最終的にはwindow.app（CosmicTypingAppインスタンス）と最低限のAPIのみをグローバル公開する形を目指す。
-- 具体的な整理・縮小案やリファクタリング方針は今後の段階で随時function.htmlに追記する。
+■ TypingEngine
+- タイピング練習のロジック（WPM/正確率計算、進捗管理、エラー検出など）
+- テキスト表示・入力監視・進捗コールバック
+- セッションごとの状態管理
+- テキストのバリデーション・サニタイズ
+
+■ TimeAttackMode
+- タイムアタックモードの状態管理（残り時間、セッションデータなど）
+- タイマー制御・UI切り替え
+- タイピングセッションの開始・終了
+- タイムアタック用のテキスト選択・表示
+
+■ LanguageManager
+- 練習テキスト（日本語/英語）のロード・管理
+- 惑星ごとのテキスト取得
+
+■ AchievementSystem
+- 実績の管理・判定・通知
+- ユーザーステータスに応じたアンロック処理
+
+■ Supabase連携（CosmicSupabase）
+- Supabase初期化・データ保存/取得
+- エラーハンドリング
+
+-->
+<!--
+【理想的な責務分離・依存関係設計】
+
+■ CosmicTypingApp
+- アプリ全体の「オーケストレーター」として、UI・状態・各サブシステムの連携を担う
+- TypingEngine, TimeAttackMode, LanguageManager, AchievementSystem, SupabaseAPI等を「インスタンスとして保持」し、必要なタイミングで呼び出す
+- 依存注入（constructor等でインスタンスを受け取る/生成する）を基本とし、window直下のグローバル参照は極力避ける
+
+■ TypingEngine
+- タイピング練習のロジックに専念し、UIや外部APIには直接依存しない
+- 状態変化や進捗はコールバック/イベントでCosmicTypingAppに通知
+
+■ TimeAttackMode
+- タイムアタック専用の状態・タイマー・UI切り替えを管理
+- TypingEngineを内部で利用する場合も、CosmicTypingApp経由で依存注入
+
+■ LanguageManager
+- テキストデータの取得・管理のみを担当し、UIや他ロジックには依存しない
+- CosmicTypingAppから必要なタイミングで呼び出される
+
+■ AchievementSystem
+- 実績判定・通知のみを担当し、ユーザーステータスやセッションデータを受け取って判定
+- CosmicTypingAppから進捗/結果を渡される形で連携
+
+■ SupabaseAPI（CosmicSupabase）
+- データ保存/取得APIとして独立し、UIや他ロジックには依存しない
+- CosmicTypingAppが必要なタイミングで呼び出す
+
+■ その他ユーティリティ
+- 必要に応じてCosmicTypingAppのコンストラクタ等で依存注入、またはローカルスコープで利用
+
+【設計方針】
+- すべての主要クラスは「単一責任原則」を意識し、役割を明確化
+- 依存関係は「上位（CosmicTypingApp）→下位（サブシステム）」の一方向とし、下位から上位を直接参照しない
+- グローバルwindow参照はUI連携や外部APIの最小限に限定
+- テスト容易性・保守性を重視し、将来的な機能追加や差し替えが容易な構造を目指す
 
 -->
 <!DOCTYPE html>
