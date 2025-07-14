@@ -608,6 +608,13 @@ window.startMission = function(missionType) {
     console.error('CosmicTypingAppインスタンスが初期化されていません');
     return;
   }
-  window.app.selectPlanet(missionType);
+  const missionMap = {
+    basic: 'earth',
+    exploration: 'mars',
+    speed: 'jupiter',
+    accuracy: 'saturn'
+  };
+  const planetKey = missionMap[missionType] || missionType;
+  window.app.selectPlanet(planetKey);
   window.app.showTypingPractice();
 };
