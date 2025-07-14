@@ -103,9 +103,16 @@ class CosmicTypingApp {
   }
 
   getDOMElements() {
-    this.elements.planetSelection = document.getElementById("planet-selection");
-    this.elements.typingPractice = document.getElementById("typing-practice");
-    this.elements.results = document.getElementById("results");
+    // Fallback対応: 新旧どちらのIDでも取得できるようにする
+    this.elements.planetSelection =
+      document.getElementById("planet-selection") ||
+      document.getElementById("missionSelection");
+    this.elements.typingPractice =
+      document.getElementById("typing-practice") ||
+      document.getElementById("typingInterface");
+    this.elements.results =
+      document.getElementById("results") ||
+      document.getElementById("resultsPanel");
     this.elements.planetCards = document.querySelectorAll(".planet-card");
     this.elements.currentPlanetImage = document.getElementById(
       "current-planet-image",
@@ -113,20 +120,47 @@ class CosmicTypingApp {
     this.elements.currentPlanetName = document.getElementById(
       "current-planet-name",
     );
-    this.elements.textDisplay = document.getElementById("text-display");
-    this.elements.typingInput = document.getElementById("typing-input");
-    this.elements.wpmDisplay = document.getElementById("wpm");
-    this.elements.accuracyDisplay = document.getElementById("accuracy");
-    this.elements.elapsedTimeDisplay = document.getElementById("elapsed-time");
-    this.elements.progressFill = document.getElementById("progress-fill");
-    this.elements.startBtn = document.getElementById("start-btn");
-    this.elements.pauseBtn = document.getElementById("pause-btn");
-    this.elements.resetBtn = document.getElementById("reset-btn");
-    this.elements.backToPlanetsBtn = document.getElementById("back-to-planets");
-    this.elements.finalWpmDisplay = document.getElementById("final-wpm");
+    this.elements.textDisplay =
+      document.getElementById("text-display") ||
+      document.getElementById("textDisplay");
+    this.elements.typingInput =
+      document.getElementById("typing-input") ||
+      document.getElementById("typingInput");
+    this.elements.wpmDisplay =
+      document.getElementById("wpm") ||
+      document.getElementById("liveWPM") ||
+      document.getElementById("currentWPM");
+    this.elements.accuracyDisplay =
+      document.getElementById("accuracy") ||
+      document.getElementById("liveAccuracy") ||
+      document.getElementById("currentAccuracy");
+    this.elements.elapsedTimeDisplay =
+      document.getElementById("elapsed-time") ||
+      document.getElementById("gameTimer");
+    this.elements.progressFill =
+      document.getElementById("progress-fill") ||
+      document.getElementById("speedBar");
+    this.elements.startBtn =
+      document.getElementById("start-btn") ||
+      document.getElementById("startBtn");
+    this.elements.pauseBtn =
+      document.getElementById("pause-btn") ||
+      document.getElementById("pauseBtn");
+    this.elements.resetBtn =
+      document.getElementById("reset-btn") ||
+      document.getElementById("resetBtn");
+    this.elements.backToPlanetsBtn =
+      document.getElementById("back-to-planets") ||
+      document.getElementById("backToMissionSelection");
+    this.elements.finalWpmDisplay =
+      document.getElementById("final-wpm") ||
+      document.getElementById("finalWPM");
     this.elements.finalAccuracyDisplay =
-      document.getElementById("final-accuracy");
-    this.elements.totalTypedDisplay = document.getElementById("total-typed");
+      document.getElementById("final-accuracy") ||
+      document.getElementById("finalAccuracy");
+    this.elements.totalTypedDisplay =
+      document.getElementById("total-typed") ||
+      document.getElementById("totalTyped");
     this.elements.totalErrorsDisplay = document.getElementById("total-errors");
     this.elements.saveResultBtn = document.getElementById("save-result");
     this.elements.retryPracticeBtn = document.getElementById("retry-practice");
@@ -279,14 +313,18 @@ class CosmicTypingApp {
 
   showPlanetSelection() {
     this.hideAllSections();
-    this.elements.planetSelection.style.display = "block";
+    if (this.elements.planetSelection) {
+      this.elements.planetSelection.style.display = "block";
+    }
     this.isPracticeActive = false;
     this.updateButtonStates();
   }
 
   showTypingPractice() {
     this.hideAllSections();
-    this.elements.typingPractice.style.display = "block";
+    if (this.elements.typingPractice) {
+      this.elements.typingPractice.style.display = "block";
+    }
     this.typingEngine.reset();
     // ローマ字表記もリセット・再表示
     this.updateRomanizedText();
@@ -295,20 +333,36 @@ class CosmicTypingApp {
 
   showResults(results) {
     this.hideAllSections();
-    this.elements.results.style.display = "block";
+    if (this.elements.results) {
+      this.elements.results.style.display = "block";
+    }
 
-    this.elements.finalWpmDisplay.textContent = results.wpm.toFixed(1);
-    this.elements.finalAccuracyDisplay.textContent = results.accuracy.toFixed(1);
-    this.elements.totalTypedDisplay.textContent = results.totalTyped;
-    this.elements.totalErrorsDisplay.textContent = results.totalErrors;
+    if (this.elements.finalWpmDisplay) {
+      this.elements.finalWpmDisplay.textContent = results.wpm.toFixed(1);
+    }
+    if (this.elements.finalAccuracyDisplay) {
+      this.elements.finalAccuracyDisplay.textContent = results.accuracy.toFixed(1);
+    }
+    if (this.elements.totalTypedDisplay) {
+      this.elements.totalTypedDisplay.textContent = results.totalTyped;
+    }
+    if (this.elements.totalErrorsDisplay) {
+      this.elements.totalErrorsDisplay.textContent = results.totalErrors;
+    }
 
     this.updateButtonStates();
   }
 
   hideAllSections() {
-    this.elements.planetSelection.style.display = "none";
-    this.elements.typingPractice.style.display = "none";
-    this.elements.results.style.display = "none";
+    if (this.elements.planetSelection) {
+      this.elements.planetSelection.style.display = "none";
+    }
+    if (this.elements.typingPractice) {
+      this.elements.typingPractice.style.display = "none";
+    }
+    if (this.elements.results) {
+      this.elements.results.style.display = "none";
+    }
   }
 
   startPractice() {
