@@ -644,5 +644,17 @@ class CosmicTypingApp {
 
 // Initialize app when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
-  window.cosmicTypingApp = new CosmicTypingApp();
+  window.app = new CosmicTypingApp();
 });
+
+// CosmicTypingAppインスタンスがwindow.appとして存在する前提
+window.startMission = function(missionType) {
+  if (!window.app) {
+    console.error('CosmicTypingAppインスタンスが初期化されていません');
+    return;
+  }
+  // missionTypeに応じて惑星やモードを切り替え
+  // 例: 'basic', 'exploration', 'speed', 'accuracy' など
+  window.app.selectPlanet(missionType); // 惑星名やモード名を渡す
+  window.app.showTypingPractice();
+};
