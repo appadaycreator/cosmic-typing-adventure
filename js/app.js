@@ -47,13 +47,13 @@ class CosmicTypingApp {
     try {
       // Initialize Supabase first
       await this.initSupabase();
-      
+
       // Initialize DOM and other components
       this.getDOMElements();
       this.setupEventListeners();
       this.initializeTypingEngine();
       this.showPlanetSelection();
-      
+
       console.log("CosmicTypingApp initialized successfully");
     } catch (error) {
       console.error("Failed to initialize CosmicTypingApp:", error);
@@ -78,7 +78,7 @@ class CosmicTypingApp {
       const success = await initializeSupabase();
       if (success) {
         console.log("Supabase initialized successfully");
-        
+
         // Test connection with fallback
         await this.testSupabaseConnection();
       } else {
@@ -167,6 +167,9 @@ class CosmicTypingApp {
     this.elements.backToPlanetsFromResultsBtn = document.getElementById(
       "back-to-planets-from-results",
     );
+    // New HUD elements
+    this.elements.survivalLivesDisplay = document.getElementById("survivalLives");
+    this.elements.survivalLivesContainer = document.getElementById("survivalLivesContainer");
   }
 
   setupEventListeners() {
@@ -219,6 +222,15 @@ class CosmicTypingApp {
       );
     }
 
+    // Time Attack Buttons
+    const timeAttackBtns = document.querySelectorAll('.time-attack-btn');
+    timeAttackBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const time = parseInt(btn.dataset.timeAttack);
+        this.startTimeAttack(time);
+      });
+    });
+
     // Keyboard shortcuts
     document.addEventListener("keydown", (e) => {
       if (e.ctrlKey || e.metaKey) {
@@ -251,6 +263,7 @@ class CosmicTypingApp {
       accuracyDisplay: this.elements.accuracyDisplay,
       timerDisplay: this.elements.elapsedTimeDisplay,
       progressBar: this.elements.progressFill,
+      survivalLivesDisplay: this.elements.survivalLivesDisplay,
     });
 
     this.typingEngine.setCallbacks({
@@ -260,10 +273,52 @@ class CosmicTypingApp {
     });
   }
 
+  startTimeAttack(seconds) {
+    this.currentPlanet = 'timeAttack'; // Pseudo planet name
+
+    this.typingEngine.mode = 'timeAttack';
+    this.typingEngine.timeLimit = seconds;
+
+    // Hide Survival UI
+    if (this.elements.survivalLivesContainer) this.elements.survivalLivesContainer.classList.add('hidden');
+
+    this.loadPracticeText('jupiter'); // Use Jupiter text for speed/time attack for now
+    this.updatePlanetInfo('jupiter');
+
+    // Update Timer Display immediately if needed
+    if (this.elements.elapsedTimeDisplay) {
+      const minutes = Math.floor(seconds / 60);
+      const secondsRem = seconds % 60;
+      this.elements.elapsedTimeDisplay.textContent =
+        `${minutes.toString().padStart(2, '0')}:${secondsRem.toString().padStart(2, '0')}`;
+    }
+
+    this.showTypingPractice();
+  }
+
   selectPlanet(planet) {
     this.currentPlanet = planet;
-    this.loadPracticeText(planet);
-    this.updatePlanetInfo(planet);
+
+    // Set Mode
+    if (planet === 'survival') {
+      this.typingEngine.mode = 'survival';
+      this.typingEngine.lives = 3;
+      this.typingEngine.maxLives = 3;
+
+      // Show Survival UI, Hide others if specific
+      if (this.elements.survivalLivesContainer) this.elements.survivalLivesContainer.classList.remove('hidden');
+    } else if (planet === 'timeAttack') {
+      this.typingEngine.mode = 'timeAttack';
+      // Hide Survival UI
+      if (this.elements.survivalLivesContainer) this.elements.survivalLivesContainer.classList.add('hidden');
+    } else {
+      this.typingEngine.mode = 'normal';
+      // Hide Survival UI
+      if (this.elements.survivalLivesContainer) this.elements.survivalLivesContainer.classList.add('hidden');
+    }
+
+    this.loadPracticeText(planet === 'survival' ? 'earth' : planet); // Reuse Earth text for now or add specific
+    this.updatePlanetInfo(planet === 'survival' ? 'earth' : planet); // Reuse Earth info
     this.showTypingPractice();
   }
 
@@ -335,6 +390,20 @@ class CosmicTypingApp {
     this.hideAllSections();
     if (this.elements.results) {
       this.elements.results.style.display = "block";
+
+      const titleElem = this.elements.results.querySelector('h3');
+      if (titleElem) {
+        if (results.cause === 'death') {
+          titleElem.textContent = "MISSION FAILED";
+          titleElem.style.color = "#ef4444"; // Red
+        } else if (results.cause === 'timeout') {
+          titleElem.textContent = "TIME UP!";
+          titleElem.style.color = "#fbbf24"; // Amber
+        } else {
+          titleElem.textContent = "ミッション完了!";
+          titleElem.style.color = "var(--cosmic-cyan)";
+        }
+      }
     }
 
     if (this.elements.finalWpmDisplay) {
@@ -429,7 +498,7 @@ class CosmicTypingApp {
     this.isPracticeActive = false;
     this.updateButtonStates();
     this.showResults(results);
-    
+
     // Auto-save results
     this.saveResult();
   }
@@ -462,15 +531,15 @@ class CosmicTypingApp {
 
     try {
       let saved = false;
-      
+
       // Try to save to Supabase first
       if (window.CosmicSupabase && window.CosmicSupabase.TypingStats) {
         saved = await window.CosmicSupabase.TypingStats.saveSession(sessionData);
       }
-      
+
       // Always save to localStorage as backup
       this.saveResultsToStorage(sessionData);
-      
+
       if (saved) {
         this.showMessage("結果が保存されました！", "success");
       } else {
@@ -521,9 +590,9 @@ class CosmicTypingApp {
       z-index: 1000;
       background-color: ${type === 'error' ? '#f44336' : type === 'success' ? '#4caf50' : '#2196f3'};
     `;
-    
+
     document.body.appendChild(messageDiv);
-    
+
     setTimeout(() => {
       if (messageDiv.parentNode) {
         messageDiv.parentNode.removeChild(messageDiv);
@@ -565,7 +634,7 @@ class CosmicTypingApp {
       const sessions = JSON.parse(
         localStorage.getItem("typing_sessions") || "[]"
       );
-      
+
       if (sessions.length === 0) {
         return {
           totalSessions: 0,
@@ -587,11 +656,11 @@ class CosmicTypingApp {
       sessions.forEach((session) => {
         stats.totalWpm += session.wpm;
         stats.totalAccuracy += session.accuracy;
-        
+
         if (session.wpm > stats.bestWpm) {
           stats.bestWpm = session.wpm;
         }
-        
+
         if (session.accuracy > stats.bestAccuracy) {
           stats.bestAccuracy = session.accuracy;
         }
@@ -657,7 +726,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // CosmicTypingAppインスタンスがwindow.appとして存在する前提
-window.startMission = function(missionType) {
+window.startMission = function (missionType) {
   if (!window.app) {
     console.error('CosmicTypingAppインスタンスが初期化されていません');
     return;
@@ -666,8 +735,22 @@ window.startMission = function(missionType) {
     basic: 'earth',
     exploration: 'mars',
     speed: 'jupiter',
-    accuracy: 'saturn'
+    accuracy: 'saturn',
+    survival: 'survival'
   };
+
+  // Check if it is time attack
+  if (typeof missionType === 'string' && missionType.startsWith('timeAttack')) {
+    // Implement Time Attack Start Logic
+    // For now, we reuse selectPlanet logic, but we need to pass time limit
+    // Currently selectPlanet takes 'planet name'. 
+    // Let's handle Time Attack separately or adjust app architecture.
+    // Since existing architecture is planet-based, let's treat Time Attack as a special flow or map it to a planet for now,
+    // but ideally we should update selectPlanet to accept options.
+    console.warn("Time Attack is not fully integrated in startMission yet without refactoring.");
+    return;
+  }
+
   const planetKey = missionMap[missionType] || missionType;
   window.app.selectPlanet(planetKey);
   window.app.showTypingPractice();

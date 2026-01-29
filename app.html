@@ -1,25 +1,31 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cosmic Typing Adventure - メインゲーム</title>
     <meta name="description" content="宇宙船操縦、惑星探索、タイピング練習、WPM計測、スキル向上を一体化した革新的なタイピング学習プラットフォーム">
-    
+
     <!-- CDN Libraries -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap"
+        rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
     <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-TXQGZRF9');</script>
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-TXQGZRF9');</script>
     <!-- End Google Tag Manager -->
-    
+
     <style>
         :root {
             --cosmic-bg: #0a0a1a;
@@ -30,19 +36,19 @@
             --ship-silver: #e5e7eb;
             --energy-green: #10b981;
         }
-        
+
         body {
             font-family: 'Exo 2', sans-serif;
             background: var(--cosmic-bg);
             color: var(--ship-silver);
             overflow-x: hidden;
         }
-        
+
         .cosmic-bg {
             background: linear-gradient(135deg, var(--cosmic-bg) 0%, var(--nebula-purple) 50%, var(--nebula-blue) 100%);
             position: relative;
         }
-        
+
         .cosmic-bg::before {
             content: '';
             position: absolute;
@@ -50,131 +56,183 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: 
+            background-image:
                 radial-gradient(2px 2px at 20px 30px, #fff, transparent),
-                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.8), transparent),
                 radial-gradient(1px 1px at 90px 40px, #fff, transparent),
-                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(255, 255, 255, 0.6), transparent),
                 radial-gradient(2px 2px at 160px 30px, #fff, transparent);
             background-repeat: repeat;
             background-size: 200px 100px;
             animation: twinkle 3s ease-in-out infinite alternate;
         }
-        
+
         @keyframes twinkle {
-            0% { opacity: 0.8; }
-            100% { opacity: 1; }
+            0% {
+                opacity: 0.8;
+            }
+
+            100% {
+                opacity: 1;
+            }
         }
-        
+
         .font-orbitron {
             font-family: 'Orbitron', monospace;
         }
-        
+
         .text-cosmic-cyan {
             color: var(--star-cyan);
         }
-        
+
         .text-planet-orange {
             color: var(--planet-orange);
         }
-        
+
         .text-energy-green {
             color: var(--energy-green);
         }
-        
+
         .bg-cosmic-card {
             background: rgba(15, 23, 42, 0.8);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(96, 165, 250, 0.3);
         }
-        
+
         .spaceship-pulse {
             animation: shipPulse 2s ease-in-out infinite;
         }
-        
+
         @keyframes shipPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.8; }
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
         }
-        
+
         .warp-effect {
             animation: warpSpeed 0.5s ease-out;
         }
-        
+
         @keyframes warpSpeed {
-            0% { transform: translateX(-50px); opacity: 0; }
-            100% { transform: translateX(0); opacity: 1; }
+            0% {
+                transform: translateX(-50px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
-        
+
         .typing-display {
             font-family: 'Courier New', monospace;
             font-size: var(--font-size, 1.2rem);
             line-height: 1.8;
             letter-spacing: 0.1em;
         }
-        
+
         .correct-char {
             color: var(--energy-green);
             background-color: rgba(16, 185, 129, 0.2);
         }
-        
+
         .incorrect-char {
             color: #ef4444;
             background-color: rgba(239, 68, 68, 0.2);
         }
-        
+
         .current-char {
             background-color: var(--star-cyan);
             color: var(--cosmic-bg);
             animation: cursorBlink 1s infinite;
         }
-        
+
         @keyframes cursorBlink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0.3; }
+
+            0%,
+            50% {
+                opacity: 1;
+            }
+
+            51%,
+            100% {
+                opacity: 0.3;
+            }
         }
-        
+
         .planet-discovered {
             animation: planetGlow 1s ease-in-out;
         }
-        
+
         @keyframes planetGlow {
-            0% { box-shadow: 0 0 0 rgba(249, 115, 22, 0.7); }
-            50% { box-shadow: 0 0 30px rgba(249, 115, 22, 0.7); }
-            100% { box-shadow: 0 0 0 rgba(249, 115, 22, 0.7); }
+            0% {
+                box-shadow: 0 0 0 rgba(249, 115, 22, 0.7);
+            }
+
+            50% {
+                box-shadow: 0 0 30px rgba(249, 115, 22, 0.7);
+            }
+
+            100% {
+                box-shadow: 0 0 0 rgba(249, 115, 22, 0.7);
+            }
         }
-        
+
         .progress-bar {
             background: linear-gradient(90deg, var(--energy-green) 0%, var(--star-cyan) 100%);
         }
-        
+
         .mobile-menu {
             transform: translateX(100%);
             transition: transform 0.3s ease-in-out;
         }
-        
+
         .mobile-menu.open {
             transform: translateX(0);
         }
-        
+
         @media (max-width: 768px) {
             .typing-display {
                 font-size: calc(var(--font-size, 1.2rem) * 0.8);
             }
         }
-        
+
         /* Font size classes */
-        .font-size-xs { --font-size: 0.8rem; }
-        .font-size-sm { --font-size: 1rem; }
-        .font-size-md { --font-size: 1.2rem; }
-        .font-size-lg { --font-size: 1.5rem; }
-        .font-size-xl { --font-size: 1.8rem; }
+        .font-size-xs {
+            --font-size: 0.8rem;
+        }
+
+        .font-size-sm {
+            --font-size: 1rem;
+        }
+
+        .font-size-md {
+            --font-size: 1.2rem;
+        }
+
+        .font-size-lg {
+            --font-size: 1.5rem;
+        }
+
+        .font-size-xl {
+            --font-size: 1.8rem;
+        }
     </style>
 </head>
+
 <body class="cosmic-bg min-h-screen">
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQGZRF9"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQGZRF9" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
     <!-- Header -->
@@ -183,22 +241,28 @@
             <div class="flex justify-between items-center h-16">
                 <!-- Logo（クリックでトップへ） -->
                 <a href="index.html" class="flex items-center space-x-3 group" style="text-decoration:none;">
-                    <i class="fas fa-rocket text-cosmic-cyan text-2xl spaceship-pulse group-hover:scale-110 transition-transform"></i>
-                    <h1 class="font-orbitron font-bold text-xl text-cosmic-cyan group-hover:underline">Cosmic Typing</h1>
+                    <i
+                        class="fas fa-rocket text-cosmic-cyan text-2xl spaceship-pulse group-hover:scale-110 transition-transform"></i>
+                    <h1 class="font-orbitron font-bold text-xl text-cosmic-cyan group-hover:underline">Cosmic Typing
+                    </h1>
                 </a>
 
                 <!-- Desktop Navigation -->
                 <nav class="hidden md:flex space-x-8">
-                    <button onclick="showSection('game')" class="nav-btn text-white hover:text-cosmic-cyan transition-colors">
+                    <button onclick="showSection('game')"
+                        class="nav-btn text-white hover:text-cosmic-cyan transition-colors">
                         <i class="fas fa-gamepad mr-2"></i>ゲーム
                     </button>
-                    <button onclick="showSection('stats')" class="nav-btn text-white hover:text-cosmic-cyan transition-colors">
+                    <button onclick="showSection('stats')"
+                        class="nav-btn text-white hover:text-cosmic-cyan transition-colors">
                         <i class="fas fa-chart-line mr-2"></i>統計
                     </button>
-                    <button onclick="showSection('fleet')" class="nav-btn text-white hover:text-cosmic-cyan transition-colors">
+                    <button onclick="showSection('fleet')"
+                        class="nav-btn text-white hover:text-cosmic-cyan transition-colors">
                         <i class="fas fa-space-shuttle mr-2"></i>艦隊
                     </button>
-                    <button onclick="showSection('settings')" class="nav-btn text-white hover:text-cosmic-cyan transition-colors">
+                    <button onclick="showSection('settings')"
+                        class="nav-btn text-white hover:text-cosmic-cyan transition-colors">
                         <i class="fas fa-cog mr-2"></i>設定
                     </button>
                 </nav>
@@ -213,7 +277,8 @@
                     <button onclick="toggleMobileMenu()" class="md:hidden text-white">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
-                    <button onclick="toggleLanguage()" class="text-cosmic-cyan hover:text-white transition-colors hidden sm:inline-flex">
+                    <button onclick="toggleLanguage()"
+                        class="text-cosmic-cyan hover:text-white transition-colors hidden sm:inline-flex">
                         <i class="fas fa-globe mr-1"></i><span id="langToggle">EN</span>
                     </button>
                 </div>
@@ -222,18 +287,23 @@
     </header>
 
     <!-- Mobile Menu -->
-    <div id="mobileMenu" class="mobile-menu fixed top-16 right-0 w-80 h-full bg-cosmic-card z-40 border-l border-blue-500">
+    <div id="mobileMenu"
+        class="mobile-menu fixed top-16 right-0 w-80 h-full bg-cosmic-card z-40 border-l border-blue-500">
         <nav class="p-6 space-y-4">
-            <button onclick="showSection('game'); closeMobileMenu()" class="w-full text-left p-3 hover:bg-blue-900 rounded-lg transition-colors">
+            <button onclick="showSection('game'); closeMobileMenu()"
+                class="w-full text-left p-3 hover:bg-blue-900 rounded-lg transition-colors">
                 <i class="fas fa-gamepad mr-3 text-cosmic-cyan"></i>ゲーム
             </button>
-            <button onclick="showSection('stats'); closeMobileMenu()" class="w-full text-left p-3 hover:bg-blue-900 rounded-lg transition-colors">
+            <button onclick="showSection('stats'); closeMobileMenu()"
+                class="w-full text-left p-3 hover:bg-blue-900 rounded-lg transition-colors">
                 <i class="fas fa-chart-line mr-3 text-cosmic-cyan"></i>統計
             </button>
-            <button onclick="showSection('fleet'); closeMobileMenu()" class="w-full text-left p-3 hover:bg-blue-900 rounded-lg transition-colors">
+            <button onclick="showSection('fleet'); closeMobileMenu()"
+                class="w-full text-left p-3 hover:bg-blue-900 rounded-lg transition-colors">
                 <i class="fas fa-space-shuttle mr-3 text-cosmic-cyan"></i>艦隊
             </button>
-            <button onclick="showSection('settings'); closeMobileMenu()" class="w-full text-left p-3 hover:bg-blue-900 rounded-lg transition-colors">
+            <button onclick="showSection('settings'); closeMobileMenu()"
+                class="w-full text-left p-3 hover:bg-blue-900 rounded-lg transition-colors">
                 <i class="fas fa-cog mr-3 text-cosmic-cyan"></i>設定
             </button>
         </nav>
@@ -241,11 +311,11 @@
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
-        
+
         <!-- Game Section -->
         <section id="gameSection" class="section-content">
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                
+
                 <!-- Left Sidebar - Ship Status -->
                 <div class="lg:col-span-1 space-y-4">
                     <!-- Ship Status -->
@@ -253,7 +323,7 @@
                         <h3 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-4 flex items-center">
                             <i class="fas fa-rocket mr-2"></i>宇宙船ステータス
                         </h3>
-                        
+
                         <div class="space-y-4">
                             <!-- Speed -->
                             <div>
@@ -262,10 +332,11 @@
                                     <span id="currentWPM" class="text-energy-green font-bold">0 WPM</span>
                                 </div>
                                 <div class="w-full bg-gray-700 rounded-full h-3">
-                                    <div id="speedBar" class="progress-bar h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+                                    <div id="speedBar" class="progress-bar h-3 rounded-full transition-all duration-300"
+                                        style="width: 0%"></div>
                                 </div>
                             </div>
-                            
+
                             <!-- Fuel (Accuracy) -->
                             <div>
                                 <div class="flex justify-between text-sm mb-1">
@@ -273,10 +344,12 @@
                                     <span id="currentAccuracy" class="text-cosmic-cyan font-bold">100%</span>
                                 </div>
                                 <div class="w-full bg-gray-700 rounded-full h-3">
-                                    <div id="fuelBar" class="bg-cosmic-cyan h-3 rounded-full transition-all duration-300" style="width: 100%"></div>
+                                    <div id="fuelBar"
+                                        class="bg-cosmic-cyan h-3 rounded-full transition-all duration-300"
+                                        style="width: 100%"></div>
                                 </div>
                             </div>
-                            
+
                             <!-- Shields (Combo) -->
                             <div>
                                 <div class="flex justify-between text-sm mb-1">
@@ -284,18 +357,20 @@
                                     <span id="currentCombo" class="text-planet-orange font-bold">0x</span>
                                 </div>
                                 <div class="w-full bg-gray-700 rounded-full h-3">
-                                    <div id="shieldBar" class="bg-planet-orange h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+                                    <div id="shieldBar"
+                                        class="bg-planet-orange h-3 rounded-full transition-all duration-300"
+                                        style="width: 0%"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Mission Progress -->
                     <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
                         <h3 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-4 flex items-center">
                             <i class="fas fa-globe mr-2"></i>探索進行度
                         </h3>
-                        
+
                         <div class="space-y-3">
                             <div class="flex justify-between text-sm">
                                 <span>現在の星系</span>
@@ -306,70 +381,88 @@
                                 <span id="planetsDiscovered" class="text-energy-green font-bold">0/12</span>
                             </div>
                             <div class="w-full bg-gray-700 rounded-full h-2">
-                                <div id="explorationBar" class="bg-energy-green h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                                <div id="explorationBar"
+                                    class="bg-energy-green h-2 rounded-full transition-all duration-500"
+                                    style="width: 0%"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Main Game Area -->
                 <div class="lg:col-span-2 space-y-6">
                     <!-- Game Mode Selection -->
                     <div id="missionSelection" class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
                         <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-4 text-center">ミッション選択</h3>
-                        
+
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                            <button onclick="startMission('basic')" class="mission-btn bg-blue-900 hover:bg-blue-800 p-4 rounded-lg transition-colors border border-blue-500">
+                            <button onclick="startMission('basic')"
+                                class="mission-btn bg-blue-900 hover:bg-blue-800 p-4 rounded-lg transition-colors border border-blue-500">
                                 <i class="fas fa-graduation-cap text-2xl text-cosmic-cyan mb-2"></i>
                                 <div class="font-bold">基礎訓練</div>
                                 <div class="text-sm text-gray-400">基本的なタイピング練習</div>
                             </button>
-                            
-                            <button onclick="startMission('exploration')" class="mission-btn bg-purple-900 hover:bg-purple-800 p-4 rounded-lg transition-colors border border-purple-500">
+
+                            <button onclick="startMission('exploration')"
+                                class="mission-btn bg-purple-900 hover:bg-purple-800 p-4 rounded-lg transition-colors border border-purple-500">
                                 <i class="fas fa-rocket text-2xl text-planet-orange mb-2"></i>
                                 <div class="font-bold">惑星探索</div>
                                 <div class="text-sm text-gray-400">新しい惑星を発見</div>
                             </button>
-                            
-                            <button onclick="startMission('speed')" class="mission-btn bg-green-900 hover:bg-green-800 p-4 rounded-lg transition-colors border border-green-500">
+
+                            <button onclick="startMission('speed')"
+                                class="mission-btn bg-green-900 hover:bg-green-800 p-4 rounded-lg transition-colors border border-green-500">
                                 <i class="fas fa-bolt text-2xl text-energy-green mb-2"></i>
                                 <div class="font-bold">高速航行</div>
                                 <div class="text-sm text-gray-400">スピード重視の訓練</div>
                             </button>
-                            
-                            <button onclick="startMission('accuracy')" class="mission-btn bg-red-900 hover:bg-red-800 p-4 rounded-lg transition-colors border border-red-500">
+
+                            <button onclick="startMission('accuracy')"
+                                class="mission-btn bg-red-900 hover:bg-red-800 p-4 rounded-lg transition-colors border border-red-500">
                                 <i class="fas fa-crosshairs text-2xl text-red-400 mb-2"></i>
                                 <div class="font-bold">精密制御</div>
                                 <div class="text-sm text-gray-400">正確性を重視した訓練</div>
                             </button>
+
+                            <!-- Survival Mode Button -->
+                            <button onclick="startMission('survival')"
+                                class="mission-btn bg-red-950 hover:bg-red-900 p-4 rounded-lg transition-colors border border-red-600">
+                                <i class="fas fa-heartbeat text-2xl text-red-500 mb-2"></i>
+                                <div class="font-bold">サバイバル</div>
+                                <div class="text-sm text-gray-400">ミス３回で終了</div>
+                            </button>
                         </div>
-                        
+
                         <!-- Time Attack Modes -->
                         <div class="mt-6">
                             <h4 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-3">タイムアタック</h4>
                             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                                <button data-time-attack="30" class="time-attack-btn bg-yellow-900 hover:bg-yellow-800 p-3 rounded-lg transition-colors border border-yellow-500">
+                                <button data-time-attack="30"
+                                    class="time-attack-btn bg-yellow-900 hover:bg-yellow-800 p-3 rounded-lg transition-colors border border-yellow-500">
                                     <div class="text-center">
                                         <div class="text-xl mb-1">⚡</div>
                                         <div class="font-bold text-sm">30秒</div>
                                         <div class="text-xs text-gray-400">スプリント</div>
                                     </div>
                                 </button>
-                                <button data-time-attack="60" class="time-attack-btn bg-orange-900 hover:bg-orange-800 p-3 rounded-lg transition-colors border border-orange-500">
+                                <button data-time-attack="60"
+                                    class="time-attack-btn bg-orange-900 hover:bg-orange-800 p-3 rounded-lg transition-colors border border-orange-500">
                                     <div class="text-center">
                                         <div class="text-xl mb-1">⏱️</div>
                                         <div class="font-bold text-sm">1分</div>
                                         <div class="text-xs text-gray-400">クイック</div>
                                     </div>
                                 </button>
-                                <button data-time-attack="180" class="time-attack-btn bg-red-900 hover:bg-red-800 p-3 rounded-lg transition-colors border border-red-500">
+                                <button data-time-attack="180"
+                                    class="time-attack-btn bg-red-900 hover:bg-red-800 p-3 rounded-lg transition-colors border border-red-500">
                                     <div class="text-center">
                                         <div class="text-xl mb-1">🏃</div>
                                         <div class="font-bold text-sm">3分</div>
                                         <div class="text-xs text-gray-400">マラソン</div>
                                     </div>
                                 </button>
-                                <button data-time-attack="300" class="time-attack-btn bg-purple-900 hover:bg-purple-800 p-3 rounded-lg transition-colors border border-purple-500">
+                                <button data-time-attack="300"
+                                    class="time-attack-btn bg-purple-900 hover:bg-purple-800 p-3 rounded-lg transition-colors border border-purple-500">
                                     <div class="text-center">
                                         <div class="text-xl mb-1">🏁</div>
                                         <div class="font-bold text-sm">5分</div>
@@ -379,7 +472,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Typing Interface -->
                     <div id="typingInterface" class="bg-cosmic-card rounded-xl p-6 border border-blue-500 hidden">
                         <!-- Timer and Stats -->
@@ -392,281 +485,301 @@
                                 <div class="text-xl font-bold text-energy-green" id="liveWPM">0</div>
                                 <div class="text-sm text-gray-400">WPM</div>
                             </div>
-                            <div class="text-center">
-                                <div class="text-xl font-bold text-cosmic-cyan" id="liveAccuracy">100%</div>
-                                <div class="text-sm text-gray-400">正確率</div>
+                            <div class="text-xl font-bold text-cosmic-cyan" id="liveAccuracy">100%</div>
+                            <div class="text-sm text-gray-400">正確率</div>
+                        </div>
+                        <!-- Survival Lives Display (Hidden by default) -->
+                        <div id="survivalLivesContainer" class="text-center hidden">
+                            <div class="text-2xl font-bold text-red-500" id="survivalLives">
+                                <i class="fas fa-heart"></i>
+                                <i class="fas fa-heart"></i>
+                                <i class="fas fa-heart"></i>
                             </div>
-                        </div>
-                        
-                        <!-- Text Display -->
-                        <div id="textDisplay" class="typing-display bg-gray-900 p-6 rounded-lg mb-4 border border-gray-600 min-h-32">
-                            <!-- Text will be dynamically inserted here -->
-                        </div>
-                        
-                        <!-- Input Area -->
-                        <div class="relative">
-                            <textarea 
-                                id="typingInput" 
-                                class="w-full bg-gray-800 text-white p-4 rounded-lg border border-gray-600 focus:border-cosmic-cyan focus:outline-none resize-none" 
-                                rows="3" 
-                                placeholder="ここに入力してください..."
-                                disabled
-                            ></textarea>
-                        </div>
-                        
-                        <!-- Game Controls -->
-                        <div class="flex justify-center space-x-4 mt-4">
-                            <button onclick="startTyping()" id="startBtn" class="bg-energy-green hover:bg-green-600 px-6 py-2 rounded-lg font-bold transition-colors">
-                                <i class="fas fa-play mr-2"></i>開始
-                            </button>
-                            <button onclick="pauseTyping()" id="pauseBtn" class="bg-planet-orange hover:bg-orange-600 px-6 py-2 rounded-lg font-bold transition-colors hidden">
-                                <i class="fas fa-pause mr-2"></i>一時停止
-                            </button>
-                            <button onclick="resetTyping()" id="resetBtn" class="bg-gray-600 hover:bg-gray-700 px-6 py-2 rounded-lg font-bold transition-colors">
-                                <i class="fas fa-redo mr-2"></i>リセット
-                            </button>
+                            <div class="text-sm text-gray-400">ライフ</div>
                         </div>
                     </div>
-                    
-                    <!-- Results Panel -->
-                    <div id="resultsPanel" class="bg-cosmic-card rounded-xl p-6 border border-blue-500 hidden">
-                        <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-4 text-center">ミッション完了!</h3>
-                        
-                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-energy-green" id="finalWPM">0</div>
-                                <div class="text-sm text-gray-400">WPM</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-cosmic-cyan" id="finalAccuracy">0%</div>
-                                <div class="text-sm text-gray-400">正確率</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-planet-orange" id="finalCombo">0x</div>
-                                <div class="text-sm text-gray-400">最大コンボ</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-purple-400" id="earnedXP">0</div>
-                                <div class="text-sm text-gray-400">獲得XP</div>
-                            </div>
+
+                    <!-- Text Display -->
+                    <div id="textDisplay"
+                        class="typing-display bg-gray-900 p-6 rounded-lg mb-4 border border-gray-600 min-h-32">
+                        <!-- Text will be dynamically inserted here -->
+                    </div>
+
+                    <!-- Input Area -->
+                    <div class="relative">
+                        <textarea id="typingInput"
+                            class="w-full bg-gray-800 text-white p-4 rounded-lg border border-gray-600 focus:border-cosmic-cyan focus:outline-none resize-none"
+                            rows="3" placeholder="ここに入力してください..." disabled></textarea>
+                    </div>
+
+                    <!-- Game Controls -->
+                    <div class="flex justify-center space-x-4 mt-4">
+                        <button onclick="startTyping()" id="startBtn"
+                            class="bg-energy-green hover:bg-green-600 px-6 py-2 rounded-lg font-bold transition-colors">
+                            <i class="fas fa-play mr-2"></i>開始
+                        </button>
+                        <button onclick="pauseTyping()" id="pauseBtn"
+                            class="bg-planet-orange hover:bg-orange-600 px-6 py-2 rounded-lg font-bold transition-colors hidden">
+                            <i class="fas fa-pause mr-2"></i>一時停止
+                        </button>
+                        <button onclick="resetTyping()" id="resetBtn"
+                            class="bg-gray-600 hover:bg-gray-700 px-6 py-2 rounded-lg font-bold transition-colors">
+                            <i class="fas fa-redo mr-2"></i>リセット
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results Panel -->
+                <div id="resultsPanel" class="bg-cosmic-card rounded-xl p-6 border border-blue-500 hidden">
+                    <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-4 text-center">ミッション完了!</h3>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-energy-green" id="finalWPM">0</div>
+                            <div class="text-sm text-gray-400">WPM</div>
                         </div>
-                        
-                        <div class="flex justify-center space-x-4">
-                            <button onclick="shareResults()" class="bg-cosmic-cyan hover:bg-blue-500 px-6 py-2 rounded-lg font-bold transition-colors">
-                                <i class="fas fa-share mr-2"></i>結果をシェア
-                            </button>
-                            <button onclick="playAgain()" class="bg-energy-green hover:bg-green-600 px-6 py-2 rounded-lg font-bold transition-colors">
-                                <i class="fas fa-play mr-2"></i>もう一度
-                            </button>
-                            <button onclick="selectNewMission()" class="bg-planet-orange hover:bg-orange-600 px-6 py-2 rounded-lg font-bold transition-colors">
-                                <i class="fas fa-globe mr-2"></i>別の惑星
-                            </button>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-cosmic-cyan" id="finalAccuracy">0%</div>
+                            <div class="text-sm text-gray-400">正確率</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-planet-orange" id="finalCombo">0x</div>
+                            <div class="text-sm text-gray-400">最大コンボ</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-purple-400" id="earnedXP">0</div>
+                            <div class="text-sm text-gray-400">獲得XP</div>
                         </div>
                     </div>
-                    
-                    <!-- Time Attack Interface -->
-                    <div id="timeAttackInterface" class="bg-cosmic-card rounded-xl p-6 border border-blue-500 hidden">
-                        <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-4 text-center">タイムアタック</h3>
-                        
-                        <!-- Timer and Progress -->
-                        <div class="flex justify-between items-center mb-6">
-                            <div class="text-center">
-                                <div class="text-3xl font-orbitron font-bold text-cosmic-cyan" id="timeAttackTimer">01:00</div>
-                                <div class="text-sm text-gray-400">残り時間</div>
-                            </div>
-                            <div class="flex-1 mx-4">
-                                <div class="bg-gray-700 rounded-full h-2">
-                                    <div id="timeAttackProgress" class="bg-cosmic-cyan h-2 rounded-full transition-all duration-1000" style="width: 0%"></div>
-                                </div>
-                            </div>
+
+                    <div class="flex justify-center space-x-4">
+                        <button onclick="shareResults()"
+                            class="bg-cosmic-cyan hover:bg-blue-500 px-6 py-2 rounded-lg font-bold transition-colors">
+                            <i class="fas fa-share mr-2"></i>結果をシェア
+                        </button>
+                        <button onclick="playAgain()"
+                            class="bg-energy-green hover:bg-green-600 px-6 py-2 rounded-lg font-bold transition-colors">
+                            <i class="fas fa-play mr-2"></i>もう一度
+                        </button>
+                        <button onclick="selectNewMission()"
+                            class="bg-planet-orange hover:bg-orange-600 px-6 py-2 rounded-lg font-bold transition-colors">
+                            <i class="fas fa-globe mr-2"></i>別の惑星
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Time Attack Interface -->
+                <div id="timeAttackInterface" class="bg-cosmic-card rounded-xl p-6 border border-blue-500 hidden">
+                    <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-4 text-center">タイムアタック</h3>
+
+                    <!-- Timer and Progress -->
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="text-center">
+                            <div class="text-3xl font-orbitron font-bold text-cosmic-cyan" id="timeAttackTimer">
+                                01:00</div>
+                            <div class="text-sm text-gray-400">残り時間</div>
                         </div>
-                        
-                        <!-- Real-time Stats -->
-                        <div class="grid grid-cols-3 gap-4 mb-6">
-                            <div class="text-center">
-                                <div class="text-xl font-bold text-energy-green" id="timeAttackWPM">0</div>
-                                <div class="text-sm text-gray-400">WPM</div>
+                        <div class="flex-1 mx-4">
+                            <div class="bg-gray-700 rounded-full h-2">
+                                <div id="timeAttackProgress"
+                                    class="bg-cosmic-cyan h-2 rounded-full transition-all duration-1000"
+                                    style="width: 0%"></div>
                             </div>
-                            <div class="text-center">
-                                <div class="text-xl font-bold text-cosmic-cyan" id="timeAttackAccuracy">100%</div>
-                                <div class="text-sm text-gray-400">正確率</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-xl font-bold text-planet-orange" id="timeAttackCombo">0</div>
-                                <div class="text-sm text-gray-400">コンボ</div>
-                            </div>
-                        </div>
-                        
-                        <!-- Text Display -->
-                        <div id="timeAttackTextDisplay" class="typing-display bg-gray-900 p-6 rounded-lg mb-4 border border-gray-600 min-h-32">
-                            <!-- Text will be dynamically inserted here -->
-                        </div>
-                        
-                        <!-- Input Area -->
-                        <div class="relative">
-                            <textarea 
-                                id="timeAttackInput" 
-                                class="w-full bg-gray-800 text-white p-4 rounded-lg border border-gray-600 focus:border-cosmic-cyan focus:outline-none resize-none" 
-                                rows="3" 
-                                placeholder="ここに入力してください..."
-                                disabled
-                            ></textarea>
-                        </div>
-                        
-                        <!-- Controls -->
-                        <div class="flex justify-center space-x-4 mt-4">
-                            <button onclick="resetTimeAttack()" class="bg-gray-600 hover:bg-gray-700 px-6 py-2 rounded-lg font-bold transition-colors">
-                                <i class="fas fa-redo mr-2"></i>リセット
-                            </button>
                         </div>
                     </div>
-                    
-                    <!-- Time Attack Results -->
-                    <div id="timeAttackResults" class="bg-cosmic-card rounded-xl p-6 border border-blue-500 hidden">
-                        <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-4 text-center">タイムアタック完了!</h3>
-                        
-                        <!-- Performance Rating -->
-                        <div class="text-center mb-6">
-                            <div class="text-4xl font-bold mb-2" id="performanceRating">A級</div>
-                            <div class="text-sm text-gray-400">パフォーマンス評価</div>
+
+                    <!-- Real-time Stats -->
+                    <div class="grid grid-cols-3 gap-4 mb-6">
+                        <div class="text-center">
+                            <div class="text-xl font-bold text-energy-green" id="timeAttackWPM">0</div>
+                            <div class="text-sm text-gray-400">WPM</div>
                         </div>
-                        
-                        <div class="grid grid-cols-2 sm:grid-cols-5 gap-4 mb-6">
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-energy-green" id="finalWPM">0</div>
-                                <div class="text-sm text-gray-400">WPM</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-cosmic-cyan" id="finalAccuracy">0%</div>
-                                <div class="text-sm text-gray-400">正確率</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-planet-orange" id="finalCombo">0</div>
-                                <div class="text-sm text-gray-400">最大コンボ</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-purple-400" id="timeUsed">0秒</div>
-                                <div class="text-sm text-gray-400">使用時間</div>
-                            </div>
-                            <div class="text-center">
-                                <div class="text-2xl font-bold text-yellow-400" id="totalTyped">0</div>
-                                <div class="text-sm text-gray-400">入力文字数</div>
-                            </div>
+                        <div class="text-center">
+                            <div class="text-xl font-bold text-cosmic-cyan" id="timeAttackAccuracy">100%</div>
+                            <div class="text-sm text-gray-400">正確率</div>
                         </div>
-                        
-                        <div class="flex justify-center space-x-4">
-                            <button onclick="shareTimeAttackResults()" class="bg-cosmic-cyan hover:bg-blue-500 px-6 py-2 rounded-lg font-bold transition-colors">
-                                <i class="fas fa-share mr-2"></i>結果をシェア
-                            </button>
-                            <button onclick="playTimeAttackAgain()" class="bg-energy-green hover:bg-green-600 px-6 py-2 rounded-lg font-bold transition-colors">
-                                <i class="fas fa-play mr-2"></i>もう一度
-                            </button>
-                            <button onclick="backToMissionSelection()" class="bg-planet-orange hover:bg-orange-600 px-6 py-2 rounded-lg font-bold transition-colors">
-                                <i class="fas fa-arrow-left mr-2"></i>戻る
-                            </button>
+                        <div class="text-center">
+                            <div class="text-xl font-bold text-planet-orange" id="timeAttackCombo">0</div>
+                            <div class="text-sm text-gray-400">コンボ</div>
+                        </div>
+                    </div>
+
+                    <!-- Text Display -->
+                    <div id="timeAttackTextDisplay"
+                        class="typing-display bg-gray-900 p-6 rounded-lg mb-4 border border-gray-600 min-h-32">
+                        <!-- Text will be dynamically inserted here -->
+                    </div>
+
+                    <!-- Input Area -->
+                    <div class="relative">
+                        <textarea id="timeAttackInput"
+                            class="w-full bg-gray-800 text-white p-4 rounded-lg border border-gray-600 focus:border-cosmic-cyan focus:outline-none resize-none"
+                            rows="3" placeholder="ここに入力してください..." disabled></textarea>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="flex justify-center space-x-4 mt-4">
+                        <button onclick="resetTimeAttack()"
+                            class="bg-gray-600 hover:bg-gray-700 px-6 py-2 rounded-lg font-bold transition-colors">
+                            <i class="fas fa-redo mr-2"></i>リセット
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Time Attack Results -->
+                <div id="timeAttackResults" class="bg-cosmic-card rounded-xl p-6 border border-blue-500 hidden">
+                    <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-4 text-center">タイムアタック完了!</h3>
+
+                    <!-- Performance Rating -->
+                    <div class="text-center mb-6">
+                        <div class="text-4xl font-bold mb-2" id="performanceRating">A級</div>
+                        <div class="text-sm text-gray-400">パフォーマンス評価</div>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-5 gap-4 mb-6">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-energy-green" id="finalWPM">0</div>
+                            <div class="text-sm text-gray-400">WPM</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-cosmic-cyan" id="finalAccuracy">0%</div>
+                            <div class="text-sm text-gray-400">正確率</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-planet-orange" id="finalCombo">0</div>
+                            <div class="text-sm text-gray-400">最大コンボ</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-purple-400" id="timeUsed">0秒</div>
+                            <div class="text-sm text-gray-400">使用時間</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-yellow-400" id="totalTyped">0</div>
+                            <div class="text-sm text-gray-400">入力文字数</div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-center space-x-4">
+                        <button onclick="shareTimeAttackResults()"
+                            class="bg-cosmic-cyan hover:bg-blue-500 px-6 py-2 rounded-lg font-bold transition-colors">
+                            <i class="fas fa-share mr-2"></i>結果をシェア
+                        </button>
+                        <button onclick="playTimeAttackAgain()"
+                            class="bg-energy-green hover:bg-green-600 px-6 py-2 rounded-lg font-bold transition-colors">
+                            <i class="fas fa-play mr-2"></i>もう一度
+                        </button>
+                        <button onclick="backToMissionSelection()"
+                            class="bg-planet-orange hover:bg-orange-600 px-6 py-2 rounded-lg font-bold transition-colors">
+                            <i class="fas fa-arrow-left mr-2"></i>戻る
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar - Discovery -->
+            <div class="lg:col-span-1 space-y-4">
+                <!-- Recent Discoveries -->
+                <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
+                    <h3 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-4 flex items-center">
+                        <i class="fas fa-telescope mr-2"></i>最近の発見
+                    </h3>
+
+                    <div id="discoveryList" class="space-y-3">
+                        <div class="text-sm text-gray-400 text-center py-4">
+                            まだ発見はありません<br>
+                            タイピングで宇宙を探索しよう！
                         </div>
                     </div>
                 </div>
-                
-                <!-- Right Sidebar - Discovery -->
-                <div class="lg:col-span-1 space-y-4">
-                    <!-- Recent Discoveries -->
-                    <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
-                        <h3 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-4 flex items-center">
-                            <i class="fas fa-telescope mr-2"></i>最近の発見
-                        </h3>
-                        
-                        <div id="discoveryList" class="space-y-3">
-                            <div class="text-sm text-gray-400 text-center py-4">
-                                まだ発見はありません<br>
-                                タイピングで宇宙を探索しよう！
+
+                <!-- Achievements -->
+                <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
+                    <h3 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-4 flex items-center">
+                        <i class="fas fa-trophy mr-2"></i>実績
+                    </h3>
+
+                    <div id="achievementList" class="space-y-2">
+                        <div class="achievement-item p-2 bg-gray-800 rounded flex items-center space-x-3 opacity-50">
+                            <i class="fas fa-medal text-gray-500"></i>
+                            <div class="text-sm">
+                                <div class="font-bold text-gray-500">初回航行</div>
+                                <div class="text-xs text-gray-600">最初のタイピングを完了</div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <!-- Achievements -->
-                    <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
-                        <h3 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-4 flex items-center">
-                            <i class="fas fa-trophy mr-2"></i>実績
-                        </h3>
-                        
-                        <div id="achievementList" class="space-y-2">
-                            <div class="achievement-item p-2 bg-gray-800 rounded flex items-center space-x-3 opacity-50">
-                                <i class="fas fa-medal text-gray-500"></i>
-                                <div class="text-sm">
-                                    <div class="font-bold text-gray-500">初回航行</div>
-                                    <div class="text-xs text-gray-600">最初のタイピングを完了</div>
-                                </div>
+                        <div class="achievement-item p-2 bg-gray-800 rounded flex items-center space-x-3 opacity-50">
+                            <i class="fas fa-rocket text-gray-500"></i>
+                            <div class="text-sm">
+                                <div class="font-bold text-gray-500">スピードパイロット</div>
+                                <div class="text-xs text-gray-600">50 WPMを達成</div>
                             </div>
-                            <div class="achievement-item p-2 bg-gray-800 rounded flex items-center space-x-3 opacity-50">
-                                <i class="fas fa-rocket text-gray-500"></i>
-                                <div class="text-sm">
-                                    <div class="font-bold text-gray-500">スピードパイロット</div>
-                                    <div class="text-xs text-gray-600">50 WPMを達成</div>
-                                </div>
-                            </div>
-                            <div class="achievement-item p-2 bg-gray-800 rounded flex items-center space-x-3 opacity-50">
-                                <i class="fas fa-globe text-gray-500"></i>
-                                <div class="text-sm">
-                                    <div class="font-bold text-gray-500">惑星発見者</div>
-                                    <div class="text-xs text-gray-600">最初の惑星を発見</div>
-                                </div>
+                        </div>
+                        <div class="achievement-item p-2 bg-gray-800 rounded flex items-center space-x-3 opacity-50">
+                            <i class="fas fa-globe text-gray-500"></i>
+                            <div class="text-sm">
+                                <div class="font-bold text-gray-500">惑星発見者</div>
+                                <div class="text-xs text-gray-600">最初の惑星を発見</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            </div>
         </section>
-        
+
         <!-- Statistics Section -->
         <section id="statsSection" class="section-content hidden">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                
+
                 <!-- Performance Overview -->
                 <div class="lg:col-span-2">
                     <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500 mb-6">
                         <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-6">パフォーマンス推移</h3>
                         <canvas id="performanceChart" style="height: 400px; max-height: 400px;"></canvas>
                     </div>
-                    
+
                     <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
                         <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-6">キー別統計</h3>
                         <canvas id="keyStatsChart" style="height: 300px; max-height: 300px;"></canvas>
                     </div>
                 </div>
-                
+
                 <!-- Statistics Summary -->
                 <div class="space-y-6">
                     <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
                         <h3 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-4">総合統計</h3>
-                        
+
                         <div class="space-y-4">
                             <div class="flex justify-between">
                                 <span>最高WPM</span>
                                 <span class="font-bold text-energy-green" id="bestWPM">0</span>
                             </div>
-                            
+
                             <!-- Analytics Tabs -->
                             <div class="mt-6">
                                 <h4 class="font-orbitron font-bold text-md text-cosmic-cyan mb-3">詳細分析</h4>
                                 <div class="grid grid-cols-2 gap-2 mb-4">
-                                    <button data-analytics="daily" class="bg-cosmic-card hover:bg-cosmic-hover p-2 rounded border border-cosmic-border text-sm transition-colors">
+                                    <button data-analytics="daily"
+                                        class="bg-cosmic-card hover:bg-cosmic-hover p-2 rounded border border-cosmic-border text-sm transition-colors">
                                         日別統計
                                     </button>
-                                    <button data-analytics="weekly" class="bg-cosmic-card hover:bg-cosmic-hover p-2 rounded border border-cosmic-border text-sm transition-colors">
+                                    <button data-analytics="weekly"
+                                        class="bg-cosmic-card hover:bg-cosmic-hover p-2 rounded border border-cosmic-border text-sm transition-colors">
                                         週別統計
                                     </button>
-                                    <button data-analytics="monthly" class="bg-cosmic-card hover:bg-cosmic-hover p-2 rounded border border-cosmic-border text-sm transition-colors">
+                                    <button data-analytics="monthly"
+                                        class="bg-cosmic-card hover:bg-cosmic-hover p-2 rounded border border-cosmic-border text-sm transition-colors">
                                         月別統計
                                     </button>
-                                    <button data-analytics="keys" class="bg-cosmic-card hover:bg-cosmic-hover p-2 rounded border border-cosmic-border text-sm transition-colors">
+                                    <button data-analytics="keys"
+                                        class="bg-cosmic-card hover:bg-cosmic-hover p-2 rounded border border-cosmic-border text-sm transition-colors">
                                         キー分析
                                     </button>
-                                    <button data-analytics="progress" class="bg-cosmic-card hover:bg-cosmic-hover p-2 rounded border border-cosmic-border text-sm transition-colors">
+                                    <button data-analytics="progress"
+                                        class="bg-cosmic-card hover:bg-cosmic-hover p-2 rounded border border-cosmic-border text-sm transition-colors">
                                         進歩トレンド
                                     </button>
                                 </div>
-                                
+
                                 <!-- Analytics Content -->
                                 <div id="dailyAnalytics" class="analytics-content hidden"></div>
                                 <div id="weeklyAnalytics" class="analytics-content hidden"></div>
@@ -692,10 +805,10 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
                         <h3 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-4">探索記録</h3>
-                        
+
                         <div class="space-y-4">
                             <div class="flex justify-between">
                                 <span>発見した惑星</span>
@@ -715,7 +828,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
                         <h3 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-4">苦手キー分析</h3>
                         <div id="weakKeys" class="space-y-2">
@@ -725,7 +838,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
                         <h3 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-4">実績</h3>
                         <div class="text-sm text-gray-400 mb-2">
@@ -738,16 +851,17 @@
                 </div>
             </div>
         </section>
-        
+
         <!-- Fleet Section -->
         <section id="fleetSection" class="section-content hidden">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                
+
                 <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
                     <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-6">保有宇宙船</h3>
-                    
+
                     <div class="space-y-4">
-                        <div class="ship-card bg-gray-800 p-4 rounded-lg border border-blue-500 border-l-4 border-l-energy-green">
+                        <div
+                            class="ship-card bg-gray-800 p-4 rounded-lg border border-blue-500 border-l-4 border-l-energy-green">
                             <div class="flex justify-between items-start mb-2">
                                 <h4 class="font-bold text-energy-green">スターターシップ</h4>
                                 <span class="text-xs bg-energy-green text-black px-2 py-1 rounded">ACTIVE</span>
@@ -760,7 +874,7 @@
                                 <div>XP倍率: x1.0</div>
                             </div>
                         </div>
-                        
+
                         <div class="ship-card bg-gray-800 p-4 rounded-lg border border-gray-600 opacity-50">
                             <div class="flex justify-between items-start mb-2">
                                 <h4 class="font-bold text-gray-500">スピードクルーザー</h4>
@@ -775,7 +889,7 @@
                             </div>
                             <div class="text-xs text-planet-orange mt-2">解放条件: 平均WPM 40以上</div>
                         </div>
-                        
+
                         <div class="ship-card bg-gray-800 p-4 rounded-lg border border-gray-600 opacity-50">
                             <div class="flex justify-between items-start mb-2">
                                 <h4 class="font-bold text-gray-500">エクスプローラー</h4>
@@ -792,10 +906,10 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
                     <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-6">宇宙船強化</h3>
-                    
+
                     <div class="space-y-6">
                         <!-- Engine Upgrade -->
                         <div class="upgrade-section">
@@ -804,16 +918,18 @@
                                 <span class="text-sm text-gray-400">Lv. <span id="engineLevel">1</span>/5</span>
                             </div>
                             <div class="w-full bg-gray-700 rounded-full h-2 mb-2">
-                                <div id="engineProgress" class="bg-energy-green h-2 rounded-full" style="width: 20%"></div>
+                                <div id="engineProgress" class="bg-energy-green h-2 rounded-full" style="width: 20%">
+                                </div>
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-sm text-gray-400">タイピング速度 +5%</span>
-                                <button data-upgrade="engine" class="bg-energy-green hover:bg-green-600 px-3 py-1 rounded text-sm font-bold transition-colors">
+                                <button data-upgrade="engine"
+                                    class="bg-energy-green hover:bg-green-600 px-3 py-1 rounded text-sm font-bold transition-colors">
                                     強化 (100 XP)
                                 </button>
                             </div>
                         </div>
-                        
+
                         <!-- Fuel System Upgrade -->
                         <div class="upgrade-section">
                             <div class="flex justify-between items-center mb-2">
@@ -825,12 +941,13 @@
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-sm text-gray-400">正確率ボーナス +2%</span>
-                                <button data-upgrade="fuel" class="bg-cosmic-cyan hover:bg-blue-500 px-3 py-1 rounded text-sm font-bold transition-colors">
+                                <button data-upgrade="fuel"
+                                    class="bg-cosmic-cyan hover:bg-blue-500 px-3 py-1 rounded text-sm font-bold transition-colors">
                                     強化 (150 XP)
                                 </button>
                             </div>
                         </div>
-                        
+
                         <!-- Shield Upgrade -->
                         <div class="upgrade-section">
                             <div class="flex justify-between items-center mb-2">
@@ -838,11 +955,13 @@
                                 <span class="text-sm text-gray-400">Lv. <span id="shieldLevel">1</span>/5</span>
                             </div>
                             <div class="w-full bg-gray-700 rounded-full h-2 mb-2">
-                                <div id="shieldProgress" class="bg-planet-orange h-2 rounded-full" style="width: 20%"></div>
+                                <div id="shieldProgress" class="bg-planet-orange h-2 rounded-full" style="width: 20%">
+                                </div>
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-sm text-gray-400">ミス時ペナルティ -10%</span>
-                                <button data-upgrade="shield" class="bg-planet-orange hover:bg-orange-600 px-3 py-1 rounded text-sm font-bold transition-colors">
+                                <button data-upgrade="shield"
+                                    class="bg-planet-orange hover:bg-orange-600 px-3 py-1 rounded text-sm font-bold transition-colors">
                                     強化 (200 XP)
                                 </button>
                             </div>
@@ -851,33 +970,36 @@
                 </div>
             </div>
         </section>
-        
+
         <!-- Settings Section -->
         <section id="settingsSection" class="section-content hidden">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                
+
                 <!-- Game Settings -->
                 <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
                     <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-6">ゲーム設定</h3>
-                    
+
                     <div class="space-y-6">
                         <!-- Language -->
                         <div>
                             <label class="block text-sm font-bold mb-2">言語 / Language</label>
                             <div class="flex space-x-2">
-                                <button data-language="ja" class="flex-1 p-2 bg-blue-600 text-white rounded-lg border border-gray-600 hover:bg-blue-700 transition-colors">
+                                <button data-language="ja"
+                                    class="flex-1 p-2 bg-blue-600 text-white rounded-lg border border-gray-600 hover:bg-blue-700 transition-colors">
                                     日本語
                                 </button>
-                                <button data-language="en" class="flex-1 p-2 bg-gray-600 text-gray-300 rounded-lg border border-gray-600 hover:bg-gray-700 transition-colors">
+                                <button data-language="en"
+                                    class="flex-1 p-2 bg-gray-600 text-gray-300 rounded-lg border border-gray-600 hover:bg-gray-700 transition-colors">
                                     English
                                 </button>
                             </div>
                         </div>
-                        
+
                         <!-- Font Size -->
                         <div>
                             <label class="block text-sm font-bold mb-2">文字サイズ</label>
-                            <select id="fontSizeSelect" class="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-cosmic-cyan focus:outline-none">
+                            <select id="fontSizeSelect"
+                                class="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-cosmic-cyan focus:outline-none">
                                 <option value="xs">極小</option>
                                 <option value="sm">小</option>
                                 <option value="md" selected>標準</option>
@@ -885,65 +1007,72 @@
                                 <option value="xl">特大</option>
                             </select>
                         </div>
-                        
+
                         <!-- Sound Effects -->
                         <div>
                             <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="soundEffects" class="w-4 h-4 text-cosmic-cyan bg-gray-800 border border-gray-600 rounded focus:ring-cosmic-cyan">
+                                <input type="checkbox" id="soundEffects"
+                                    class="w-4 h-4 text-cosmic-cyan bg-gray-800 border border-gray-600 rounded focus:ring-cosmic-cyan">
                                 <span>効果音を有効にする</span>
                             </label>
                         </div>
-                        
+
                         <!-- Background Music -->
                         <div>
                             <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="backgroundMusic" class="w-4 h-4 text-cosmic-cyan bg-gray-800 border border-gray-600 rounded focus:ring-cosmic-cyan">
+                                <input type="checkbox" id="backgroundMusic"
+                                    class="w-4 h-4 text-cosmic-cyan bg-gray-800 border border-gray-600 rounded focus:ring-cosmic-cyan">
                                 <span>BGMを有効にする</span>
                             </label>
                         </div>
-                        
+
                         <!-- Auto-save -->
                         <div>
                             <label class="flex items-center space-x-3">
-                                <input type="checkbox" id="autoSave" checked class="w-4 h-4 text-cosmic-cyan bg-gray-800 border border-gray-600 rounded focus:ring-cosmic-cyan">
+                                <input type="checkbox" id="autoSave" checked
+                                    class="w-4 h-4 text-cosmic-cyan bg-gray-800 border border-gray-600 rounded focus:ring-cosmic-cyan">
                                 <span>自動保存を有効にする</span>
                             </label>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Account & Data -->
                 <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
                     <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-6">アカウント・データ管理</h3>
-                    
+
                     <div class="space-y-6">
                         <!-- User Profile -->
                         <div>
                             <label class="block text-sm font-bold mb-2">パイロット名</label>
-                            <input type="text" id="pilotName" value="宇宙探険家" class="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-cosmic-cyan focus:outline-none">
+                            <input type="text" id="pilotName" value="宇宙探険家"
+                                class="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-cosmic-cyan focus:outline-none">
                         </div>
-                        
+
                         <!-- Export Data -->
                         <div>
                             <h4 class="font-bold mb-2">データのエクスポート</h4>
-                            <button onclick="exportData()" class="bg-cosmic-cyan hover:bg-blue-500 px-4 py-2 rounded-lg font-bold transition-colors w-full">
+                            <button onclick="exportData()"
+                                class="bg-cosmic-cyan hover:bg-blue-500 px-4 py-2 rounded-lg font-bold transition-colors w-full">
                                 <i class="fas fa-download mr-2"></i>データをダウンロード
                             </button>
                         </div>
-                        
+
                         <!-- Import Data -->
                         <div>
                             <h4 class="font-bold mb-2">データのインポート</h4>
                             <input type="file" id="importFile" accept=".json" class="hidden">
-                            <button onclick="document.getElementById('importFile').click()" class="bg-energy-green hover:bg-green-600 px-4 py-2 rounded-lg font-bold transition-colors w-full">
+                            <button onclick="document.getElementById('importFile').click()"
+                                class="bg-energy-green hover:bg-green-600 px-4 py-2 rounded-lg font-bold transition-colors w-full">
                                 <i class="fas fa-upload mr-2"></i>データをアップロード
                             </button>
                         </div>
-                        
+
                         <!-- Reset Data -->
                         <div>
                             <h4 class="font-bold mb-2 text-red-400">データのリセット</h4>
-                            <button onclick="resetAllData()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-bold transition-colors w-full">
+                            <button onclick="resetAllData()"
+                                class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-bold transition-colors w-full">
                                 <i class="fas fa-exclamation-triangle mr-2"></i>全データを削除
                             </button>
                             <p class="text-xs text-gray-400 mt-1">※この操作は取り消せません</p>
@@ -961,4 +1090,5 @@
     <script src="js/time-attack-mode.js"></script>
     <script src="js/app.js"></script>
 </body>
+
 </html>
