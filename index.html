@@ -236,31 +236,49 @@
         /* CTAボタンの視認性向上 */
         .cta-primary {
             background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 100%);
-            padding: 1rem 2rem;
-            font-size: 1.125rem;
+            padding: 1.25rem 2.5rem;
+            font-size: 1.25rem;
             font-weight: 700;
             border-radius: 9999px;
-            box-shadow: 0 4px 20px rgba(6, 182, 212, 0.5);
-            transition: all 0.3s ease;
-            min-height: 56px;
+            box-shadow: 0 6px 25px rgba(6, 182, 212, 0.6);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 60px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            border: none;
+            cursor: pointer;
         }
 
         .cta-primary:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 8px 30px rgba(6, 182, 212, 0.7);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 40px rgba(6, 182, 212, 0.8);
         }
 
         .cta-primary:active {
-            transform: translateY(-1px) scale(1);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 6px 25px rgba(6, 182, 212, 0.6);
+        }
+        
+        .cta-primary:focus-visible {
+            outline: 4px solid var(--star-cyan);
+            outline-offset: 4px;
         }
 
         .cta-secondary {
             border-width: 3px;
-            min-height: 56px;
+            min-height: 60px;
             font-weight: 600;
+            padding: 1.25rem 2.5rem;
+            font-size: 1.25rem;
+            background: rgba(6, 182, 212, 0.1);
+            backdrop-filter: blur(8px);
+            cursor: pointer;
+        }
+        
+        .cta-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(6, 182, 212, 0.4);
         }
 
         /* フォーカスリングの改善（アクセシビリティ） */
@@ -325,7 +343,46 @@
 
             .cta-primary, .cta-secondary {
                 width: 100%;
-                padding: 1rem 1.5rem;
+                padding: 1.25rem 2rem;
+                font-size: 1.125rem;
+            }
+            
+            /* ヒーローセクションのテキストサイズ調整 */
+            .hero-description {
+                font-size: 1rem;
+            }
+            
+            /* 統計カードのテキストサイズ調整 */
+            .stat-card {
+                padding: 1rem;
+            }
+            
+            .stat-card .text-2xl {
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* ダークモード対応のメディアクエリ */
+        @media (prefers-color-scheme: light) {
+            :root {
+                --space-navy: #f8f9fa;
+                --text-primary: #212529;
+            }
+        }
+        
+        /* アニメーション軽減 */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            
+            .cta-primary:hover,
+            .cta-secondary:hover {
+                transform: none;
             }
         }
     </style>
@@ -427,14 +484,19 @@
 
                 <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
                     <button onclick="window.open('./app.html', '_blank')"
-                        class="cta-primary pulse-glow"
+                        class="cta-primary pulse-glow relative overflow-hidden group"
                         aria-label="今すぐタイピングゲームを開始">
-                        <i class="fas fa-rocket mr-2" aria-hidden="true"></i>宇宙探索を開始
+                        <span class="relative z-10">
+                            <i class="fas fa-rocket mr-2 group-hover:animate-bounce" aria-hidden="true"></i>宇宙探索を開始
+                        </span>
+                        <span class="absolute inset-0 bg-gradient-to-r from-purple-600 to-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                     </button>
                     <button onclick="scrollToSection('features')"
-                        class="cta-secondary border-2 border-cyan-400 px-8 py-3 rounded-full font-bold text-lg hover:bg-cyan-400 hover:text-black transition-all"
+                        class="cta-secondary border-3 border-cyan-400 px-8 py-3 rounded-full font-bold text-lg hover:bg-cyan-400 hover:text-black transition-all relative overflow-hidden group"
                         aria-label="特徴セクションへスクロール">
-                        <i class="fas fa-info-circle mr-2" aria-hidden="true"></i>特徴を見る
+                        <span class="relative z-10">
+                            <i class="fas fa-info-circle mr-2" aria-hidden="true"></i>特徴を見る
+                        </span>
                     </button>
                 </div>
 

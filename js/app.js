@@ -475,7 +475,20 @@ export class CosmicTypingApp {
         this.elements.typingInput.disabled = false;
         this.elements.typingInput.focus();
         this.elements.typingInput.classList.add('typing-active');
+        this.elements.typingInput.placeholder = '📝 タイピング中... 正確に入力しましょう！';
       }
+      
+      // 視覚的フィードバック: 開始アニメーション
+      if (this.elements.textDisplay) {
+        this.elements.textDisplay.style.animation = 'pulse 0.3s ease-out';
+        setTimeout(() => {
+          if (this.elements.textDisplay) {
+            this.elements.textDisplay.style.animation = '';
+          }
+        }, 300);
+      }
+      
+      this.showMessage('タイピング開始！頑張りましょう！', 'success');
     }
   }
 
@@ -488,7 +501,11 @@ export class CosmicTypingApp {
       // UX改善: 一時停止時のビジュアルフィードバック
       if (this.elements.typingInput) {
         this.elements.typingInput.classList.remove('typing-active');
+        this.elements.typingInput.disabled = true;
+        this.elements.typingInput.placeholder = '⏸️ 一時停止中です';
       }
+      
+      this.showMessage('一時停止しました', 'info');
     }
   }
 
@@ -503,7 +520,21 @@ export class CosmicTypingApp {
     if (this.elements.typingInput) {
       this.elements.typingInput.classList.remove('typing-active');
       this.elements.typingInput.value = '';
+      this.elements.typingInput.disabled = true;
+      this.elements.typingInput.placeholder = '📝 ここに入力してください。開始ボタンを押すと入力可能になります。';
     }
+    
+    // テキスト表示もリセット
+    if (this.elements.textDisplay) {
+      this.elements.textDisplay.style.animation = 'shake 0.3s ease-out';
+      setTimeout(() => {
+        if (this.elements.textDisplay) {
+          this.elements.textDisplay.style.animation = '';
+        }
+      }, 300);
+    }
+    
+    this.showMessage('リセットしました', 'info');
   }
 
   retryPractice() {
@@ -543,6 +574,33 @@ export class CosmicTypingApp {
   onTypingComplete(results) {
     this.isPracticeActive = false;
     this.updateButtonStates();
+    
+    // 入力欄を無効化
+    if (this.elements.typingInput) {
+      this.elements.typingInput.disabled = true;
+      this.elements.typingInput.classList.remove('typing-active');
+      this.elements.typingInput.placeholder = '✅ 完了しました！';
+    }
+    
+    // 完了アニメーション
+    if (this.elements.textDisplay) {
+      this.elements.textDisplay.style.animation = 'completionCelebration 0.5s ease-out';
+      setTimeout(() => {
+        if (this.elements.textDisplay) {
+          this.elements.textDisplay.style.animation = '';
+        }
+      }, 500);
+    }
+    
+    // 結果によって異なるメッセージ
+    if (results.cause === 'death') {
+      this.showMessage('ミッション失敗...もう一度挑戦しましょう！', 'error');
+    } else if (results.cause === 'timeout') {
+      this.showMessage('タイムアップ！結果を確認しましょう', 'warning');
+    } else {
+      this.showMessage('🎉 ミッション完了！素晴らしい！', 'success');
+    }
+    
     this.showResults(results);
 
     // Auto-save results
@@ -551,7 +609,13 @@ export class CosmicTypingApp {
 
   onTypingError(error) {
     console.error("Typing engine error:", error);
-    this.showMessage("タイピングエンジンでエラーが発生しました。", "error");
+    this.showMessage("⚠️ エラーが発生しました。ページを再読み込みしてください。", "error");
+    
+    // エラー時は入力欄を無効化
+    if (this.elements.typingInput) {
+      this.elements.typingInput.disabled = true;
+      this.elements.typingInput.classList.remove('typing-active');
+    }
   }
 
   async saveResult() {
@@ -587,14 +651,14 @@ export class CosmicTypingApp {
       this.saveResultsToStorage(sessionData);
 
       if (saved) {
-        this.showMessage("結果が保存されました！", "success");
+        this.showMessage("💾 結果が保存されました！", "success");
       } else {
-        this.showMessage("結果をローカルに保存しました。", "info");
+        this.showMessage("💾 結果をローカルに保存しました。", "info");
       }
     } catch (error) {
       console.error("Error saving results:", error);
       this.saveResultsToStorage(sessionData);
-      this.showMessage("結果をローカルに保存しました。", "info");
+      this.showMessage("💾 結果をローカルに保存しました。", "info");
     }
   }
 

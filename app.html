@@ -318,40 +318,121 @@
         .mission-btn {
             transition: all 0.2s ease;
             border-width: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mission-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+        
+        .mission-btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
 
         .mission-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
         }
 
         .mission-btn:active {
             transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .mission-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
         }
 
         /* タイピング入力欄の視認性向上 */
+        #typingInput,
+        #timeAttackInput {
+            border-width: 3px;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+        }
+        
         #typingInput:focus,
         #timeAttackInput:focus {
             border-color: var(--star-cyan);
-            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.3);
+            box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.25), 0 4px 16px rgba(6, 182, 212, 0.2);
+            transform: translateY(-2px);
         }
 
-        /* プレースホルダーの視認性 */
+        /* プレースホルダーの視認性向上 */
         ::placeholder {
             color: #9ca3af;
             opacity: 1;
+            font-size: 1rem;
+            font-weight: 500;
         }
 
         /* ローディング/アクティブ状態のインジケーター */
         .typing-active {
             border-color: var(--energy-green) !important;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3) !important;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.25) !important;
+            background: #f0fdf4 !important;
+        }
+        
+        /* 入力欄無効状態 */
+        #typingInput:disabled,
+        #timeAttackInput:disabled {
+            background: #1f2937;
+            border-color: #374151;
+            cursor: not-allowed;
+            opacity: 0.6;
         }
 
         /* 結果パネルの強調 */
         #resultsPanel h3,
         #timeAttackResults h3 {
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeInScale 0.5s ease-out;
+        }
+        
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        /* 結果の各統計値にアニメーション */
+        #resultsPanel .text-center,
+        #timeAttackResults .text-center {
+            animation: slideUp 0.4s ease-out backwards;
+        }
+        
+        #resultsPanel .text-center:nth-child(1) { animation-delay: 0.1s; }
+        #resultsPanel .text-center:nth-child(2) { animation-delay: 0.2s; }
+        #resultsPanel .text-center:nth-child(3) { animation-delay: 0.3s; }
+        #resultsPanel .text-center:nth-child(4) { animation-delay: 0.4s; }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* スキップリンク（アクセシビリティ） */
@@ -648,30 +729,42 @@
 
                     <!-- Text Display -->
                     <div id="textDisplay"
-                        class="typing-display bg-gray-900 p-6 rounded-lg mb-4 border border-gray-600 min-h-32 text-gray-300">
+                        class="typing-display bg-gray-900 p-6 rounded-lg mb-4 border-2 border-cosmic-cyan min-h-32 text-gray-300 shadow-lg"
+                        role="article"
+                        aria-label="タイピング練習テキスト">
                         <!-- Text will be dynamically inserted here -->
                     </div>
 
                     <!-- Input Area -->
                     <div class="relative">
+                        <label for="typingInput" class="sr-only">タイピング入力欄</label>
                         <textarea id="typingInput"
-                            class="w-full bg-gray-800 text-white p-4 rounded-lg border border-gray-600 focus:border-cosmic-cyan focus:outline-none resize-none placeholder-gray-400"
-                            rows="3" placeholder="ここに入力してください..." disabled></textarea>
+                            class="w-full bg-gray-800 text-white p-4 rounded-lg border-2 border-cosmic-cyan focus:border-energy-green focus:outline-none resize-none placeholder-gray-400 shadow-lg"
+                            rows="3" 
+                            placeholder="📝 ここに入力してください。開始ボタンを押すと入力可能になります。" 
+                            disabled
+                            aria-describedby="input-instructions"></textarea>
+                        <div id="input-instructions" class="sr-only">
+                            開始ボタンを押してからこのテキストエリアに入力してください
+                        </div>
                     </div>
 
                     <!-- Game Controls -->
                     <div class="flex justify-center space-x-4 mt-4">
                         <button onclick="startTyping()" id="startBtn"
-                            class="bg-energy-green hover:bg-green-600 px-6 py-2 rounded-lg font-bold transition-colors">
-                            <i class="fas fa-play mr-2"></i>開始
+                            class="bg-energy-green hover:bg-green-600 px-8 py-3 rounded-lg font-bold transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                            aria-label="タイピング練習を開始">
+                            <i class="fas fa-play mr-2" aria-hidden="true"></i>開始
                         </button>
                         <button onclick="pauseTyping()" id="pauseBtn"
-                            class="bg-planet-orange hover:bg-orange-600 px-6 py-2 rounded-lg font-bold transition-colors hidden">
-                            <i class="fas fa-pause mr-2"></i>一時停止
+                            class="bg-planet-orange hover:bg-orange-600 px-8 py-3 rounded-lg font-bold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 hidden"
+                            aria-label="タイピング練習を一時停止">
+                            <i class="fas fa-pause mr-2" aria-hidden="true"></i>一時停止
                         </button>
                         <button onclick="resetTyping()" id="resetBtn"
-                            class="bg-gray-600 hover:bg-gray-700 px-6 py-2 rounded-lg font-bold transition-colors">
-                            <i class="fas fa-redo mr-2"></i>リセット
+                            class="bg-gray-600 hover:bg-gray-700 px-8 py-3 rounded-lg font-bold transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+                            aria-label="タイピング練習をリセット">
+                            <i class="fas fa-redo mr-2" aria-hidden="true"></i>リセット
                         </button>
                     </div>
                 </div>
