@@ -1,0 +1,47 @@
+# 依存関係
+node_modules/
+package-lock.json
+yarn.lock
+
+# ビルド出力
+dist/
+build/
+.cache/
+
+# 環境変数
+.env
+.env.local
+.env.*.local
+
+# エディタ・IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# ログファイル
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# テストカバレッジ
+coverage/
+.nyc_output/
+
+# 一時ファイル
+tmp/
+temp/
+*.tmp
+
+# OS固有
+Thumbs.db
+.DS_Store
+
+# Supabase設定（セキュリティのため）
+.env.supabase
+
+# デバッグファイル
+debug.log

@@ -124,6 +124,11 @@
 
 このプロジェクトは**静的ホスティング専用**に設計されています。ビルドプロセスは不要です。
 
+### 前提条件
+
+- モダンなWebブラウザ（Chrome 90+, Firefox 88+, Safari 14+, Edge 90+）
+- ローカル開発の場合: Python 3.x または Node.js 14.x以上
+
 ### デプロイ方法
 
 #### GitHub Pages
@@ -174,6 +179,14 @@ cd cosmic-typing-adventure
 ```
 
 2. **ローカルサーバーの起動**
+
+#### オプション1: npm scripts を使用（推奨）
+```bash
+npm start
+# http://localhost:8000 で自動起動
+```
+
+#### オプション2: 直接コマンドを実行
 ```bash
 # Python 3
 python3 -m http.server 8000
@@ -188,6 +201,13 @@ php -S localhost:8000
 3. **ブラウザでアクセス**
 ```
 http://localhost:8000
+```
+
+4. **テストの実行**
+```bash
+npm test
+# または直接ブラウザで開く
+open http://localhost:8000/tests/test-suite.html
 ```
 
 ### Supabase設定（オプション）

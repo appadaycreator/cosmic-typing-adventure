@@ -1,0 +1,53 @@
+{
+  "name": "cosmic-typing-adventure",
+  "version": "2.0.0",
+  "description": "宇宙テーマのタイピング練習アプリケーション - 楽しくタイピングスキルを向上",
+  "type": "module",
+  "main": "js/app.js",
+  "scripts": {
+    "start": "python3 -m http.server 8000",
+    "test": "echo '⚠️  ブラウザで tests/test-suite.html を開いてテストを実行してください' && open http://localhost:8000/tests/test-suite.html",
+    "lint": "echo '⚠️  ESLintが未設定です。将来実装予定'",
+    "format": "echo '⚠️  Prettierが未設定です。将来実装予定'",
+    "build": "echo '⚠️  ビルド不要（静的ファイルのみ）'",
+    "deploy:github": "echo '📦 GitHub Pagesへデプロイ準備完了。git push origin main を実行してください'",
+    "deploy:netlify": "echo '📦 Netlifyへデプロイ準備完了。Netlify CLIまたはWeb UIを使用してください'",
+    "deploy:vercel": "vercel",
+    "coverage": "echo '📊 テストカバレッジを確認するには、ブラウザ開発者ツールでカバレッジタブを使用してください'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/cosmic-typing-adventure.git"
+  },
+  "keywords": [
+    "typing",
+    "タイピング",
+    "練習",
+    "ゲーム",
+    "宇宙",
+    "教育",
+    "WPM",
+    "スキルアップ",
+    "PWA",
+    "静的サイト"
+  ],
+  "author": "Cosmic Typing Adventure Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yourusername/cosmic-typing-adventure/issues"
+  },
+  "homepage": "https://github.com/yourusername/cosmic-typing-adventure#readme",
+  "devDependencies": {},
+  "dependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Firefox versions",
+    "last 2 Safari versions",
+    "last 2 Edge versions",
+    "iOS >= 14",
+    "Android >= 90"
+  ]
+}
