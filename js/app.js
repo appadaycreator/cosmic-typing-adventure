@@ -12,6 +12,7 @@ import { logger } from './logger.js';
 import { DOMUtils } from './dom-utils.js';
 import { errorHandler } from './error-handler.js';
 import { GameModeManager, LeaderboardManager, formatModeResults } from './game-mode-manager.js';
+import { AdvancedAnalytics } from './advanced-analytics.js';
 
 export class CosmicTypingApp {
   constructor() {
@@ -37,6 +38,7 @@ export class CosmicTypingApp {
     this.shipUpgradeSystem = new ShipUpgradeSystem(this.soundManager, this.userStats);
     this.gameModeManager = new GameModeManager();
     this.leaderboardManager = null; // Initialized after Supabase
+    this.advancedAnalytics = new AdvancedAnalytics();
 
     // Make app available globally
     window.app = this;
@@ -636,6 +638,20 @@ export class CosmicTypingApp {
     }
     
     this.showResults(formattedResults);
+
+    // Record session in advanced analytics
+    if (this.advancedAnalytics) {
+      const analyticsData = {
+        wpm: results.wpm,
+        accuracy: results.accuracy,
+        duration: results.duration,
+        totalTyped: results.totalTyped,
+        totalErrors: results.totalErrors,
+        maxCombo: results.maxCombo || 0,
+        weakKeys: results.weakKeys || {}
+      };
+      this.advancedAnalytics.recordSession(analyticsData);
+    }
 
     // Auto-save results
     await this.saveResult();

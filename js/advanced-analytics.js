@@ -1,6 +1,6 @@
 // Advanced Analytics for Cosmic Typing Adventure
 
-class AdvancedAnalytics {
+export class AdvancedAnalytics {
     constructor() {
         this.dailyStats = {};
         this.weeklyStats = {};
@@ -8,8 +8,17 @@ class AdvancedAnalytics {
         this.keyAnalysis = {};
         this.progressTrends = [];
         
+        // Chart.jsインスタンス
+        this.performanceChart = null;
+        this.keyStatsChart = null;
+        this.wpmTrendChart = null;
+        this.accuracyTrendChart = null;
+        this.practiceTimeChart = null;
+        this.weakKeysChart = null;
+        
         this.loadAnalytics();
         this.setupEventListeners();
+        this.initializeCharts();
         console.log('📊 Advanced Analytics initialized');
     }
 
@@ -554,8 +563,439 @@ class AdvancedAnalytics {
             this.progressTrends = [];
             
             this.saveAnalytics();
+            this.updateAllCharts();
             
             console.log('All analytics data cleared');
         }
+    }
+
+    // Chart.jsグラフの初期化
+    initializeCharts() {
+        // DOMが完全に読み込まれるまで待機
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                console.log('Advanced Analytics: DOM loaded, ready to create charts');
+            });
+        } else {
+            console.log('Advanced Analytics: DOM already loaded, ready to create charts');
+        }
+    }
+
+    // パフォーマンス推移グラフ（WPM・正確率）
+    createPerformanceChart() {
+        const canvas = document.getElementById('performanceChart');
+        if (!canvas) {
+            console.warn('Performance chart canvas not found');
+            return;
+        }
+
+        const ctx = canvas.getContext('2d');
+        
+        // データ準備
+        const data = this.getPerformanceChartData();
+        const hasData = this.progressTrends.length > 0;
+        
+        // 既存のチャートを破棄
+        if (this.performanceChart) {
+            this.performanceChart.destroy();
+        }
+
+        this.performanceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.labels,
+                datasets: [
+                    {
+                        label: 'WPM',
+                        data: data.wpmData,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: '正確率 (%)',
+                        data: data.accuracyData,
+                        borderColor: '#06b6d4',
+                        backgroundColor: 'rgba(6, 182, 212, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            color: '#e5e7eb',
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleColor: '#06b6d4',
+                        bodyColor: '#e5e7eb',
+                        borderColor: '#06b6d4',
+                        borderWidth: 1,
+                        enabled: hasData
+                    },
+                    title: {
+                        display: !hasData,
+                        text: 'データがありません。タイピング練習を始めましょう！',
+                        color: '#9ca3af',
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: '#9ca3af',
+                            maxRotation: 45,
+                            minRotation: 45
+                        },
+                        grid: {
+                            color: 'rgba(75, 85, 99, 0.3)'
+                        }
+                    },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'WPM',
+                            color: '#10b981'
+                        },
+                        ticks: {
+                            color: '#9ca3af'
+                        },
+                        grid: {
+                            color: 'rgba(75, 85, 99, 0.3)'
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: '正確率 (%)',
+                            color: '#06b6d4'
+                        },
+                        ticks: {
+                            color: '#9ca3af'
+                        },
+                        grid: {
+                            drawOnChartArea: false,
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // キー別統計グラフ（苦手キー）
+    createKeyStatsChart() {
+        const canvas = document.getElementById('keyStatsChart');
+        if (!canvas) {
+            console.warn('Key stats chart canvas not found');
+            return;
+        }
+
+        const ctx = canvas.getContext('2d');
+        
+        // データ準備
+        const data = this.getKeyStatsChartData();
+        
+        // 既存のチャートを破棄
+        if (this.keyStatsChart) {
+            this.keyStatsChart.destroy();
+        }
+
+        if (data.labels.length === 0) {
+            // データがない場合のメッセージ
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#9ca3af';
+            ctx.font = '16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('データが不足しています', canvas.width / 2, canvas.height / 2 - 10);
+            ctx.fillText('もっと練習してデータを収集しましょう！', canvas.width / 2, canvas.height / 2 + 20);
+            return;
+        }
+
+        this.keyStatsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'エラー回数',
+                    data: data.errorData,
+                    backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                    borderColor: '#ef4444',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            color: '#e5e7eb',
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleColor: '#ef4444',
+                        bodyColor: '#e5e7eb',
+                        borderColor: '#ef4444',
+                        borderWidth: 1,
+                        callbacks: {
+                            afterLabel: function(context) {
+                                const index = context.dataIndex;
+                                const avgErrors = data.avgErrorData[index];
+                                return `平均: ${avgErrors.toFixed(1)}回/セッション`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: '#9ca3af',
+                            font: {
+                                family: 'monospace',
+                                size: 14
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(75, 85, 99, 0.3)'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'エラー回数',
+                            color: '#ef4444'
+                        },
+                        ticks: {
+                            color: '#9ca3af',
+                            stepSize: 1
+                        },
+                        grid: {
+                            color: 'rgba(75, 85, 99, 0.3)'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // パフォーマンスチャートのデータ取得
+    getPerformanceChartData() {
+        const trends = this.progressTrends.slice(-30); // 直近30セッション
+        
+        if (trends.length === 0) {
+            // サンプルデータを表示
+            return {
+                labels: ['練習1', '練習2', '練習3', '練習4', '練習5'],
+                wpmData: [0, 0, 0, 0, 0],
+                accuracyData: [0, 0, 0, 0, 0]
+            };
+        }
+
+        const labels = trends.map((t, index) => `練習${index + 1}`);
+        const wpmData = trends.map(t => t.wpm || 0);
+        const accuracyData = trends.map(t => t.accuracy || 0);
+
+        return { labels, wpmData, accuracyData };
+    }
+
+    // キー統計チャートのデータ取得
+    getKeyStatsChartData() {
+        const keys = Object.keys(this.keyAnalysis).sort((a, b) => {
+            return this.keyAnalysis[b].totalErrors - this.keyAnalysis[a].totalErrors;
+        });
+
+        const topKeys = keys.slice(0, 15); // トップ15の苦手キー
+
+        if (topKeys.length === 0) {
+            return {
+                labels: [],
+                errorData: [],
+                avgErrorData: []
+            };
+        }
+
+        const labels = topKeys.map(key => key.length > 3 ? key.substring(0, 3) + '...' : key);
+        const errorData = topKeys.map(key => this.keyAnalysis[key].totalErrors);
+        const avgErrorData = topKeys.map(key => {
+            const analysis = this.keyAnalysis[key];
+            return analysis.totalErrors / analysis.sessions;
+        });
+
+        return { labels, errorData, avgErrorData };
+    }
+
+    // すべてのグラフを更新
+    updateAllCharts() {
+        if (this.performanceChart) {
+            const data = this.getPerformanceChartData();
+            this.performanceChart.data.labels = data.labels;
+            this.performanceChart.data.datasets[0].data = data.wpmData;
+            this.performanceChart.data.datasets[1].data = data.accuracyData;
+            this.performanceChart.update('none');
+        }
+
+        if (this.keyStatsChart) {
+            this.createKeyStatsChart(); // 再作成が必要
+        }
+    }
+
+    // CSVエクスポート機能
+    exportToCSV() {
+        const csvData = [];
+        
+        // ヘッダー
+        csvData.push(['日付', '平均WPM', '平均正確率', 'セッション数', '総練習時間(秒)', '最高WPM', '最高正確率'].join(','));
+        
+        // 日別データ
+        const dates = Object.keys(this.dailyStats).sort();
+        dates.forEach(date => {
+            const stats = this.dailyStats[date];
+            const avgWPM = stats.sessions > 0 ? Math.round(stats.totalWPM / stats.sessions) : 0;
+            const avgAccuracy = stats.sessions > 0 ? Math.round(stats.totalAccuracy / stats.sessions) : 0;
+            
+            csvData.push([
+                date,
+                avgWPM,
+                avgAccuracy,
+                stats.sessions,
+                stats.totalTime,
+                stats.bestWPM,
+                stats.bestAccuracy
+            ].join(','));
+        });
+        
+        const csvString = csvData.join('\n');
+        const blob = new Blob(['\uFEFF' + csvString], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `cosmic_typing_stats_${new Date().toISOString().split('T')[0]}.csv`;
+        link.click();
+        
+        URL.revokeObjectURL(url);
+        
+        console.log('CSV exported successfully');
+    }
+
+    // 練習時間の円グラフ（日別/週別/月別）
+    createPracticeTimeChart(containerId, period = 'daily') {
+        const canvas = document.getElementById(containerId);
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        const data = this.getPracticeTimeData(period);
+
+        if (this.practiceTimeChart) {
+            this.practiceTimeChart.destroy();
+        }
+
+        this.practiceTimeChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: '練習時間 (分)',
+                    data: data.timeData,
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.7)',
+                        'rgba(6, 182, 212, 0.7)',
+                        'rgba(249, 115, 22, 0.7)',
+                        'rgba(239, 68, 68, 0.7)',
+                        'rgba(168, 85, 247, 0.7)',
+                        'rgba(245, 158, 11, 0.7)',
+                        'rgba(59, 130, 246, 0.7)'
+                    ],
+                    borderColor: '#1f2937',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            color: '#e5e7eb'
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return `${label}: ${value}分 (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // 練習時間データの取得
+    getPracticeTimeData(period) {
+        let stats = {};
+        
+        switch(period) {
+            case 'daily':
+                stats = this.dailyStats;
+                break;
+            case 'weekly':
+                stats = this.weeklyStats;
+                break;
+            case 'monthly':
+                stats = this.monthlyStats;
+                break;
+        }
+
+        const keys = Object.keys(stats).sort().slice(-7); // 最新7件
+        const labels = keys.map(key => {
+            if (period === 'daily') {
+                const date = new Date(key);
+                return `${date.getMonth() + 1}/${date.getDate()}`;
+            }
+            return key;
+        });
+        const timeData = keys.map(key => Math.round(stats[key].totalTime / 60)); // 分に変換
+
+        return { labels, timeData };
     }
 } 

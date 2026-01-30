@@ -1098,6 +1098,20 @@
                             <!-- Achievements will be populated here -->
                         </div>
                     </div>
+
+                    <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
+                        <h3 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-4">データエクスポート</h3>
+                        <div class="space-y-3">
+                            <button onclick="window.app?.advancedAnalytics?.exportToCSV()"
+                                class="w-full bg-cosmic-cyan hover:bg-blue-500 px-4 py-2 rounded-lg font-bold transition-colors">
+                                <i class="fas fa-file-csv mr-2"></i>CSV形式でダウンロード
+                            </button>
+                            <button onclick="window.app?.advancedAnalytics?.exportAnalytics()"
+                                class="w-full bg-energy-green hover:bg-green-600 px-4 py-2 rounded-lg font-bold transition-colors">
+                                <i class="fas fa-file-download mr-2"></i>JSON形式でダウンロード
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1332,6 +1346,100 @@
             </div>
         </section>
     </main>
+    
+    <!-- Global Functions -->
+    <script>
+        // Section navigation
+        function showSection(sectionName) {
+            const sections = {
+                'game': 'gameSection',
+                'stats': 'statsSection',
+                'fleet': 'fleetSection',
+                'settings': 'settingsSection'
+            };
+            
+            // Hide all sections
+            Object.values(sections).forEach(id => {
+                const section = document.getElementById(id);
+                if (section) {
+                    section.classList.add('hidden');
+                }
+            });
+            
+            // Show selected section
+            const targetSection = document.getElementById(sections[sectionName]);
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+                
+                // Update charts when showing stats section
+                if (sectionName === 'stats' && window.app?.advancedAnalytics) {
+                    setTimeout(() => {
+                        window.app.advancedAnalytics.createPerformanceChart();
+                        window.app.advancedAnalytics.createKeyStatsChart();
+                    }, 100);
+                }
+            }
+        }
+        
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            if (menu) {
+                menu.classList.toggle('open');
+            }
+        }
+        
+        function closeMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            if (menu) {
+                menu.classList.remove('open');
+            }
+        }
+        
+        // Language toggle
+        function toggleLanguage() {
+            if (window.app?.languageManager) {
+                const currentLang = window.app.languageManager.currentLanguage;
+                const newLang = currentLang === 'ja' ? 'en' : 'ja';
+                window.app.languageManager.setLanguage(newLang);
+                
+                // Update toggle button
+                const langToggle = document.getElementById('langToggle');
+                if (langToggle) {
+                    langToggle.textContent = newLang === 'ja' ? 'EN' : '日本語';
+                }
+            }
+        }
+        
+        // Data export (for settings section)
+        function exportData() {
+            if (window.app?.advancedAnalytics) {
+                window.app.advancedAnalytics.exportAnalytics();
+            } else {
+                alert('統計データがありません');
+            }
+        }
+        
+        // Reset all data
+        function resetAllData() {
+            if (confirm('すべてのデータを削除しますか？この操作は取り消せません。')) {
+                // Clear localStorage
+                const keysToRemove = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key.startsWith('cosmicTyping_')) {
+                        keysToRemove.push(key);
+                    }
+                }
+                keysToRemove.forEach(key => localStorage.removeItem(key));
+                
+                // Reload page
+                alert('すべてのデータが削除されました。ページを再読み込みします。');
+                window.location.reload();
+            }
+        }
+    </script>
+    
     <!-- Load application scripts -->
     <script type="module" src="js/app.js"></script>
 </body>
