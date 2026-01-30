@@ -396,4 +396,74 @@ body {
     background: #d1ecf1;
     color: #0c5460;
     border: 1px solid #bee5eb;
+}
+
+/* ===== UX改善: 全ページ共通のアクセシビリティ向上 ===== */
+
+/* フォーカスリングの改善（キーボードナビゲーション） */
+*:focus-visible {
+    outline: 3px solid #667eea;
+    outline-offset: 2px;
+}
+
+/* スキップリンク（アクセシビリティ） */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #667eea;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    z-index: 9999;
+    transition: top 0.3s ease;
+    text-decoration: none;
+}
+
+.skip-link:focus {
+    top: 16px;
+}
+
+/* 宇宙テーマ背景でのテキスト視認性向上 */
+.cosmic-gradient .text-gray-300,
+.cosmic-bg .text-gray-300 {
+    color: #d1d5db !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.cosmic-gradient .text-gray-400,
+.cosmic-bg .text-gray-400 {
+    color: #9ca3af !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* ボタンの最小タッチターゲットサイズ */
+@media (pointer: coarse) {
+    button, .btn, a[role="button"] {
+        min-height: 48px;
+        min-width: 48px;
+    }
+}
+
+/* 高コントラストモード対応 */
+@media (prefers-contrast: high) {
+    .text-gray-300, .text-gray-400 {
+        color: #ffffff !important;
+    }
+    
+    .btn-primary, .btn-secondary {
+        border: 2px solid currentColor;
+    }
+}
+
+/* アニメーション軽減設定対応 */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 } 

@@ -469,6 +469,13 @@ export class CosmicTypingApp {
       // ローマ字表記も再表示
       this.updateRomanizedText();
       this.updateButtonStates();
+      
+      // UX改善: タイピング開始時に入力欄へ自動フォーカス
+      if (this.elements.typingInput) {
+        this.elements.typingInput.disabled = false;
+        this.elements.typingInput.focus();
+        this.elements.typingInput.classList.add('typing-active');
+      }
     }
   }
 
@@ -477,6 +484,11 @@ export class CosmicTypingApp {
       this.isPracticeActive = false;
       this.typingEngine.pause();
       this.updateButtonStates();
+      
+      // UX改善: 一時停止時のビジュアルフィードバック
+      if (this.elements.typingInput) {
+        this.elements.typingInput.classList.remove('typing-active');
+      }
     }
   }
 
@@ -486,6 +498,12 @@ export class CosmicTypingApp {
     // ローマ字表記もリセット・再表示
     this.updateRomanizedText();
     this.updateButtonStates();
+    
+    // UX改善: リセット時のビジュアルフィードバック
+    if (this.elements.typingInput) {
+      this.elements.typingInput.classList.remove('typing-active');
+      this.elements.typingInput.value = '';
+    }
   }
 
   retryPractice() {
@@ -604,27 +622,63 @@ export class CosmicTypingApp {
   }
 
   showMessage(message, type = "info") {
-    // Simple message display
+    // UX改善: より視覚的に優れた通知システム
     const messageDiv = document.createElement("div");
     messageDiv.className = `message message-${type}`;
-    messageDiv.textContent = message;
+    messageDiv.setAttribute('role', 'alert');
+    messageDiv.setAttribute('aria-live', 'polite');
+    
+    const icons = {
+      success: 'fa-check-circle',
+      error: 'fa-exclamation-circle',
+      info: 'fa-info-circle',
+      warning: 'fa-exclamation-triangle'
+    };
+    
+    const colors = {
+      success: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+      error: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
+      info: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
+      warning: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)'
+    };
+    
+    messageDiv.innerHTML = `
+      <i class="fas ${icons[type] || icons.info}" style="margin-right: 8px;"></i>
+      <span>${message}</span>
+    `;
+    
     messageDiv.style.cssText = `
       position: fixed;
       top: 20px;
       right: 20px;
-      padding: 10px 20px;
-      border-radius: 5px;
+      padding: 14px 20px;
+      border-radius: 10px;
       color: white;
-      z-index: 1000;
-      background-color: ${type === 'error' ? '#f44336' : type === 'success' ? '#4caf50' : '#2196f3'};
+      z-index: 9999;
+      background: ${colors[type] || colors.info};
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      transform: translateX(120%);
+      transition: transform 0.3s ease-out;
+      max-width: 90vw;
     `;
 
     document.body.appendChild(messageDiv);
+    
+    // アニメーションでスライドイン
+    requestAnimationFrame(() => {
+      messageDiv.style.transform = 'translateX(0)';
+    });
 
     setTimeout(() => {
-      if (messageDiv.parentNode) {
-        messageDiv.parentNode.removeChild(messageDiv);
-      }
+      messageDiv.style.transform = 'translateX(120%)';
+      setTimeout(() => {
+        if (messageDiv.parentNode) {
+          messageDiv.parentNode.removeChild(messageDiv);
+        }
+      }, 300);
     }, 3000);
   }
 

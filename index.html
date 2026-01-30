@@ -208,10 +208,133 @@
                 transform: translateX(100%);
             }
         }
+
+        /* ===== UX改善: コントラスト比向上 ===== */
+        
+        /* テキストの視認性向上 */
+        .text-gray-200 {
+            color: #e5e7eb !important;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .text-gray-300 {
+            color: #d1d5db !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+        }
+
+        .text-gray-400 {
+            color: #9ca3af !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ヒーローセクションの説明テキスト強調 */
+        .hero-description {
+            color: #f3f4f6 !important;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* CTAボタンの視認性向上 */
+        .cta-primary {
+            background: linear-gradient(135deg, #06b6d4 0%, #8b5cf6 100%);
+            padding: 1rem 2rem;
+            font-size: 1.125rem;
+            font-weight: 700;
+            border-radius: 9999px;
+            box-shadow: 0 4px 20px rgba(6, 182, 212, 0.5);
+            transition: all 0.3s ease;
+            min-height: 56px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(6, 182, 212, 0.7);
+        }
+
+        .cta-primary:active {
+            transform: translateY(-1px) scale(1);
+        }
+
+        .cta-secondary {
+            border-width: 3px;
+            min-height: 56px;
+            font-weight: 600;
+        }
+
+        /* フォーカスリングの改善（アクセシビリティ） */
+        button:focus-visible,
+        a:focus-visible {
+            outline: 3px solid var(--star-cyan);
+            outline-offset: 3px;
+        }
+
+        /* フィーチャーカードの説明テキスト改善 */
+        .feature-card p {
+            color: #e5e7eb !important;
+        }
+
+        /* ナビゲーションリンクの視認性向上 */
+        nav a {
+            color: #f3f4f6;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        nav a:hover {
+            color: var(--star-cyan);
+        }
+
+        /* スキップリンク（アクセシビリティ） */
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--star-cyan);
+            color: black;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            z-index: 9999;
+            transition: top 0.3s ease;
+        }
+
+        .skip-link:focus {
+            top: 16px;
+        }
+
+        /* 統計カードの改善 */
+        .stat-card {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-card .text-sm {
+            color: #d1d5db !important;
+        }
+
+        /* モバイルタッチターゲット最小サイズ確保 */
+        @media (max-width: 768px) {
+            button, a.btn, .nav-link {
+                min-height: 48px;
+                min-width: 48px;
+            }
+
+            .cta-primary, .cta-secondary {
+                width: 100%;
+                padding: 1rem 1.5rem;
+            }
+        }
     </style>
 </head>
 
 <body class="font-noto text-white cosmic-gradient star-field min-h-screen">
+    <!-- スキップリンク（アクセシビリティ） -->
+    <a href="#features" class="skip-link">メインコンテンツへスキップ</a>
+
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQGZRF9" height="0" width="0"
             style="display:none;visibility:hidden"></iframe></noscript>
@@ -297,39 +420,41 @@
                     <span class="typing-cursor">宇宙探索タイピングゲーム</span>
                 </p>
 
-                <p class="text-lg md:text-xl mb-8 max-w-3xl mx-auto text-gray-200 drop-shadow-sm">
+                <p class="hero-description text-lg md:text-xl mb-8 max-w-3xl mx-auto">
                     タイピングで宇宙船を操縦し、未知の惑星を発見・探索。<br>
                     楽しみながらWPM向上と苦手文字克服を実現する革新的なタイピング練習サービス
                 </p>
 
                 <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
                     <button onclick="window.open('./app.html', '_blank')"
-                        class="bg-gradient-to-r from-cyan-500 to-purple-600 px-8 py-3 rounded-full font-bold text-lg hover:shadow-lg transform hover:scale-105 transition-all pulse-glow">
-                        <i class="fas fa-rocket mr-2"></i>宇宙探索を開始
+                        class="cta-primary pulse-glow"
+                        aria-label="今すぐタイピングゲームを開始">
+                        <i class="fas fa-rocket mr-2" aria-hidden="true"></i>宇宙探索を開始
                     </button>
                     <button onclick="scrollToSection('features')"
-                        class="border-2 border-cyan-400 px-8 py-3 rounded-full font-bold text-lg hover:bg-cyan-400 hover:text-black transition-all">
-                        <i class="fas fa-info-circle mr-2"></i>特徴を見る
+                        class="cta-secondary border-2 border-cyan-400 px-8 py-3 rounded-full font-bold text-lg hover:bg-cyan-400 hover:text-black transition-all"
+                        aria-label="特徴セクションへスクロール">
+                        <i class="fas fa-info-circle mr-2" aria-hidden="true"></i>特徴を見る
                     </button>
                 </div>
 
                 <!-- Live Stats Demo -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
-                    <div class="bg-black bg-opacity-50 p-4 rounded-lg">
-                        <div class="text-2xl font-bold text-cyan-400" id="demo-wpm">0</div>
-                        <div class="text-sm text-gray-400">WPM</div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto" role="group" aria-label="統計デモ">
+                    <div class="stat-card p-4 rounded-lg">
+                        <div class="text-2xl font-bold text-cyan-400" id="demo-wpm" aria-live="polite">0</div>
+                        <div class="text-sm">WPM</div>
                     </div>
-                    <div class="bg-black bg-opacity-50 p-4 rounded-lg">
-                        <div class="text-2xl font-bold text-purple-400" id="demo-accuracy">0%</div>
-                        <div class="text-sm text-gray-400">正確性</div>
+                    <div class="stat-card p-4 rounded-lg">
+                        <div class="text-2xl font-bold text-purple-400" id="demo-accuracy" aria-live="polite">0%</div>
+                        <div class="text-sm">正確性</div>
                     </div>
-                    <div class="bg-black bg-opacity-50 p-4 rounded-lg">
-                        <div class="text-2xl font-bold text-orange-400" id="demo-planets">0</div>
-                        <div class="text-sm text-gray-400">発見惑星</div>
+                    <div class="stat-card p-4 rounded-lg">
+                        <div class="text-2xl font-bold text-orange-400" id="demo-planets" aria-live="polite">0</div>
+                        <div class="text-sm">発見惑星</div>
                     </div>
-                    <div class="bg-black bg-opacity-50 p-4 rounded-lg">
-                        <div class="text-2xl font-bold text-green-400" id="demo-level">1</div>
-                        <div class="text-sm text-gray-400">レベル</div>
+                    <div class="stat-card p-4 rounded-lg">
+                        <div class="text-2xl font-bold text-green-400" id="demo-level" aria-live="polite">1</div>
+                        <div class="text-sm">レベル</div>
                     </div>
                 </div>
             </div>

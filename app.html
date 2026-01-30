@@ -14,6 +14,10 @@
         href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap"
         rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- カスタムCSS -->
+    <link rel="stylesheet" href="css/mobile-optimization.css">
+    <link rel="stylesheet" href="css/responsive.css">
 
     <!-- Google Tag Manager -->
     <script>(function (w, d, s, l, i) {
@@ -271,10 +275,107 @@
         .font-size-xl {
             --font-size: 1.8rem;
         }
+
+        /* UX改善: コントラスト比向上 */
+        .text-high-contrast {
+            color: #e5e7eb !important; /* より明るいグレーでコントラスト確保 */
+        }
+
+        /* ナビゲーションリンクの視認性向上 */
+        .nav-btn {
+            color: #f3f4f6 !important;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            color: var(--star-cyan) !important;
+            transform: translateY(-1px);
+        }
+
+        /* ミッション説明テキストの視認性向上 */
+        .mission-btn .text-gray-300 {
+            color: #d1d5db !important;
+        }
+
+        /* 統計ラベルの視認性向上 */
+        .text-gray-400 {
+            color: #9ca3af !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        /* フォーカスリングの改善（アクセシビリティ） */
+        button:focus-visible,
+        input:focus-visible,
+        textarea:focus-visible,
+        a:focus-visible {
+            outline: 2px solid var(--star-cyan);
+            outline-offset: 2px;
+        }
+
+        /* ボタンのホバー状態改善 */
+        .mission-btn {
+            transition: all 0.2s ease;
+            border-width: 2px;
+        }
+
+        .mission-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .mission-btn:active {
+            transform: translateY(0);
+        }
+
+        /* タイピング入力欄の視認性向上 */
+        #typingInput:focus,
+        #timeAttackInput:focus {
+            border-color: var(--star-cyan);
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.3);
+        }
+
+        /* プレースホルダーの視認性 */
+        ::placeholder {
+            color: #9ca3af;
+            opacity: 1;
+        }
+
+        /* ローディング/アクティブ状態のインジケーター */
+        .typing-active {
+            border-color: var(--energy-green) !important;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3) !important;
+        }
+
+        /* 結果パネルの強調 */
+        #resultsPanel h3,
+        #timeAttackResults h3 {
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* スキップリンク（アクセシビリティ） */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--star-cyan);
+            color: black;
+            padding: 8px 16px;
+            z-index: 100;
+            transition: top 0.3s;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
     </style>
 </head>
 
 <body class="cosmic-bg min-h-screen">
+    <!-- スキップリンク（アクセシビリティ） -->
+    <a href="#gameSection" class="skip-link">メインコンテンツへスキップ</a>
+
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQGZRF9" height="0" width="0"
             style="display:none;visibility:hidden"></iframe></noscript>
@@ -534,7 +635,7 @@
                             <div class="text-xl font-bold text-cosmic-cyan drop-shadow-md" id="liveAccuracy">100%</div>
                             <div class="text-sm text-gray-300">正確率</div>
                         </div>
-                        <!-- Survival Lives Display (Hidden by default) -->
+                            <!-- Survival Lives Display (Hidden by default) -->
                         <div id="survivalLivesContainer" class="text-center hidden">
                             <div class="text-2xl font-bold text-red-500" id="survivalLives">
                                 <i class="fas fa-heart"></i>
