@@ -513,10 +513,13 @@
     <script type="module">
         import { JapaneseTypingTests } from './japanese-typing-tests.js';
         import { textManagerTests } from './text-manager-tests.js';
+        import { syncTests, runSyncTests } from './sync-tests.js';
         
         // グローバルに公開
         window.JapaneseTypingTests = JapaneseTypingTests;
         window.textManagerTests = textManagerTests;
+        window.syncTests = syncTests;
+        window.runSyncTests = runSyncTests;
     </script>
 
     <script>

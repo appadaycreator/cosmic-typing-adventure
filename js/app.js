@@ -13,6 +13,8 @@ import { DOMUtils } from './dom-utils.js';
 import { errorHandler } from './error-handler.js';
 import { GameModeManager, LeaderboardManager, formatModeResults } from './game-mode-manager.js';
 import { AdvancedAnalytics } from './advanced-analytics.js';
+import { syncManager } from './sync-manager.js';
+import { syncUI } from './sync-ui.js';
 
 export class CosmicTypingApp {
   constructor() {
@@ -85,6 +87,9 @@ export class CosmicTypingApp {
       // Initialize Supabase first
       await this.initSupabase();
 
+      // Initialize sync system
+      this.initSyncSystem();
+
       // Initialize DOM and other components
       this.getDOMElements();
       this.setupEventListeners();
@@ -135,6 +140,23 @@ export class CosmicTypingApp {
       logger.error("Supabase initialization error:", error);
       // Continue with offline functionality
       this.leaderboardManager = new LeaderboardManager(null);
+    }
+  }
+
+  /**
+   * Initialize sync system
+   */
+  initSyncSystem() {
+    try {
+      logger.info("Initializing sync system...");
+      
+      // Initialize sync UI
+      syncUI.initialize();
+      
+      logger.info("Sync system initialized successfully");
+    } catch (error) {
+      logger.error("Failed to initialize sync system:", error);
+      // Continue without sync UI (core functionality still works)
     }
   }
 

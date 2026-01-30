@@ -1,4 +1,7 @@
 // Supabase Configuration for Cosmic Typing Adventure
+// 同期マネージャーと統合された完全なオフライン/オンライン対応システム
+
+import { logger } from './logger.js';
 
 // Supabase configuration（静的ホスティング用: 直書き）
 const SUPABASE_CONFIG = {
@@ -12,17 +15,6 @@ let supabase = null;
 let isInitializing = false;
 let initializationPromise = null;
 let isOnline = navigator.onLine;
-
-// Network status monitoring
-window.addEventListener('online', () => {
-  isOnline = true;
-  console.log('Network: Online');
-});
-
-window.addEventListener('offline', () => {
-  isOnline = false;
-  console.log('Network: Offline');
-});
 
 // Initialize Supabase with improved error handling
 export async function initializeSupabase() {
@@ -54,11 +46,12 @@ async function performInitialization() {
   try {
     // Check if Supabase is already loaded
     if (typeof window !== "undefined" && window.supabase) {
-      console.log("Supabase already loaded from CDN");
+      logger.info("Supabase already loaded from CDN");
       supabase = window.supabase.createClient(
         SUPABASE_CONFIG.url,
         SUPABASE_CONFIG.anonKey
       );
+      window.supabaseClient = supabase; // グローバルアクセス用
       return true;
     }
 
@@ -70,23 +63,25 @@ async function performInitialization() {
       SUPABASE_CONFIG.url,
       SUPABASE_CONFIG.anonKey
     );
+    
+    window.supabaseClient = supabase; // グローバルアクセス用
 
     // Test connection only if online
     if (isOnline) {
       const { data, error } = await supabase.from('typing_sessions').select('count').limit(1);
       if (error) {
-        console.warn("Supabase connection test failed:", error);
+        logger.warn("Supabase connection test failed:", error);
         // Continue anyway for offline functionality
       } else {
-        console.log("Supabase initialized and connected successfully");
+        logger.info("Supabase initialized and connected successfully");
       }
     } else {
-      console.log("Supabase initialized in offline mode");
+      logger.info("Supabase initialized in offline mode");
     }
 
     return true;
   } catch (error) {
-    console.error("Supabase initialization error:", error);
+    logger.error("Supabase initialization error:", error);
     return false;
   }
 }
@@ -139,40 +134,59 @@ async function attemptLoadSupabase(attempt) {
 
 // Database operations for typing statistics
 export const TypingStats = {
-  // Save typing session results with improved error handling
+  // Save typing session results with sync manager integration
   async saveSession(sessionData) {
     // Always save to localStorage first for reliability
     const localSaved = this.saveToLocalStorage(sessionData);
 
-    if (!supabase || !isOnline) {
-      console.warn("Supabase not available or offline, using localStorage only");
-      return localSaved;
-    }
+    // Add to sync queue for online synchronization
+    const operation = {
+      type: 'save_session',
+      data: {
+        planet: sessionData.planet,
+        wpm: sessionData.wpm,
+        accuracy: sessionData.accuracy,
+        totalTyped: sessionData.totalTyped,
+        totalErrors: sessionData.totalErrors,
+        duration: sessionData.duration,
+        timestamp: new Date().toISOString()
+      }
+    };
 
-    try {
-      const { data, error } = await supabase.from("typing_sessions").insert([
-        {
-          planet: sessionData.planet,
-          wpm: sessionData.wpm,
-          accuracy: sessionData.accuracy,
-          total_typed: sessionData.totalTyped,
-          total_errors: sessionData.totalErrors,
-          duration: sessionData.duration,
-          session_date: new Date().toISOString(),
-        },
-      ]);
+    // 動的にsyncManagerにアクセス（循環参照を避けるため）
+    const syncMgr = window.syncManager;
+    if (syncMgr && typeof syncMgr.addToQueue === 'function') {
+      syncMgr.addToQueue(operation);
+      logger.info("Session added to sync queue");
+    } else if (supabase && isOnline) {
+      // Fallback: direct save if sync manager not available
+      try {
+        const { data, error } = await supabase.from("typing_sessions").insert([
+          {
+            planet: sessionData.planet,
+            wpm: sessionData.wpm,
+            accuracy: sessionData.accuracy,
+            total_typed: sessionData.totalTyped,
+            total_errors: sessionData.totalErrors,
+            duration: sessionData.duration,
+            session_date: new Date().toISOString(),
+          },
+        ]);
 
-      if (error) {
-        console.error("Supabase save error:", error);
+        if (error) {
+          logger.error("Supabase save error:", error);
+          return localSaved;
+        }
+
+        logger.info("Session saved to Supabase successfully");
+        return true;
+      } catch (error) {
+        logger.error("Error saving session:", error);
         return localSaved;
       }
-
-      console.log("Session saved to Supabase successfully:", data);
-      return true;
-    } catch (error) {
-      console.error("Error saving session:", error);
-      return localSaved;
     }
+
+    return localSaved;
   },
 
   // Save to localStorage as fallback
@@ -183,6 +197,7 @@ export const TypingStats = {
         ...sessionData,
         id: Date.now(),
         saved_at: new Date().toISOString(),
+        synced: false, // 同期状態を追跡
         source: 'localStorage'
       };
 
@@ -193,10 +208,10 @@ export const TypingStats = {
       }
 
       localStorage.setItem('typing_sessions', JSON.stringify(existingData));
-      console.log("Session saved to localStorage");
+      logger.info("Session saved to localStorage");
       return true;
     } catch (error) {
-      console.error("Error saving to localStorage:", error);
+      logger.error("Error saving to localStorage:", error);
       return false;
     }
   },
@@ -204,7 +219,7 @@ export const TypingStats = {
   // Get user's typing history with fallback
   async getHistory(limit = 50) {
     if (!supabase || !isOnline) {
-      console.warn("Supabase not available or offline, using localStorage data");
+      logger.warn("Supabase not available or offline, using localStorage data");
       return this.getLocalHistory(limit);
     }
 
@@ -216,13 +231,17 @@ export const TypingStats = {
         .limit(limit);
 
       if (error) {
-        console.error("Supabase history fetch error:", error);
+        logger.error("Supabase history fetch error:", error);
         return this.getLocalHistory(limit);
       }
 
-      return data || [];
+      // ローカルデータとマージ（未同期のデータを含める）
+      const localData = this.getLocalHistory(limit);
+      const unsyncedLocal = localData.filter(item => !item.synced);
+      
+      return [...unsyncedLocal, ...(data || [])].slice(0, limit);
     } catch (error) {
-      console.error("Error fetching history:", error);
+      logger.error("Error fetching history:", error);
       return this.getLocalHistory(limit);
     }
   },
@@ -231,9 +250,9 @@ export const TypingStats = {
   getLocalHistory(limit = 50) {
     try {
       const data = JSON.parse(localStorage.getItem('typing_sessions') || '[]');
-      return data.slice(0, limit);
+      return data.slice(-limit).reverse(); // 最新のデータを優先
     } catch (error) {
-      console.error("Error reading from localStorage:", error);
+      logger.error("Error reading from localStorage:", error);
       return [];
     }
   },
@@ -241,7 +260,7 @@ export const TypingStats = {
   // Get statistics by planet with improved error handling
   async getStatsByPlanet() {
     if (!supabase || !isOnline) {
-      console.warn("Supabase not available or offline, using localStorage data");
+      logger.warn("Supabase not available or offline, using localStorage data");
       return this.getLocalStatsByPlanet();
     }
 
@@ -252,13 +271,13 @@ export const TypingStats = {
         .order("session_date", { ascending: false });
 
       if (error) {
-        console.error("Supabase stats fetch error:", error);
+        logger.error("Supabase stats fetch error:", error);
         return this.getLocalStatsByPlanet();
       }
 
       return this.calculatePlanetStats(data || []);
     } catch (error) {
-      console.error("Error fetching planet stats:", error);
+      logger.error("Error fetching planet stats:", error);
       return this.getLocalStatsByPlanet();
     }
   },
@@ -312,7 +331,7 @@ export const TypingStats = {
       const data = JSON.parse(localStorage.getItem('typing_sessions') || '[]');
       return this.calculatePlanetStats(data);
     } catch (error) {
-      console.error("Error reading local stats:", error);
+      logger.error("Error reading local stats:", error);
       return {};
     }
   },
@@ -320,7 +339,7 @@ export const TypingStats = {
   // Get overall statistics with fallback
   async getOverallStats() {
     if (!supabase) {
-      console.warn("Supabase not initialized, using localStorage data");
+      logger.warn("Supabase not initialized, using localStorage data");
       return this.getLocalOverallStats();
     }
 
@@ -331,13 +350,13 @@ export const TypingStats = {
         .order("session_date", { ascending: false });
 
       if (error) {
-        console.error("Supabase overall stats fetch error:", error);
+        logger.error("Supabase overall stats fetch error:", error);
         return this.getLocalOverallStats();
       }
 
       return this.calculateOverallStats(data || []);
     } catch (error) {
-      console.error("Error fetching overall stats:", error);
+      logger.error("Error fetching overall stats:", error);
       return this.getLocalOverallStats();
     }
   },
@@ -395,7 +414,7 @@ export const TypingStats = {
       const data = JSON.parse(localStorage.getItem('typing_sessions') || '[]');
       return this.calculateOverallStats(data);
     } catch (error) {
-      console.error("Error reading local overall stats:", error);
+      logger.error("Error reading local overall stats:", error);
       return {
         totalSessions: 0,
         avgWpm: 0,
@@ -408,6 +427,21 @@ export const TypingStats = {
       };
     }
   },
+
+  // Mark local session as synced
+  markAsSynced(sessionId) {
+    try {
+      const data = JSON.parse(localStorage.getItem('typing_sessions') || '[]');
+      const session = data.find(s => s.id === sessionId);
+      if (session) {
+        session.synced = true;
+        localStorage.setItem('typing_sessions', JSON.stringify(data));
+        logger.info(`Session ${sessionId} marked as synced`);
+      }
+    } catch (error) {
+      logger.error("Error marking session as synced:", error);
+    }
+  },
 };
 
 // Practice texts management with fallback
@@ -415,7 +449,7 @@ export const PracticeTexts = {
   // Get practice texts for a specific planet
   async getTextsByPlanet(planet) {
     if (!supabase) {
-      console.warn("Supabase not initialized, using local texts");
+      logger.warn("Supabase not initialized, using local texts");
       return this.getLocalTextsByPlanet(planet);
     }
 
@@ -427,13 +461,13 @@ export const PracticeTexts = {
         .eq("is_active", true);
 
       if (error) {
-        console.error("Supabase texts fetch error:", error);
+        logger.error("Supabase texts fetch error:", error);
         return this.getLocalTextsByPlanet(planet);
       }
 
       return data || [];
     } catch (error) {
-      console.error("Error fetching practice texts:", error);
+      logger.error("Error fetching practice texts:", error);
       return this.getLocalTextsByPlanet(planet);
     }
   },
@@ -477,45 +511,53 @@ export const PracticeTexts = {
 
   // Save user preferences
   async savePreferences(preferences) {
-    if (!supabase) {
-      console.warn("Supabase not initialized, saving to localStorage");
-      return this.savePreferencesToLocal(preferences);
-    }
+    // Save to localStorage first
+    this.savePreferencesToLocal(preferences);
 
-    try {
-      const { data, error } = await supabase
-        .from("user_preferences")
-        .upsert([preferences], { onConflict: "user_id" });
+    // Add to sync queue（動的アクセス）
+    const syncMgr = window.syncManager;
+    if (syncMgr && typeof syncMgr.addToQueue === 'function') {
+      syncMgr.addToQueue({
+        type: 'save_preferences',
+        data: preferences
+      });
+      logger.info("Preferences added to sync queue");
+    } else if (supabase && isOnline) {
+      // Fallback: direct save
+      try {
+        const { data, error } = await supabase
+          .from("user_preferences")
+          .upsert([preferences], { onConflict: "user_id" });
 
-      if (error) {
-        console.error("Supabase preferences save error:", error);
-        return this.savePreferencesToLocal(preferences);
+        if (error) {
+          logger.error("Supabase preferences save error:", error);
+        } else {
+          logger.info("Preferences saved successfully");
+        }
+      } catch (error) {
+        logger.error("Error saving preferences:", error);
       }
-
-      console.log("Preferences saved successfully");
-      return true;
-    } catch (error) {
-      console.error("Error saving preferences:", error);
-      return this.savePreferencesToLocal(preferences);
     }
+
+    return true;
   },
 
   // Save preferences to localStorage
   savePreferencesToLocal(preferences) {
     try {
       localStorage.setItem('user_preferences', JSON.stringify(preferences));
-      console.log("Preferences saved to localStorage");
+      logger.info("Preferences saved to localStorage");
       return true;
     } catch (error) {
-      console.error("Error saving preferences to localStorage:", error);
+      logger.error("Error saving preferences to localStorage:", error);
       return false;
     }
   },
 
   // Get user preferences
   async getPreferences() {
-    if (!supabase) {
-      console.warn("Supabase not initialized, using localStorage");
+    if (!supabase || !isOnline) {
+      logger.warn("Supabase not available, using localStorage");
       return this.getPreferencesFromLocal();
     }
 
@@ -526,13 +568,13 @@ export const PracticeTexts = {
         .limit(1);
 
       if (error) {
-        console.error("Supabase preferences fetch error:", error);
+        logger.error("Supabase preferences fetch error:", error);
         return this.getPreferencesFromLocal();
       }
 
       return data && data.length > 0 ? data[0] : this.getDefaultPreferences();
     } catch (error) {
-      console.error("Error fetching preferences:", error);
+      logger.error("Error fetching preferences:", error);
       return this.getPreferencesFromLocal();
     }
   },
@@ -543,7 +585,7 @@ export const PracticeTexts = {
       const prefs = localStorage.getItem('user_preferences');
       return prefs ? JSON.parse(prefs) : this.getDefaultPreferences();
     } catch (error) {
-      console.error("Error reading preferences from localStorage:", error);
+      logger.error("Error reading preferences from localStorage:", error);
       return this.getDefaultPreferences();
     }
   },
@@ -562,15 +604,25 @@ export const PracticeTexts = {
 
 // Enhanced error handling function
 export function handleSupabaseError(error, fallbackData = null) {
-  console.error("Supabase operation failed:", error);
+  logger.error("Supabase operation failed:", error);
 
   // Log additional context for debugging
   if (error.code) {
-    console.error("Error code:", error.code);
+    logger.error("Error code:", error.code);
   }
   if (error.message) {
-    console.error("Error message:", error.message);
+    logger.error("Error message:", error.message);
   }
 
   return fallbackData;
+}
+
+// Get Supabase client instance
+export function getSupabaseClient() {
+  return supabase;
+}
+
+// Check if online
+export function isSupabaseOnline() {
+  return isOnline;
 }
