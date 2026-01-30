@@ -169,6 +169,51 @@
             }
         }
 
+        /* Visual Effects */
+        @keyframes pop {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.3);
+                color: #fff;
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .correct-char {
+            color: var(--energy-green);
+            animation: pop 0.1s ease-out;
+            display: inline-block;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
+        }
+
+        .incorrect-char {
+            color: #ef4444;
+            background-color: rgba(239, 68, 68, 0.2);
+            display: inline-block;
+            animation: shake 0.2s ease-in-out;
+        }
+
         .planet-discovered {
             animation: planetGlow 1s ease-in-out;
         }
@@ -1085,6 +1130,8 @@
     <!-- Load application scripts -->
     <script src="js/common.js"></script>
     <script src="js/supabase-config.js"></script>
+    <script src="js/sound-manager.js"></script>
+    <script src="js/kana-mapping.js"></script>
     <script src="js/typing-engine.js"></script>
     <script src="js/language-manager.js"></script>
     <script src="js/time-attack-mode.js"></script>

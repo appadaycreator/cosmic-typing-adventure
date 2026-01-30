@@ -1,49 +1,60 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cosmic Typing Adventure - 宇宙探索タイピングゲーム</title>
-    <meta name="description" content="宇宙探索をテーマにした革新的なタイピング練習サービス。タイピングで宇宙船を操縦し、惑星を発見・探索しながらスキルアップ。WPM向上、苦手文字克服、ゲーミフィケーション要素満載。">
+    <meta name="description"
+        content="宇宙探索をテーマにした革新的なタイピング練習サービス。タイピングで宇宙船を操縦し、惑星を発見・探索しながらスキルアップ。WPM向上、苦手文字克服、ゲーミフィケーション要素満載。">
     <meta name="keywords" content="タイピング練習,宇宙,ゲーム,WPM,スキルアップ,タイピングゲーム,宇宙探索">
     <meta name="author" content="Cosmic Typing Adventure">
-    
+
     <!-- OGP設定 -->
     <meta property="og:title" content="Cosmic Typing Adventure - 宇宙探索タイピングゲーム">
     <meta property="og:description" content="宇宙探索をテーマにした革新的なタイピング練習サービス。タイピングで宇宙船を操縦し、惑星を発見・探索しながらスキルアップ。">
-    <meta property="og:image" content="https://cdn1.genspark.ai/user-upload-image/gpt_image_generated/8ec45681-975e-4f2e-884d-5d981aed580b">
+    <meta property="og:image"
+        content="https://cdn1.genspark.ai/user-upload-image/gpt_image_generated/8ec45681-975e-4f2e-884d-5d981aed580b">
     <meta property="og:url" content="https://appadaycreator.github.io/cosmic-typing-adventure/">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Cosmic Typing Adventure">
-    
+
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Cosmic Typing Adventure - 宇宙探索タイピングゲーム">
     <meta name="twitter:description" content="宇宙探索をテーマにした革新的なタイピング練習サービス">
-    <meta name="twitter:image" content="https://cdn1.genspark.ai/user-upload-image/gpt_image_generated/8ec45681-975e-4f2e-884d-5d981aed580b">
-    
+    <meta name="twitter:image"
+        content="https://cdn1.genspark.ai/user-upload-image/gpt_image_generated/8ec45681-975e-4f2e-884d-5d981aed580b">
+
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="https://cdn1.genspark.ai/user-upload-image/gpt_image_generated/a530bbce-a7b7-4e12-98a6-684774ea66e1">
-    <link rel="apple-touch-icon" href="https://cdn1.genspark.ai/user-upload-image/gpt_image_generated/a530bbce-a7b7-4e12-98a6-684774ea66e1">
-    
+    <link rel="icon" type="image/png"
+        href="https://cdn1.genspark.ai/user-upload-image/gpt_image_generated/a530bbce-a7b7-4e12-98a6-684774ea66e1">
+    <link rel="apple-touch-icon"
+        href="https://cdn1.genspark.ai/user-upload-image/gpt_image_generated/a530bbce-a7b7-4e12-98a6-684774ea66e1">
+
     <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-TXQGZRF9');</script>
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-TXQGZRF9');</script>
     <!-- End Google Tag Manager -->
-    
+
     <!-- External Libraries -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
     <!-- PWA Manifest -->
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#1e1b4b">
-    
+
     <style>
         :root {
             --space-navy: #0f0f23;
@@ -58,20 +69,25 @@
             --font-size-lg: 1.125rem;
             --font-size-xl: 1.25rem;
         }
-        
-        .font-orbitron { font-family: 'Orbitron', monospace; }
-        .font-noto { font-family: 'Noto Sans JP', sans-serif; }
-        
+
+        .font-orbitron {
+            font-family: 'Orbitron', monospace;
+        }
+
+        .font-noto {
+            font-family: 'Noto Sans JP', sans-serif;
+        }
+
         .cosmic-gradient {
             background: linear-gradient(135deg, var(--space-navy) 0%, var(--space-purple) 50%, var(--cosmic-blue) 100%);
         }
-        
+
         .nebula-gradient {
             background: linear-gradient(45deg, var(--nebula-purple), var(--star-cyan), var(--planet-orange));
         }
-        
+
         .star-field {
-            background-image: 
+            background-image:
                 radial-gradient(2px 2px at 20px 30px, white, transparent),
                 radial-gradient(2px 2px at 40px 70px, white, transparent),
                 radial-gradient(1px 1px at 90px 40px, white, transparent),
@@ -80,78 +96,125 @@
             background-repeat: repeat;
             background-size: 200px 100px;
         }
-        
+
         .floating-animation {
             animation: float 6s ease-in-out infinite;
         }
-        
+
         @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
         }
-        
+
         .pulse-glow {
             animation: pulse-glow 2s infinite;
         }
-        
+
         @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.5); }
-            50% { box-shadow: 0 0 40px rgba(6, 182, 212, 0.8); }
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(6, 182, 212, 0.8);
+            }
         }
-        
+
         .typing-cursor {
             border-right: 2px solid var(--star-cyan);
             animation: blink 1s infinite;
         }
-        
+
         @keyframes blink {
-            0%, 50% { border-color: transparent; }
-            51%, 100% { border-color: var(--star-cyan); }
+
+            0%,
+            50% {
+                border-color: transparent;
+            }
+
+            51%,
+            100% {
+                border-color: var(--star-cyan);
+            }
         }
-        
+
         /* 文字サイズ調整 */
-        .font-size-xs { font-size: var(--font-size-xs); }
-        .font-size-sm { font-size: var(--font-size-sm); }
-        .font-size-base { font-size: var(--font-size-base); }
-        .font-size-lg { font-size: var(--font-size-lg); }
-        .font-size-xl { font-size: var(--font-size-xl); }
-        
+        .font-size-xs {
+            font-size: var(--font-size-xs);
+        }
+
+        .font-size-sm {
+            font-size: var(--font-size-sm);
+        }
+
+        .font-size-base {
+            font-size: var(--font-size-base);
+        }
+
+        .font-size-lg {
+            font-size: var(--font-size-lg);
+        }
+
+        .font-size-xl {
+            font-size: var(--font-size-xl);
+        }
+
         /* レスポンシブ対応 */
         @media (max-width: 768px) {
-            .mobile-menu { display: none; }
-            .mobile-menu.active { display: block; }
+            .mobile-menu {
+                display: none;
+            }
+
+            .mobile-menu.active {
+                display: block;
+            }
         }
-        
+
         /* カスタムスクロールバー */
         ::-webkit-scrollbar {
             width: 8px;
         }
-        
+
         ::-webkit-scrollbar-track {
             background: var(--space-navy);
         }
-        
+
         ::-webkit-scrollbar-thumb {
             background: var(--star-cyan);
             border-radius: 4px;
         }
-        
+
         .spaceship-trail {
             background: linear-gradient(90deg, transparent, var(--star-cyan), transparent);
             height: 2px;
             animation: trail 2s infinite;
         }
-        
+
         @keyframes trail {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
         }
     </style>
 </head>
+
 <body class="font-noto text-white cosmic-gradient star-field min-h-screen">
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQGZRF9"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQGZRF9" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
     <!-- Navigation -->
@@ -162,21 +225,23 @@
                     <i class="fas fa-rocket text-2xl text-cyan-400"></i>
                     <span class="font-orbitron text-xl font-bold">Cosmic Typing Adventure</span>
                 </div>
-                
+
                 <!-- Desktop Menu -->
                 <div class="hidden md:flex items-center space-x-6">
                     <a href="#features" class="hover:text-cyan-400 transition-colors">特徴</a>
                     <a href="#gameplay" class="hover:text-cyan-400 transition-colors">ゲーム要素</a>
                     <a href="#howto" class="hover:text-cyan-400 transition-colors">使い方</a>
                     <a href="#equipment" class="hover:text-cyan-400 transition-colors">推奨機器</a>
-                    
+
                     <!-- Language Toggle -->
                     <div class="flex items-center space-x-2">
-                        <button onclick="toggleLanguage('ja')" class="text-sm hover:text-cyan-400" id="lang-ja">日本語</button>
+                        <button onclick="toggleLanguage('ja')" class="text-sm hover:text-cyan-400"
+                            id="lang-ja">日本語</button>
                         <span class="text-gray-400">|</span>
-                        <button onclick="toggleLanguage('en')" class="text-sm hover:text-cyan-400" id="lang-en">English</button>
+                        <button onclick="toggleLanguage('en')" class="text-sm hover:text-cyan-400"
+                            id="lang-en">English</button>
                     </div>
-                    
+
                     <!-- Font Size Controls -->
                     <div class="flex items-center space-x-1">
                         <i class="fas fa-font text-sm"></i>
@@ -186,18 +251,19 @@
                         <button onclick="changeFontSize('lg')" class="text-lg hover:text-cyan-400">大</button>
                         <button onclick="changeFontSize('xl')" class="text-xl hover:text-cyan-400">特大</button>
                     </div>
-                    
-                    <button onclick="window.open('./app.html', '_blank')" class="bg-gradient-to-r from-cyan-500 to-purple-600 px-6 py-2 rounded-full font-bold hover:shadow-lg transform hover:scale-105 transition-all">
+
+                    <button onclick="window.open('./app.html', '_blank')"
+                        class="bg-gradient-to-r from-cyan-500 to-purple-600 px-6 py-2 rounded-full font-bold hover:shadow-lg transform hover:scale-105 transition-all">
                         <i class="fas fa-play mr-2"></i>今すぐプレイ
                     </button>
                 </div>
-                
+
                 <!-- Mobile Menu Button -->
                 <button class="md:hidden text-2xl" onclick="toggleMobileMenu()">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
-            
+
             <!-- Mobile Menu -->
             <div id="mobile-menu" class="mobile-menu md:hidden py-4 border-t border-gray-700">
                 <div class="flex flex-col space-y-4">
@@ -205,7 +271,8 @@
                     <a href="#gameplay" class="hover:text-cyan-400 transition-colors">ゲーム要素</a>
                     <a href="#howto" class="hover:text-cyan-400 transition-colors">使い方</a>
                     <a href="#equipment" class="hover:text-cyan-400 transition-colors">推奨機器</a>
-                    <button onclick="window.open('./app.html', '_blank')" class="bg-gradient-to-r from-cyan-500 to-purple-600 px-6 py-2 rounded-full font-bold w-full">
+                    <button onclick="window.open('./app.html', '_blank')"
+                        class="bg-gradient-to-r from-cyan-500 to-purple-600 px-6 py-2 rounded-full font-bold w-full">
                         <i class="fas fa-play mr-2"></i>今すぐプレイ
                     </button>
                 </div>
@@ -220,29 +287,32 @@
                 <div class="floating-animation mb-8">
                     <i class="fas fa-rocket text-6xl md:text-8xl text-cyan-400 mb-4"></i>
                 </div>
-                
-                <h1 class="font-orbitron text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+
+                <h1
+                    class="font-orbitron text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
                     Cosmic Typing Adventure
                 </h1>
-                
+
                 <p class="text-xl md:text-2xl mb-4 text-gray-300">
                     <span class="typing-cursor">宇宙探索タイピングゲーム</span>
                 </p>
-                
+
                 <p class="text-lg md:text-xl mb-8 max-w-3xl mx-auto text-gray-400">
                     タイピングで宇宙船を操縦し、未知の惑星を発見・探索。<br>
                     楽しみながらWPM向上と苦手文字克服を実現する革新的なタイピング練習サービス
                 </p>
-                
+
                 <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                    <button onclick="window.open('./app.html', '_blank')" class="bg-gradient-to-r from-cyan-500 to-purple-600 px-8 py-3 rounded-full font-bold text-lg hover:shadow-lg transform hover:scale-105 transition-all pulse-glow">
+                    <button onclick="window.open('./app.html', '_blank')"
+                        class="bg-gradient-to-r from-cyan-500 to-purple-600 px-8 py-3 rounded-full font-bold text-lg hover:shadow-lg transform hover:scale-105 transition-all pulse-glow">
                         <i class="fas fa-rocket mr-2"></i>宇宙探索を開始
                     </button>
-                    <button onclick="scrollToSection('features')" class="border-2 border-cyan-400 px-8 py-3 rounded-full font-bold text-lg hover:bg-cyan-400 hover:text-black transition-all">
+                    <button onclick="scrollToSection('features')"
+                        class="border-2 border-cyan-400 px-8 py-3 rounded-full font-bold text-lg hover:bg-cyan-400 hover:text-black transition-all">
                         <i class="fas fa-info-circle mr-2"></i>特徴を見る
                     </button>
                 </div>
-                
+
                 <!-- Live Stats Demo -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
                     <div class="bg-black bg-opacity-50 p-4 rounded-lg">
@@ -275,10 +345,11 @@
                 </h2>
                 <p class="text-xl text-gray-400">他にはない宇宙探索タイピング体験</p>
             </div>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Feature 1 -->
-                <div class="bg-gradient-to-br from-purple-900 to-blue-900 p-6 rounded-lg hover:transform hover:scale-105 transition-all">
+                <div
+                    class="bg-gradient-to-br from-purple-900 to-blue-900 p-6 rounded-lg hover:transform hover:scale-105 transition-all">
                     <div class="text-center mb-4">
                         <i class="fas fa-rocket text-4xl text-cyan-400 mb-4"></i>
                         <h3 class="font-orbitron text-xl font-bold mb-2">宇宙船操縦システム</h3>
@@ -288,9 +359,10 @@
                         リアルタイムで宇宙空間を移動する臨場感を体験。
                     </p>
                 </div>
-                
+
                 <!-- Feature 2 -->
-                <div class="bg-gradient-to-br from-orange-900 to-red-900 p-6 rounded-lg hover:transform hover:scale-105 transition-all">
+                <div
+                    class="bg-gradient-to-br from-orange-900 to-red-900 p-6 rounded-lg hover:transform hover:scale-105 transition-all">
                     <div class="text-center mb-4">
                         <i class="fas fa-globe text-4xl text-orange-400 mb-4"></i>
                         <h3 class="font-orbitron text-xl font-bold mb-2">惑星発見システム</h3>
@@ -300,9 +372,10 @@
                         多様なタイピング課題でスキルアップ。
                     </p>
                 </div>
-                
+
                 <!-- Feature 3 -->
-                <div class="bg-gradient-to-br from-green-900 to-teal-900 p-6 rounded-lg hover:transform hover:scale-105 transition-all">
+                <div
+                    class="bg-gradient-to-br from-green-900 to-teal-900 p-6 rounded-lg hover:transform hover:scale-105 transition-all">
                     <div class="text-center mb-4">
                         <i class="fas fa-chart-line text-4xl text-green-400 mb-4"></i>
                         <h3 class="font-orbitron text-xl font-bold mb-2">AI苦手分析</h3>
@@ -312,9 +385,10 @@
                         効率的な上達をサポート。
                     </p>
                 </div>
-                
+
                 <!-- Feature 4 -->
-                <div class="bg-gradient-to-br from-pink-900 to-purple-900 p-6 rounded-lg hover:transform hover:scale-105 transition-all">
+                <div
+                    class="bg-gradient-to-br from-pink-900 to-purple-900 p-6 rounded-lg hover:transform hover:scale-105 transition-all">
                     <div class="text-center mb-4">
                         <i class="fas fa-users text-4xl text-pink-400 mb-4"></i>
                         <h3 class="font-orbitron text-xl font-bold mb-2">協力ミッション</h3>
@@ -324,9 +398,10 @@
                         チームワークでより高い目標を達成。
                     </p>
                 </div>
-                
+
                 <!-- Feature 5 -->
-                <div class="bg-gradient-to-br from-yellow-900 to-orange-900 p-6 rounded-lg hover:transform hover:scale-105 transition-all">
+                <div
+                    class="bg-gradient-to-br from-yellow-900 to-orange-900 p-6 rounded-lg hover:transform hover:scale-105 transition-all">
                     <div class="text-center mb-4">
                         <i class="fas fa-trophy text-4xl text-yellow-400 mb-4"></i>
                         <h3 class="font-orbitron text-xl font-bold mb-2">実績システム</h3>
@@ -336,9 +411,10 @@
                         様々な称号でモチベーション維持。
                     </p>
                 </div>
-                
+
                 <!-- Feature 6 -->
-                <div class="bg-gradient-to-br from-indigo-900 to-purple-900 p-6 rounded-lg hover:transform hover:scale-105 transition-all">
+                <div
+                    class="bg-gradient-to-br from-indigo-900 to-purple-900 p-6 rounded-lg hover:transform hover:scale-105 transition-all">
                     <div class="text-center mb-4">
                         <i class="fas fa-mobile-alt text-4xl text-indigo-400 mb-4"></i>
                         <h3 class="font-orbitron text-xl font-bold mb-2">マルチデバイス対応</h3>
@@ -361,7 +437,7 @@
                 </h2>
                 <p class="text-xl text-gray-400">楽しさと学習効果を両立した設計</p>
             </div>
-            
+
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 <!-- Game Flow -->
                 <div class="space-y-6">
@@ -374,7 +450,7 @@
                             <p class="text-gray-400">初心者船から高性能船まで、レベルに応じてアンロック</p>
                         </div>
                     </div>
-                    
+
                     <div class="flex items-center space-x-4 p-4 bg-black bg-opacity-50 rounded-lg">
                         <div class="bg-purple-500 w-12 h-12 rounded-full flex items-center justify-center">
                             <span class="font-bold text-white">2</span>
@@ -384,7 +460,7 @@
                             <p class="text-gray-400">基礎練習から高難度探索まで多様なミッション</p>
                         </div>
                     </div>
-                    
+
                     <div class="flex items-center space-x-4 p-4 bg-black bg-opacity-50 rounded-lg">
                         <div class="bg-orange-500 w-12 h-12 rounded-full flex items-center justify-center">
                             <span class="font-bold text-white">3</span>
@@ -394,7 +470,7 @@
                             <p class="text-gray-400">タイピングで宇宙船を操縦し、惑星を発見</p>
                         </div>
                     </div>
-                    
+
                     <div class="flex items-center space-x-4 p-4 bg-black bg-opacity-50 rounded-lg">
                         <div class="bg-green-500 w-12 h-12 rounded-full flex items-center justify-center">
                             <span class="font-bold text-white">4</span>
@@ -405,7 +481,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Progress Chart -->
                 <div class="bg-black bg-opacity-50 p-6 rounded-lg">
                     <h3 class="font-orbitron text-xl font-bold mb-4 text-center">
@@ -414,27 +490,30 @@
                     <canvas id="progressChart" style="height: 300px; max-height: 350px;"></canvas>
                 </div>
             </div>
-            
+
             <!-- Game Elements -->
             <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="text-center">
-                    <div class="bg-gradient-to-br from-cyan-500 to-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div
+                        class="bg-gradient-to-br from-cyan-500 to-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-tachometer-alt text-2xl text-white"></i>
                     </div>
                     <h3 class="font-orbitron text-lg font-bold mb-2">リアルタイムWPM</h3>
                     <p class="text-gray-400">タイピング速度に応じて宇宙船の速度がリアルタイムで変化</p>
                 </div>
-                
+
                 <div class="text-center">
-                    <div class="bg-gradient-to-br from-purple-500 to-pink-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div
+                        class="bg-gradient-to-br from-purple-500 to-pink-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-bullseye text-2xl text-white"></i>
                     </div>
                     <h3 class="font-orbitron text-lg font-bold mb-2">精密操縦</h3>
                     <p class="text-gray-400">正確性が高いほど燃料効率が良くなり、遠い惑星まで到達可能</p>
                 </div>
-                
+
                 <div class="text-center">
-                    <div class="bg-gradient-to-br from-orange-500 to-red-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div
+                        class="bg-gradient-to-br from-orange-500 to-red-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-fire text-2xl text-white"></i>
                     </div>
                     <h3 class="font-orbitron text-lg font-bold mb-2">コンボシステム</h3>
@@ -453,12 +532,13 @@
                 </h2>
                 <p class="text-xl text-gray-400">簡単3ステップで宇宙探索を開始</p>
             </div>
-            
+
             <div class="max-w-4xl mx-auto">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <!-- Step 1 -->
                     <div class="text-center">
-                        <div class="bg-gradient-to-br from-cyan-500 to-blue-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <div
+                            class="bg-gradient-to-br from-cyan-500 to-blue-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
                             <span class="font-orbitron text-2xl font-bold text-white">1</span>
                         </div>
                         <h3 class="font-orbitron text-xl font-bold mb-4">アカウント作成</h3>
@@ -470,10 +550,11 @@
                             <p class="text-sm text-gray-300">無料・匿名OK</p>
                         </div>
                     </div>
-                    
+
                     <!-- Step 2 -->
                     <div class="text-center">
-                        <div class="bg-gradient-to-br from-purple-500 to-pink-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <div
+                            class="bg-gradient-to-br from-purple-500 to-pink-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
                             <span class="font-orbitron text-2xl font-bold text-white">2</span>
                         </div>
                         <h3 class="font-orbitron text-xl font-bold mb-4">レベル診断</h3>
@@ -485,10 +566,11 @@
                             <p class="text-sm text-gray-300">2分で完了</p>
                         </div>
                     </div>
-                    
+
                     <!-- Step 3 -->
                     <div class="text-center">
-                        <div class="bg-gradient-to-br from-orange-500 to-red-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <div
+                            class="bg-gradient-to-br from-orange-500 to-red-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
                             <span class="font-orbitron text-2xl font-bold text-white">3</span>
                         </div>
                         <h3 class="font-orbitron text-xl font-bold mb-4">探索開始</h3>
@@ -501,7 +583,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Additional Info -->
                 <div class="mt-12 bg-gradient-to-r from-purple-900 to-blue-900 p-6 rounded-lg">
                     <h3 class="font-orbitron text-xl font-bold mb-4 text-center">
@@ -509,14 +591,19 @@
                     </h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <ul class="space-y-2">
-                            <li class="flex items-center"><i class="fas fa-check text-green-400 mr-2"></i>毎日15分の継続練習</li>
-                            <li class="flex items-center"><i class="fas fa-check text-green-400 mr-2"></i>正確性を重視した練習</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-400 mr-2"></i>毎日15分の継続練習
+                            </li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-400 mr-2"></i>正確性を重視した練習
+                            </li>
                             <li class="flex items-center"><i class="fas fa-check text-green-400 mr-2"></i>苦手キーの集中練習</li>
                         </ul>
                         <ul class="space-y-2">
-                            <li class="flex items-center"><i class="fas fa-check text-green-400 mr-2"></i>ホームポジションの維持</li>
-                            <li class="flex items-center"><i class="fas fa-check text-green-400 mr-2"></i>画面を見ながらタイピング</li>
-                            <li class="flex items-center"><i class="fas fa-check text-green-400 mr-2"></i>リズム良く一定速度を保つ</li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-400 mr-2"></i>ホームポジションの維持
+                            </li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-400 mr-2"></i>画面を見ながらタイピング
+                            </li>
+                            <li class="flex items-center"><i class="fas fa-check text-green-400 mr-2"></i>リズム良く一定速度を保つ
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -533,10 +620,11 @@
                 </h2>
                 <p class="text-xl text-gray-400">宇宙船操縦に最適なキーボード&マウス</p>
             </div>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Affiliate Product 1 -->
-                <div class="bg-gradient-to-br from-gray-900 to-gray-800 p-6 rounded-lg hover:transform hover:scale-105 transition-all">
+                <div
+                    class="bg-gradient-to-br from-gray-900 to-gray-800 p-6 rounded-lg hover:transform hover:scale-105 transition-all">
                     <div class="text-center mb-4">
                         <i class="fas fa-keyboard text-4xl text-cyan-400 mb-4"></i>
                         <h3 class="font-bold text-lg mb-2">ゲーミングキーボード</h3>
@@ -559,13 +647,16 @@
                             <span class="text-cyan-400">★★★★☆</span>
                         </div>
                     </div>
-                    <button class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 py-2 rounded-lg font-bold hover:shadow-lg transition-all">
+                    <a href="#" target="_blank" rel="noopener noreferrer"
+                        class="js-track-affiliate block text-center w-full bg-gradient-to-r from-cyan-500 to-blue-600 py-2 rounded-lg font-bold hover:shadow-lg transition-all text-white no-underline"
+                        data-platform="Amazon" data-item-name="Gaming Keyboard">
                         <i class="fas fa-shopping-cart mr-2"></i>詳細を見る
-                    </button>
+                    </a>
                 </div>
-                
+
                 <!-- Affiliate Product 2 -->
-                <div class="bg-gradient-to-br from-gray-900 to-gray-800 p-6 rounded-lg hover:transform hover:scale-105 transition-all">
+                <div
+                    class="bg-gradient-to-br from-gray-900 to-gray-800 p-6 rounded-lg hover:transform hover:scale-105 transition-all">
                     <div class="text-center mb-4">
                         <i class="fas fa-mouse text-4xl text-purple-400 mb-4"></i>
                         <h3 class="font-bold text-lg mb-2">エルゴノミクスマウス</h3>
@@ -588,13 +679,16 @@
                             <span class="text-purple-400">★★★☆☆</span>
                         </div>
                     </div>
-                    <button class="w-full bg-gradient-to-r from-purple-500 to-pink-600 py-2 rounded-lg font-bold hover:shadow-lg transition-all">
+                    <a href="#" target="_blank" rel="noopener noreferrer"
+                        class="js-track-affiliate block text-center w-full bg-gradient-to-r from-purple-500 to-pink-600 py-2 rounded-lg font-bold hover:shadow-lg transition-all text-white no-underline"
+                        data-platform="Amazon" data-item-name="Ergonomic Mouse">
                         <i class="fas fa-shopping-cart mr-2"></i>詳細を見る
-                    </button>
+                    </a>
                 </div>
-                
+
                 <!-- Affiliate Product 3 -->
-                <div class="bg-gradient-to-br from-gray-900 to-gray-800 p-6 rounded-lg hover:transform hover:scale-105 transition-all">
+                <div
+                    class="bg-gradient-to-br from-gray-900 to-gray-800 p-6 rounded-lg hover:transform hover:scale-105 transition-all">
                     <div class="text-center mb-4">
                         <i class="fas fa-desktop text-4xl text-orange-400 mb-4"></i>
                         <h3 class="font-bold text-lg mb-2">デュアルモニター</h3>
@@ -617,12 +711,14 @@
                             <span class="text-orange-400">★★★★☆</span>
                         </div>
                     </div>
-                    <button class="w-full bg-gradient-to-r from-orange-500 to-red-600 py-2 rounded-lg font-bold hover:shadow-lg transition-all">
+                    <a href="#" target="_blank" rel="noopener noreferrer"
+                        class="js-track-affiliate block text-center w-full bg-gradient-to-r from-orange-500 to-red-600 py-2 rounded-lg font-bold hover:shadow-lg transition-all text-white no-underline"
+                        data-platform="Amazon" data-item-name="Dual Monitor">
                         <i class="fas fa-shopping-cart mr-2"></i>詳細を見る
-                    </button>
+                    </a>
                 </div>
             </div>
-            
+
             <!-- Learning Resources -->
             <div class="mt-12 bg-gradient-to-r from-indigo-900 to-purple-900 p-6 rounded-lg">
                 <h3 class="font-orbitron text-xl font-bold mb-6 text-center">
@@ -634,7 +730,8 @@
                             <i class="fas fa-book text-cyan-400 mr-2"></i>タイピング技術書
                         </h4>
                         <p class="text-gray-400 text-sm mb-3">プロが教える効率的なタイピング習得法</p>
-                        <button class="bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded text-sm font-bold transition-colors">
+                        <button
+                            class="bg-cyan-500 hover:bg-cyan-600 px-4 py-2 rounded text-sm font-bold transition-colors">
                             詳細を見る
                         </button>
                     </div>
@@ -643,7 +740,8 @@
                             <i class="fas fa-video text-purple-400 mr-2"></i>オンライン講座
                         </h4>
                         <p class="text-gray-400 text-sm mb-3">動画で学ぶ正しいフォームとテクニック</p>
-                        <button class="bg-purple-500 hover:bg-purple-600 px-4 py-2 rounded text-sm font-bold transition-colors">
+                        <button
+                            class="bg-purple-500 hover:bg-purple-600 px-4 py-2 rounded text-sm font-bold transition-colors">
                             詳細を見る
                         </button>
                     </div>
@@ -661,25 +759,30 @@
             <p class="text-xl mb-8 max-w-2xl mx-auto text-gray-300">
                 無料でアカウント作成。数分で銀河系最高のタイピング冒険が始まります。
             </p>
-            
+
             <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-                <button onclick="window.open('./app.html', '_blank')" class="bg-gradient-to-r from-cyan-500 to-purple-600 px-8 py-4 rounded-full font-bold text-lg hover:shadow-xl transform hover:scale-105 transition-all pulse-glow">
+                <button onclick="window.open('./app.html', '_blank')"
+                    class="bg-gradient-to-r from-cyan-500 to-purple-600 px-8 py-4 rounded-full font-bold text-lg hover:shadow-xl transform hover:scale-105 transition-all pulse-glow">
                     <i class="fas fa-rocket mr-2"></i>無料で探索開始
                 </button>
-                <button onclick="window.open('./how-to-use.html', '_blank')" class="border-2 border-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-black transition-all">
+                <button onclick="window.open('./how-to-use.html', '_blank')"
+                    class="border-2 border-white px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:text-black transition-all">
                     <i class="fas fa-question-circle mr-2"></i>詳しい使い方
                 </button>
             </div>
-            
+
             <!-- Social Share -->
             <div class="flex justify-center space-x-4">
-                <button onclick="shareToTwitter()" class="bg-blue-400 hover:bg-blue-500 p-3 rounded-full transition-colors">
+                <button onclick="shareToTwitter()"
+                    class="bg-blue-400 hover:bg-blue-500 p-3 rounded-full transition-colors">
                     <i class="fab fa-twitter text-xl"></i>
                 </button>
-                <button onclick="shareToFacebook()" class="bg-blue-600 hover:bg-blue-700 p-3 rounded-full transition-colors">
+                <button onclick="shareToFacebook()"
+                    class="bg-blue-600 hover:bg-blue-700 p-3 rounded-full transition-colors">
                     <i class="fab fa-facebook text-xl"></i>
                 </button>
-                <button onclick="shareToLine()" class="bg-green-500 hover:bg-green-600 p-3 rounded-full transition-colors">
+                <button onclick="shareToLine()"
+                    class="bg-green-500 hover:bg-green-600 p-3 rounded-full transition-colors">
                     <i class="fab fa-line text-xl"></i>
                 </button>
                 <button onclick="copyUrl()" class="bg-gray-600 hover:bg-gray-700 p-3 rounded-full transition-colors">
@@ -715,30 +818,37 @@
                         </a>
                     </div>
                 </div>
-                
+
                 <!-- Quick Links -->
                 <div>
                     <h3 class="font-bold text-lg mb-4">クイックリンク</h3>
                     <ul class="space-y-2">
-                        <li><a href="./app.html" class="text-gray-400 hover:text-cyan-400 transition-colors">ゲーム開始</a></li>
-                        <li><a href="./how-to-use.html" class="text-gray-400 hover:text-cyan-400 transition-colors">使い方</a></li>
+                        <li><a href="./app.html" class="text-gray-400 hover:text-cyan-400 transition-colors">ゲーム開始</a>
+                        </li>
+                        <li><a href="./how-to-use.html"
+                                class="text-gray-400 hover:text-cyan-400 transition-colors">使い方</a></li>
                         <li><a href="#features" class="text-gray-400 hover:text-cyan-400 transition-colors">特徴</a></li>
-                        <li><a href="#gameplay" class="text-gray-400 hover:text-cyan-400 transition-colors">ゲーム要素</a></li>
+                        <li><a href="#gameplay" class="text-gray-400 hover:text-cyan-400 transition-colors">ゲーム要素</a>
+                        </li>
                     </ul>
                 </div>
-                
+
                 <!-- Legal -->
                 <div>
                     <h3 class="font-bold text-lg mb-4">法的情報</h3>
                     <ul class="space-y-2">
-                        <li><a href="./terms.html" class="text-gray-400 hover:text-cyan-400 transition-colors">利用規約</a></li>
-                        <li><a href="./privacy.html" class="text-gray-400 hover:text-cyan-400 transition-colors">プライバシーポリシー</a></li>
-                        <li><a href="./contact.html" class="text-gray-400 hover:text-cyan-400 transition-colors">お問い合わせ</a></li>
-                        <li><a href="./tests/test-suite.html" class="text-gray-400 hover:text-cyan-400 transition-colors">テストスイート</a></li>
+                        <li><a href="./terms.html" class="text-gray-400 hover:text-cyan-400 transition-colors">利用規約</a>
+                        </li>
+                        <li><a href="./privacy.html"
+                                class="text-gray-400 hover:text-cyan-400 transition-colors">プライバシーポリシー</a></li>
+                        <li><a href="./contact.html"
+                                class="text-gray-400 hover:text-cyan-400 transition-colors">お問い合わせ</a></li>
+                        <li><a href="./tests/test-suite.html"
+                                class="text-gray-400 hover:text-cyan-400 transition-colors">テストスイート</a></li>
                     </ul>
                 </div>
             </div>
-            
+
             <div class="border-t border-gray-800 mt-8 pt-8 text-center">
                 <p class="text-gray-400">
                     &copy; 2025 Cosmic Typing Adventure. All rights reserved.
@@ -752,59 +862,59 @@
         // Global variables
         let currentLanguage = 'ja';
         let currentFontSize = 'base';
-        
+
         // Initialize page
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             initializeAnimations();
             initializeProgressChart();
             setupServiceWorker();
             loadUserPreferences();
-            
+
             console.log('🚀 Cosmic Typing Adventure initialized');
             console.log('Language:', currentLanguage);
             console.log('Font Size:', currentFontSize);
         });
-        
+
         // Language toggle
         function toggleLanguage(lang) {
             currentLanguage = lang;
             localStorage.setItem('preferred_language', lang);
-            
+
             // Update active language button
             document.querySelectorAll('[id^="lang-"]').forEach(btn => {
                 btn.classList.remove('text-cyan-400');
                 btn.classList.add('text-gray-400');
             });
             document.getElementById(`lang-${lang}`).classList.add('text-cyan-400');
-            
+
             // Here you would implement actual language switching
             console.log(`Language switched to: ${lang}`);
-            
+
             // Show notification
             showNotification(`言語を${lang === 'ja' ? '日本語' : 'English'}に変更しました`, 'success');
         }
-        
+
         // Font size adjustment
         function changeFontSize(size) {
             currentFontSize = size;
             localStorage.setItem('preferred_font_size', size);
-            
+
             // Remove all font size classes
             document.body.classList.remove('font-size-xs', 'font-size-sm', 'font-size-base', 'font-size-lg', 'font-size-xl');
-            
+
             // Add new font size class
             document.body.classList.add(`font-size-${size}`);
-            
+
             console.log(`Font size changed to: ${size}`);
             showNotification(`文字サイズを変更しました`, 'success');
         }
-        
+
         // Mobile menu toggle
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
             menu.classList.toggle('active');
         }
-        
+
         // Smooth scroll to section
         function scrollToSection(sectionId) {
             const element = document.getElementById(sectionId);
@@ -812,7 +922,7 @@
                 element.scrollIntoView({ behavior: 'smooth' });
             }
         }
-        
+
         // Initialize animations
         function initializeAnimations() {
             // Demo stats animation
@@ -820,23 +930,23 @@
             animateValue('demo-accuracy', 0, 94, 2000, '%');
             animateValue('demo-planets', 0, 23, 2000);
             animateValue('demo-level', 1, 12, 2000);
-            
+
             // Floating animations for features
             const features = document.querySelectorAll('.floating-animation');
             features.forEach((feature, index) => {
                 feature.style.animationDelay = `${index * 0.5}s`;
             });
         }
-        
+
         // Animate number values
         function animateValue(elementId, start, end, duration, suffix = '') {
             const element = document.getElementById(elementId);
             if (!element) return;
-            
+
             const range = end - start;
             const increment = range / (duration / 16);
             let current = start;
-            
+
             const timer = setInterval(() => {
                 current += increment;
                 if (current >= end) {
@@ -847,12 +957,12 @@
                 }
             }, 16);
         }
-        
+
         // Initialize progress chart
         function initializeProgressChart() {
             const ctx = document.getElementById('progressChart');
             if (!ctx) return;
-            
+
             new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -894,36 +1004,36 @@
                 }
             });
         }
-        
+
         // Social sharing functions
         function shareToTwitter() {
             const text = 'Cosmic Typing Adventure - 宇宙探索タイピングゲームで楽しくスキルアップ！';
             const url = window.location.href;
             window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
         }
-        
+
         function shareToFacebook() {
             const url = window.location.href;
             window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
         }
-        
+
         function shareToLine() {
             const text = 'Cosmic Typing Adventure - 宇宙探索タイピングゲーム';
             const url = window.location.href;
             window.open(`https://line.me/R/msg/text/?${encodeURIComponent(text + ' ' + url)}`, '_blank');
         }
-        
+
         function copyUrl() {
             navigator.clipboard.writeText(window.location.href).then(() => {
                 showNotification('URLをコピーしました！', 'success');
             });
         }
-        
+
         // Notification system
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
             notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300`;
-            
+
             if (type === 'success') {
                 notification.classList.add('bg-green-500');
             } else if (type === 'error') {
@@ -931,21 +1041,21 @@
             } else {
                 notification.classList.add('bg-blue-500');
             }
-            
+
             notification.innerHTML = `
                 <div class="flex items-center space-x-2">
                     <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'exclamation' : 'info'}-circle"></i>
                     <span>${message}</span>
                 </div>
             `;
-            
+
             document.body.appendChild(notification);
-            
+
             // Animate in
             setTimeout(() => {
                 notification.classList.remove('translate-x-full');
             }, 100);
-            
+
             // Animate out
             setTimeout(() => {
                 notification.classList.add('translate-x-full');
@@ -954,7 +1064,7 @@
                 }, 300);
             }, 3000);
         }
-        
+
         // Setup service worker for PWA
         function setupServiceWorker() {
             if ('serviceWorker' in navigator) {
@@ -967,23 +1077,23 @@
                     });
             }
         }
-        
+
         // Load user preferences
         function loadUserPreferences() {
             const savedLanguage = localStorage.getItem('preferred_language');
             const savedFontSize = localStorage.getItem('preferred_font_size');
-            
+
             if (savedLanguage) {
                 toggleLanguage(savedLanguage);
             }
-            
+
             if (savedFontSize) {
                 changeFontSize(savedFontSize);
             }
         }
-        
+
         // Keyboard navigation
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 const menu = document.getElementById('mobile-menu');
                 if (menu.classList.contains('active')) {
@@ -991,20 +1101,20 @@
                 }
             }
         });
-        
+
         // Track user engagement
         let startTime = Date.now();
-        window.addEventListener('beforeunload', function() {
+        window.addEventListener('beforeunload', function () {
             const timeSpent = Date.now() - startTime;
             localStorage.setItem('last_visit_duration', timeSpent);
             console.log(`Time spent on page: ${timeSpent}ms`);
         });
-        
+
         // Performance logging
-        window.addEventListener('load', function() {
+        window.addEventListener('load', function () {
             const loadTime = performance.now();
             console.log(`Page loaded in: ${loadTime}ms`);
-            
+
             // Track performance
             if ('PerformanceObserver' in window) {
                 const observer = new PerformanceObserver((list) => {
@@ -1017,4 +1127,5 @@
         });
     </script>
 </body>
+
 </html>

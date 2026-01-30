@@ -103,9 +103,12 @@ class TypingEngine {
             return;
         }
 
+        this.tokenizeText(); // Tokenize Japanese text
+
         this.typedText = '';
-        this.currentIndex = 0;
-        this.errors.clear(); // Clear Map instead of array
+        this.currentIndex = 0; // Index of current token
+        this.currentInput = ''; // Current buffer for partial matches
+        this.errors.clear();
         this.totalTyped = 0;
         this.totalErrors = 0;
         this.wpm = 0;
@@ -127,10 +130,163 @@ class TypingEngine {
         if (this.mode === 'survival') {
             this.lives = this.maxLives;
             this.updateLivesDisplay();
-        } else if (this.mode === 'timeAttack') {
-            // For time attack, we might use a countdown instead of standard timer
-            // But existing WPM timer is sufficient if we check limits
         }
+    }
+
+    // Tokenize text into Kana chunks
+    tokenizeText() {
+        this.tokens = [];
+        let text = this.currentText;
+        const mapping = window.KANA_MAPPING || {};
+
+        // Simple greedy tokenizer
+        let i = 0;
+        while (i < text.length) {
+            let bestMatch = null;
+            let matchLen = 0;
+
+            // Try to match longest key first (e.g. 'sha' vs 'shi')
+            // Actually keys are kana. 'しゃ' (2 chars) vs 'し' (1 char)
+            // Determine max key length from mapping (usually 2 for compound)
+
+            // Check 2 chars first
+            if (i + 1 < text.length) {
+                const twoChars = text.substr(i, 2);
+                if (mapping[twoChars]) {
+                    bestMatch = { kana: twoChars, patterns: mapping[twoChars] };
+                    matchLen = 2;
+                }
+            }
+
+            // Check 1 char if no 2 char match
+            if (!bestMatch) {
+                const char = text[i];
+                if (mapping[char]) {
+                    bestMatch = { kana: char, patterns: mapping[char] };
+                    matchLen = 1;
+                } else {
+                    // Fallback to wanakana or exact match
+                    const fallback = window.wanakana ? window.wanakana.toRomaji(char) : char;
+                    bestMatch = { kana: char, patterns: [fallback] };
+                    matchLen = 1;
+                }
+            }
+
+            this.tokens.push({
+                ...bestMatch,
+                isComplete: false,
+                isError: false,
+                input: '' // What user typed for this token
+            });
+            i += matchLen;
+        }
+    }
+
+    handleInput(event) {
+        if (!this.isActive) return;
+
+        // Note: 'input' event passes the whole value usually, but we want the logical char.
+        // If we use keydown, we get key. If input, we get value.
+        // Assuming textarea is cleared or we track diff.
+        // Existing logic used 'event.target.value'.
+        // We should change to track appended char or just use keydown info if possible.
+        // But for mobile support 'input' is better.
+        // Let's assume we can get the new char.
+
+        const val = event.target.value;
+        const inputChar = val.slice(-1); // Taking last char is risky if user pastes or moves cursor.
+        // Better: assume input field is cleared after each valid token or we keep full history?
+        // Let's stick to "append" logic for now, but handle backspace explicitly.
+
+        if (event.inputType === 'deleteContentBackward') {
+            // Backspace handling is complex with flexible tokens.
+            // Simplest: prevent backspace or handle it by resetting current token?
+            // For now, let's ignore backspace in this pass or implement simple reset.
+            return;
+        }
+
+        if (!inputChar) return; // Ignore empty
+
+        // Calculate current token
+        if (this.currentIndex >= this.tokens.length) return;
+
+        const token = this.tokens[this.currentIndex];
+        const nextInput = this.currentInput + inputChar;
+
+        // Provide visual/sound feedback - SoundManager hook
+        if (window.soundManager) window.soundManager.play('type');
+
+        // Check against patterns
+        const isValid = token.patterns.some(p => p.startsWith(nextInput));
+        const isComplete = token.patterns.some(p => p === nextInput);
+
+        if (isValid) {
+            this.currentInput = nextInput;
+            this.typedText += inputChar; // Global typed tracking
+            this.totalTyped++;
+
+            if (isComplete) {
+                token.isComplete = true;
+                token.input = this.currentInput;
+                this.currentIndex++;
+                this.currentInput = '';
+
+                // Play completion sound?
+                if (this.currentIndex >= this.tokens.length) {
+                    this.complete();
+                }
+            }
+
+            // Clear errors for this token if valid
+            token.isError = false;
+        } else {
+            // Error
+            this.totalErrors++;
+            token.isError = true;
+            this.addError(this.totalTyped, '', inputChar); // Loose tracking
+
+            // Survival logic
+            if (this.mode === 'survival') {
+                this.lives--;
+                this.updateLivesDisplay();
+                if (this.lives <= 0) {
+                    this.complete({ cause: 'death' });
+                    return;
+                }
+            }
+
+            if (window.soundManager) window.soundManager.play('error');
+        }
+
+        this.displayText();
+        this.updateProgress();
+    }
+
+    displayText() {
+        if (!this.elements.textDisplay) return;
+
+        let html = '';
+        this.tokens.forEach((token, idx) => {
+            let className = '';
+            if (token.isComplete) {
+                className = 'correct-char';
+            } else if (idx === this.currentIndex) {
+                className = token.isError ? 'incorrect-char' : 'current-char';
+            }
+
+            // Display visual cue for partial input if current
+            let displayChar = token.kana;
+            if (idx === this.currentIndex && this.currentInput.length > 0) {
+                // Maybe show romaji hint?
+                // displayChar += `<span class="text-xs absolute -bottom-4 left-0">${this.currentInput}</span>`;
+            }
+
+            html += `<span class="${className} relative">${displayChar}</span>`;
+        });
+
+        this.elements.textDisplay.innerHTML = html;
+
+        // Auto-scroll logic if needed
     }
 
     updateLivesDisplay() {
