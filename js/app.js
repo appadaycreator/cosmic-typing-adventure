@@ -11,6 +11,7 @@ import { SecurityUtils } from './security-utils.js';
 import { logger } from './logger.js';
 import { DOMUtils } from './dom-utils.js';
 import { errorHandler } from './error-handler.js';
+import { GameModeManager, LeaderboardManager, formatModeResults } from './game-mode-manager.js';
 
 export class CosmicTypingApp {
   constructor() {
@@ -21,6 +22,7 @@ export class CosmicTypingApp {
     this.currentText = "";
     this.isPracticeActive = false;
     this.userInput = '';
+    this.supabaseClient = null;
 
     // User stats initialization
     this.userStats = {
@@ -33,6 +35,8 @@ export class CosmicTypingApp {
     // Initialize systems
     this.achievementSystem = new AchievementSystem(this.userStats);
     this.shipUpgradeSystem = new ShipUpgradeSystem(this.soundManager, this.userStats);
+    this.gameModeManager = new GameModeManager();
+    this.leaderboardManager = null; // Initialized after Supabase
 
     // Make app available globally
     window.app = this;
@@ -110,14 +114,25 @@ export class CosmicTypingApp {
       if (success) {
         logger.info("Supabase initialized successfully");
 
+        // Get Supabase client for leaderboard
+        if (window.supabase) {
+          this.supabaseClient = window.supabase.createClient(
+            "https://heosgwasjtspuczbllrp.supabase.co",
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhlb3Nnd2FzanRzcHVjemJsbHJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNjQ3NjMsImV4cCI6MjA2Nzk0MDc2M30.zNaIL1IXFQgcoWgk5EX5t5mOkewLB1-9rrqqS_jR0Zc"
+          );
+          this.leaderboardManager = new LeaderboardManager(this.supabaseClient);
+        }
+
         // Test connection with fallback
         await this.testSupabaseConnection();
       } else {
         logger.warn("Supabase initialization failed, continuing with offline mode");
+        this.leaderboardManager = new LeaderboardManager(null);
       }
     } catch (error) {
       logger.error("Supabase initialization error:", error);
       // Continue with offline functionality
+      this.leaderboardManager = new LeaderboardManager(null);
     }
   }
 
@@ -295,6 +310,8 @@ export class CosmicTypingApp {
       timerDisplay: this.elements.elapsedTimeDisplay,
       progressBar: this.elements.progressFill,
       survivalLivesDisplay: this.elements.survivalLivesDisplay,
+      inputHintDisplay: document.getElementById('inputHintDisplay'),
+      currentInputDisplay: document.getElementById('currentInputDisplay'),
     });
 
     this.typingEngine.setCallbacks({
@@ -574,7 +591,7 @@ export class CosmicTypingApp {
     }
   }
 
-  onTypingComplete(results) {
+  async onTypingComplete(results) {
     this.isPracticeActive = false;
     this.updateButtonStates();
     
@@ -595,19 +612,33 @@ export class CosmicTypingApp {
       }, 500);
     }
     
+    // モード別の結果評価
+    const mode = this.typingEngine.mode || 'normal';
+    results.mode = mode;
+    results.timeLimit = this.typingEngine.timeLimit;
+    
+    // ランク評価を計算
+    const rankInfo = this.gameModeManager.calculateRank(results);
+    const formattedResults = formatModeResults(mode, results, rankInfo);
+    
     // 結果によって異なるメッセージ
     if (results.cause === 'death') {
       this.showMessage('ミッション失敗...もう一度挑戦しましょう！', 'error');
     } else if (results.cause === 'timeout') {
       this.showMessage('タイムアップ！結果を確認しましょう', 'warning');
     } else {
-      this.showMessage('🎉 ミッション完了！素晴らしい！', 'success');
+      this.showMessage(`🎉 ミッション完了！ランク: ${rankInfo.rank}`, 'success');
     }
     
-    this.showResults(results);
+    // リーダーボードに保存（サバイバルとタイムアタックのみ）
+    if (mode === 'survival' || mode === 'timeAttack') {
+      await this.saveToLeaderboard(formattedResults);
+    }
+    
+    this.showResults(formattedResults);
 
     // Auto-save results
-    this.saveResult();
+    await this.saveResult();
   }
 
   onTypingError(error) {
@@ -866,6 +897,58 @@ export class CosmicTypingApp {
     }
     romanElem.style.color = color;
     romanElem.textContent = romanized;
+  }
+
+  // リーダーボードに保存
+  async saveToLeaderboard(results) {
+    if (!this.leaderboardManager) {
+      logger.warn('Leaderboard manager not initialized');
+      return;
+    }
+
+    try {
+      const saved = await this.leaderboardManager.saveScore(results);
+      if (saved) {
+        logger.info('Score saved to leaderboard');
+      }
+    } catch (error) {
+      logger.error('Error saving to leaderboard:', error);
+    }
+  }
+
+  // リーダーボードを表示
+  async showLeaderboard(mode, timeLimit = null) {
+    if (!this.leaderboardManager) {
+      this.showMessage('リーダーボードが利用できません', 'error');
+      return;
+    }
+
+    try {
+      const leaderboard = await this.leaderboardManager.getLeaderboard(mode, timeLimit, 10);
+      
+      // Display leaderboard in UI
+      this.displayLeaderboard(leaderboard, mode, timeLimit);
+    } catch (error) {
+      logger.error('Error fetching leaderboard:', error);
+      this.showMessage('リーダーボードの取得に失敗しました', 'error');
+    }
+  }
+
+  // リーダーボードをUIに表示
+  displayLeaderboard(leaderboard, mode, timeLimit) {
+    // TODO: Implement leaderboard display in UI
+    // This would create a modal or panel showing the leaderboard
+    logger.info('Leaderboard:', leaderboard);
+    
+    // For now, just log to console
+    console.table(leaderboard.map((entry, index) => ({
+      順位: index + 1,
+      プレイヤー: entry.player_name,
+      スコア: entry.score,
+      ランク: entry.rank,
+      WPM: entry.wpm,
+      正確率: `${entry.accuracy}%`
+    })));
   }
 }
 

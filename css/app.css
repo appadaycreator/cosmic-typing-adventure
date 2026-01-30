@@ -1,5 +1,40 @@
 /* App-specific styles for Cosmic Typing Adventure - Optimized Version */
 
+/* Animations for Typing Feedback */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.shake-animation {
+    animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* Typing Text Color States */
+.correct-char {
+    color: #10b981 !important;
+    font-weight: 600 !important;
+}
+
+.current-char {
+    color: #3b82f6 !important;
+    font-weight: 700 !important;
+    background: rgba(59, 130, 246, 0.1) !important;
+    padding: 2px 4px !important;
+    border-radius: 4px !important;
+}
+
+.incorrect-char {
+    color: #ef4444 !important;
+    font-weight: 700 !important;
+    text-decoration: underline wavy !important;
+}
+
+.pending-char {
+    color: #9ca3af !important;
+}
+
 /* App Container */
 .app-container {
     max-width: 1000px;

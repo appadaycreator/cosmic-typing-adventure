@@ -509,6 +509,16 @@
         </div>
     </footer>
 
+    <!-- テストモジュールのインポート -->
+    <script type="module">
+        import { JapaneseTypingTests } from './japanese-typing-tests.js';
+        import { textManagerTests } from './text-manager-tests.js';
+        
+        // グローバルに公開
+        window.JapaneseTypingTests = JapaneseTypingTests;
+        window.textManagerTests = textManagerTests;
+    </script>
+
     <script>
         class CosmicTestSuite {
             constructor() {
@@ -521,6 +531,7 @@
                     total: 0
                 };
                 this.isRunning = false;
+                this.japaneseTypingTests = null;
                 this.initializeTests();
                 this.setupEventListeners();
                 this.setupCharts();
@@ -566,6 +577,33 @@
                 this.results = { passed: 0, failed: 0, warnings: 0, total: this.tests.length };
                 
                 this.logMessage('テスト実行開始', 'info');
+                
+                // 日本語タイピングテストを実行
+                if (window.JapaneseTypingTests) {
+                    this.logMessage('日本語タイピングエンジンテスト開始', 'info');
+                    this.japaneseTypingTests = new window.JapaneseTypingTests();
+                    const japaneseResults = await this.japaneseTypingTests.runAllTests();
+                    
+                    // 結果をマージ
+                    this.results.passed += japaneseResults.passed;
+                    this.results.failed += japaneseResults.failed;
+                    this.results.total += japaneseResults.total;
+                    
+                    this.logMessage(`日本語タイピングテスト完了: ${japaneseResults.passed}/${japaneseResults.total} 成功`, 'success');
+                }
+                
+                // テキストマネージャーテストを実行
+                if (window.textManagerTests) {
+                    this.logMessage('テキストマネージャーテスト開始', 'info');
+                    const textManagerResults = await this.runTestSuite(window.textManagerTests);
+                    
+                    // 結果をマージ
+                    this.results.passed += textManagerResults.passed;
+                    this.results.failed += textManagerResults.failed;
+                    this.results.total += textManagerResults.total;
+                    
+                    this.logMessage(`テキストマネージャーテスト完了: ${textManagerResults.passed}/${textManagerResults.total} 成功`, 'success');
+                }
                 
                 for (let i = 0; i < this.tests.length; i++) {
                     if (!this.isRunning) break;
@@ -869,6 +907,25 @@
 
             delay(ms) {
                 return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            async runTestSuite(testSuite) {
+                const results = { passed: 0, failed: 0, total: testSuite.tests.length };
+                
+                for (const test of testSuite.tests) {
+                    try {
+                        this.logMessage(`[TEXT-MANAGER] ${test.name} テスト開始`, 'info');
+                        await test.run();
+                        results.passed++;
+                        this.logMessage(`[TEXT-MANAGER] ${test.name} テスト成功`, 'success');
+                    } catch (error) {
+                        results.failed++;
+                        this.logMessage(`[TEXT-MANAGER] ${test.name} テスト失敗: ${error.message}`, 'error');
+                    }
+                    await this.delay(100);
+                }
+                
+                return results;
             }
         }
 

@@ -1,13 +1,17 @@
-// Typing Engine for Cosmic Typing Adventure - Security Enhanced Version
+// Typing Engine for Cosmic Typing Adventure - Japanese Typing Enhanced Version
+// バージョン: 3.0.0
+// 最終更新: 2026-01-30
 
-import { KANA_MAPPING } from './kana-mapping.js';
+import { KANA_MAPPING, handleSokuon, handleN } from './kana-mapping.js';
 
 export class TypingEngine {
     constructor(soundManager) {
         this.soundManager = soundManager;
         this.currentText = '';
         this.typedText = '';
-        this.currentIndex = 0;
+        this.currentIndex = 0; // 現在のトークンインデックス
+        this.currentInput = ''; // 現在入力中のローマ字バッファ
+        this.tokens = []; // トークン化されたかな文字列
         this.startTime = null;
         this.endTime = null;
         this.isActive = false;
@@ -24,7 +28,9 @@ export class TypingEngine {
             wpmDisplay: null,
             accuracyDisplay: null,
             timerDisplay: null,
-            progressBar: null
+            progressBar: null,
+            inputHintDisplay: null, // 入力候補表示用
+            currentInputDisplay: null // 現在の入力表示用
         };
 
         // Callbacks
@@ -133,122 +139,183 @@ export class TypingEngine {
         if (this.mode === 'survival') {
             this.lives = this.maxLives;
             this.updateLivesDisplay();
+            
+            // Show survival UI
+            if (this.elements.survivalLivesContainer) {
+                this.elements.survivalLivesContainer.classList.remove('hidden');
+            }
+        } else {
+            // Hide survival UI for other modes
+            if (this.elements.survivalLivesContainer) {
+                this.elements.survivalLivesContainer.classList.add('hidden');
+            }
+        }
+        
+        // Time Attack mode initialization
+        if (this.mode === 'timeAttack') {
+            if (this.timeLimit > 0 && this.elements.timerDisplay) {
+                const minutes = Math.floor(this.timeLimit / 60);
+                const seconds = this.timeLimit % 60;
+                this.elements.timerDisplay.textContent =
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
         }
     }
 
-    // Tokenize text into Kana chunks
+    /**
+     * テキストを かなトークン に分解する（改良版）
+     * 最長一致アルゴリズムを使用して、複雑な拗音や特殊音も正しく処理
+     */
     tokenizeText() {
         this.tokens = [];
-        let text = this.currentText;
+        const text = this.currentText;
         const mapping = KANA_MAPPING || {};
-
-        // Simple greedy tokenizer
+        
+        // 最大マッチング長を決定（マッピングテーブルから）
+        const maxLength = Math.max(...Object.keys(mapping).map(k => k.length));
+        
         let i = 0;
         while (i < text.length) {
             let bestMatch = null;
             let matchLen = 0;
-
-            // Try to match longest key first (e.g. 'sha' vs 'shi')
-            // Actually keys are kana. 'しゃ' (2 chars) vs 'し' (1 char)
-            // Determine max key length from mapping (usually 2 for compound)
-
-            // Check 2 chars first
-            if (i + 1 < text.length) {
-                const twoChars = text.substr(i, 2);
-                if (mapping[twoChars]) {
-                    bestMatch = { kana: twoChars, patterns: mapping[twoChars] };
-                    matchLen = 2;
+            
+            // 最長一致を探す（長い方から試す）
+            for (let len = Math.min(maxLength, text.length - i); len >= 1; len--) {
+                const substr = text.substr(i, len);
+                if (mapping[substr]) {
+                    bestMatch = { kana: substr, patterns: [...mapping[substr]] };
+                    matchLen = len;
+                    break;
                 }
             }
-
-            // Check 1 char if no 2 char match
+            
+            // マッチしない場合はそのまま1文字として扱う
             if (!bestMatch) {
                 const char = text[i];
-                if (mapping[char]) {
-                    bestMatch = { kana: char, patterns: mapping[char] };
-                    matchLen = 1;
-                } else {
-                    // Fallback to exact match as wanakana is optional/removed
-                    const fallback = char;
-                    bestMatch = { kana: char, patterns: [fallback] };
-                    matchLen = 1;
+                // 英数字や記号はそのまま通す
+                bestMatch = { kana: char, patterns: [char] };
+                matchLen = 1;
+            }
+            
+            // 促音（っ）の特殊処理
+            if (bestMatch.kana === 'っ' || bestMatch.kana === 'ッ') {
+                const nextKana = text[i + matchLen];
+                if (nextKana && mapping[nextKana]) {
+                    bestMatch.patterns = handleSokuon(nextKana);
                 }
             }
-
+            
+            // 「ん」の特殊処理
+            if (bestMatch.kana === 'ん' || bestMatch.kana === 'ン') {
+                const nextKana = text[i + matchLen];
+                bestMatch.patterns = handleN(nextKana);
+            }
+            
             this.tokens.push({
                 ...bestMatch,
                 isComplete: false,
                 isError: false,
-                input: '' // What user typed for this token
+                input: '', // ユーザーが入力したローマ字
+                matchedPattern: null // マッチしたパターン
             });
+            
             i += matchLen;
         }
+        
+        console.debug('Tokenized text:', this.tokens);
     }
 
+    /**
+     * キー入力処理（改良版）
+     * 日本語ローマ字入力の柔軟なマッチングをサポート
+     */
     handleInput(event) {
         if (!this.isActive) return;
 
-        // Note: 'input' event passes the whole value usually, but we want the logical char.
-        // If we use keydown, we get key. If input, we get value.
-        // Assuming textarea is cleared or we track diff.
-        // Existing logic used 'event.target.value'.
-        // We should change to track appended char or just use keydown info if possible.
-        // But for mobile support 'input' is better.
-        // Let's assume we can get the new char.
-
-        const val = event.target.value;
-        const inputChar = val.slice(-1); // Taking last char is risky if user pastes or moves cursor.
-        // Better: assume input field is cleared after each valid token or we keep full history?
-        // Let's stick to "append" logic for now, but handle backspace explicitly.
-
-        if (event.inputType === 'deleteContentBackward') {
-            // Backspace handling is complex with flexible tokens.
-            // Simplest: prevent backspace or handle it by resetting current token?
-            // For now, let's ignore backspace in this pass or implement simple reset.
+        const input = event.target.value;
+        
+        // バックスペース処理
+        if (input.length < this.currentInput.length) {
+            this.currentInput = input;
+            this.displayText();
+            this.updateInputHint();
+            return;
+        }
+        
+        // 新しい文字が入力された
+        if (input.length === 0) {
+            this.currentInput = '';
+            this.displayText();
+            this.updateInputHint();
             return;
         }
 
-        if (!inputChar) return; // Ignore empty
-
-        // Calculate current token
-        if (this.currentIndex >= this.tokens.length) return;
+        // 現在のトークンをチェック
+        if (this.currentIndex >= this.tokens.length) {
+            // 全て完了
+            return;
+        }
 
         const token = this.tokens[this.currentIndex];
+        const inputChar = input.slice(-1); // 最後に入力された文字
         const nextInput = this.currentInput + inputChar;
 
-        // Provide visual/sound feedback - SoundManager hook
-        if (this.soundManager) this.soundManager.play('type');
+        // セキュリティバリデーション
+        if (this.securityEnabled && this.inputValidation) {
+            try {
+                this.validateInput(nextInput);
+            } catch (error) {
+                this.handleSecurityError('suspicious_input', error);
+                return;
+            }
+        }
 
-        // Check against patterns
-        const isValid = token.patterns.some(p => p.startsWith(nextInput));
-        const isComplete = token.patterns.some(p => p === nextInput);
+        // パターンマッチング
+        const validPatterns = token.patterns.filter(p => p.startsWith(nextInput));
+        const completePatterns = token.patterns.filter(p => p === nextInput);
 
-        if (isValid) {
+        if (validPatterns.length > 0) {
+            // 有効な入力
             this.currentInput = nextInput;
-            this.typedText += inputChar; // Global typed tracking
             this.totalTyped++;
-
-            if (isComplete) {
-                token.isComplete = true;
-                token.input = this.currentInput;
-                this.currentIndex++;
-                this.currentInput = '';
-
-                // Play completion sound?
-                if (this.currentIndex >= this.tokens.length) {
-                    this.complete();
-                }
+            
+            // サウンドフィードバック
+            if (this.soundManager) {
+                this.soundManager.play('type');
             }
 
-            // Clear errors for this token if valid
-            token.isError = false;
+            if (completePatterns.length > 0) {
+                // トークン完成
+                token.isComplete = true;
+                token.input = this.currentInput;
+                token.matchedPattern = completePatterns[0];
+                token.isError = false;
+                
+                // 次のトークンへ
+                this.currentIndex++;
+                this.currentInput = '';
+                
+                // 入力フィールドをクリア
+                event.target.value = '';
+                
+                // 全トークン完成チェック
+                if (this.currentIndex >= this.tokens.length) {
+                    this.complete();
+                    return;
+                }
+            }
         } else {
-            // Error
+            // 無効な入力（エラー）
             this.totalErrors++;
             token.isError = true;
-            this.addError(this.totalTyped, '', inputChar); // Loose tracking
+            this.addError(this.currentIndex, token.kana, inputChar);
+            
+            // エラーサウンド
+            if (this.soundManager) {
+                this.soundManager.play('error');
+            }
 
-            // Survival logic
+            // サバイバルモードの処理
             if (this.mode === 'survival') {
                 this.lives--;
                 this.updateLivesDisplay();
@@ -258,46 +325,163 @@ export class TypingEngine {
                 }
             }
 
-            if (this.soundManager) this.soundManager.play('error');
+            // エラー後は入力をリセット
+            this.currentInput = '';
+            event.target.value = '';
         }
 
+        // 表示更新
         this.displayText();
         this.updateProgress();
+        this.updateInputHint();
+        this.debouncedUpdate();
     }
 
+    /**
+     * テキスト表示の更新（改良版）
+     * 入力済み=緑、現在=青、未入力=灰色、エラー=赤の色分け
+     */
     displayText() {
         if (!this.elements.textDisplay) return;
 
         let html = '';
         this.tokens.forEach((token, idx) => {
             let className = '';
+            let style = '';
+            
             if (token.isComplete) {
+                // 入力済み = 緑
                 className = 'correct-char';
+                style = 'color: #10b981; font-weight: 600;';
             } else if (idx === this.currentIndex) {
-                className = token.isError ? 'incorrect-char' : 'current-char';
+                if (token.isError) {
+                    // エラー = 赤（シェイクアニメーション付き）
+                    className = 'incorrect-char shake-animation';
+                    style = 'color: #ef4444; font-weight: 700; text-decoration: underline wavy;';
+                } else {
+                    // 現在入力中 = 青
+                    className = 'current-char';
+                    style = 'color: #3b82f6; font-weight: 700; background: rgba(59, 130, 246, 0.1); padding: 2px 4px; border-radius: 4px;';
+                }
+            } else if (idx > this.currentIndex) {
+                // 未入力 = 灰色
+                className = 'pending-char';
+                style = 'color: #9ca3af;';
             }
 
-            // Display visual cue for partial input if current
-            let displayChar = token.kana;
-            if (idx === this.currentIndex && this.currentInput.length > 0) {
-                // Maybe show romaji hint?
-                // displayChar += `<span class="text-xs absolute -bottom-4 left-0">${this.currentInput}</span>`;
-            }
-
-            html += `<span class="${className} relative">${displayChar}</span>`;
+            const displayChar = this.escapeHtml(token.kana);
+            html += `<span class="${className}" style="${style}">${displayChar}</span>`;
         });
 
-        this.elements.textDisplay.innerHTML = html;
+        // 安全なHTML挿入
+        if (this.securityEnabled && window.XSSProtection) {
+            try {
+                window.XSSProtection.safeInnerHTML(this.elements.textDisplay, html);
+            } catch (error) {
+                this.handleSecurityError('xss_prevention', error);
+                this.elements.textDisplay.textContent = this.currentText;
+            }
+        } else {
+            this.elements.textDisplay.innerHTML = html;
+        }
 
-        // Auto-scroll logic if needed
+        // オートスクロール
+        this.autoScroll();
+    }
+
+    /**
+     * 自動スクロール処理
+     */
+    autoScroll() {
+        if (!this.elements.textDisplay) return;
+        
+        const currentElement = this.elements.textDisplay.querySelector('.current-char');
+        if (currentElement) {
+            currentElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'center'
+            });
+        }
+    }
+
+    /**
+     * 入力候補のヒント表示
+     */
+    updateInputHint() {
+        if (this.currentIndex >= this.tokens.length) {
+            if (this.elements.inputHintDisplay) {
+                this.elements.inputHintDisplay.innerHTML = '';
+            }
+            if (this.elements.currentInputDisplay) {
+                this.elements.currentInputDisplay.innerHTML = '';
+            }
+            return;
+        }
+
+        const token = this.tokens[this.currentIndex];
+        
+        // 現在の入力を表示
+        if (this.elements.currentInputDisplay) {
+            const currentHtml = `
+                <div class="text-sm text-gray-600">
+                    <span class="font-semibold">現在の入力:</span>
+                    <span class="ml-2 text-blue-600 font-mono text-lg">${this.currentInput || '(入力待ち)'}</span>
+                </div>
+            `;
+            this.elements.currentInputDisplay.innerHTML = currentHtml;
+        }
+
+        // 入力候補を表示
+        if (this.elements.inputHintDisplay) {
+            const validPatterns = token.patterns.filter(p => 
+                p.startsWith(this.currentInput)
+            );
+            
+            let hintHtml = '<div class="text-sm">';
+            hintHtml += '<span class="font-semibold text-gray-700">入力候補:</span>';
+            hintHtml += '<div class="flex flex-wrap gap-2 mt-1">';
+            
+            validPatterns.slice(0, 5).forEach(pattern => {
+                const remaining = pattern.substring(this.currentInput.length);
+                hintHtml += `
+                    <span class="inline-flex items-center px-2 py-1 rounded bg-blue-100 text-blue-800 font-mono text-xs">
+                        <span class="text-gray-400">${this.currentInput}</span><span class="font-bold">${remaining}</span>
+                    </span>
+                `;
+            });
+            
+            if (validPatterns.length > 5) {
+                hintHtml += `<span class="text-gray-500 text-xs">他 ${validPatterns.length - 5} パターン</span>`;
+            }
+            
+            hintHtml += '</div></div>';
+            this.elements.inputHintDisplay.innerHTML = hintHtml;
+        }
     }
 
     updateLivesDisplay() {
         // Callback or direct DOM manipulation if elements provided
         if (this.elements.survivalLivesDisplay) {
             let hearts = '';
-            for (let i = 0; i < this.lives; i++) hearts += '<i class="fas fa-heart"></i> ';
+            for (let i = 0; i < this.maxLives; i++) {
+                if (i < this.lives) {
+                    hearts += '<i class="fas fa-heart text-red-500"></i> ';
+                } else {
+                    hearts += '<i class="far fa-heart text-gray-500"></i> ';
+                }
+            }
             this.elements.survivalLivesDisplay.innerHTML = hearts;
+            
+            // アニメーション効果
+            if (this.elements.survivalLivesDisplay.parentElement) {
+                this.elements.survivalLivesDisplay.parentElement.style.animation = 'none';
+                setTimeout(() => {
+                    if (this.elements.survivalLivesDisplay && this.elements.survivalLivesDisplay.parentElement) {
+                        this.elements.survivalLivesDisplay.parentElement.style.animation = 'shake 0.5s ease-in-out';
+                    }
+                }, 10);
+            }
         }
     }
 
@@ -355,6 +539,8 @@ export class TypingEngine {
         this.currentText = '';
         this.typedText = '';
         this.currentIndex = 0;
+        this.currentInput = '';
+        this.tokens = [];
         this.errors.clear();
         this.totalTyped = 0;
         this.totalErrors = 0;
@@ -364,58 +550,10 @@ export class TypingEngine {
         this.displayText();
         this.updateProgress();
         this.updateDisplays();
+        this.updateInputHint();
 
         if (this.elements.typingInput) {
             this.elements.typingInput.value = '';
-        }
-    }
-
-    // Handle input events with security validation
-    handleInput(event) {
-        if (!this.isActive) return;
-
-        const input = event.target.value;
-
-        // Security validation for input
-        if (this.securityEnabled && this.inputValidation) {
-            try {
-                this.validateInput(input);
-            } catch (error) {
-                this.handleSecurityError('suspicious_input', error);
-                return;
-            }
-        }
-        // 日本語→ローマ字変換
-        // Simplified fallback since wanakana is not present
-        const expectedRomaji = this.currentText;
-        const inputRomaji = input;
-
-        if (inputRomaji.length > this.typedText.length) {
-            // 新しい文字が入力された
-            const newChar = inputRomaji[inputRomaji.length - 1];
-            const expectedChar = expectedRomaji[this.currentIndex];
-            if (newChar === expectedChar) {
-                // 正しい文字
-                this.typedText += newChar;
-                this.currentIndex++;
-                this.totalTyped++;
-                this.removeError(this.currentIndex - 1);
-            } else {
-                // 間違った文字
-                this.addError(this.currentIndex, expectedChar, newChar);
-                this.totalErrors++;
-                this.currentIndex++;
-                this.typedText += newChar;
-                this.totalTyped++;
-            }
-            this.updateProgress();
-            this.debouncedUpdate();
-            if (this.currentIndex >= expectedRomaji.length) {
-                this.complete();
-            }
-        } else if (inputRomaji.length < this.typedText.length) {
-            // バックスペース
-            this.handleBackspace(inputRomaji.length);
         }
     }
 
@@ -498,68 +636,20 @@ export class TypingEngine {
         this.errors.delete(index);
     }
 
-    // Recalculate errors after backspace
+    // Recalculate errors after backspace (simplified for token-based system)
     recalculateErrors() {
         this.errors.clear();
         this.totalErrors = 0;
-        const expectedRomaji = this.currentText;
-        for (let i = 0; i < this.typedText.length; i++) {
-            if (this.typedText[i] !== expectedRomaji[i]) {
-                this.addError(i, expectedRomaji[i], this.typedText[i]);
+        
+        this.tokens.forEach((token, idx) => {
+            if (token.isError) {
                 this.totalErrors++;
-
-                // Survival Mode Logic
-                if (this.mode === 'survival' && i === this.typedText.length - 1) {
-                    this.lives--;
-                    this.updateLivesDisplay();
-                    if (this.lives <= 0) {
-                        this.complete({ cause: 'death' });
-                        return;
-                    }
-                }
+                this.errors.set(idx, {
+                    expected: token.kana,
+                    actual: token.input || ''
+                });
             }
-        }
-    }
-
-    // Display text with security and performance optimization
-    displayText() {
-        if (!this.elements.textDisplay) return;
-
-        const text = this.currentText;
-        let html = '';
-
-        for (let i = 0; i < text.length; i++) {
-            const char = text[i];
-            const isTyped = i < this.typedText.length;
-            const isCorrect = isTyped && this.typedText[i] === char;
-            const hasError = this.errors.has(i);
-
-            let className = '';
-            if (isTyped) {
-                className = isCorrect ? 'correct' : 'incorrect';
-            } else if (i === this.currentIndex) {
-                className = 'current';
-            }
-
-            if (className) {
-                html += `<span class="${className}">${this.escapeHtml(char)}</span>`;
-            } else {
-                html += this.escapeHtml(char);
-            }
-        }
-
-        // Safe innerHTML assignment with security
-        if (this.securityEnabled && window.XSSProtection) {
-            try {
-                window.XSSProtection.safeInnerHTML(this.elements.textDisplay, html);
-            } catch (error) {
-                this.handleSecurityError('xss_prevention', error);
-                // Fallback to safe display
-                this.elements.textDisplay.textContent = text;
-            }
-        } else {
-            this.elements.textDisplay.innerHTML = html;
-        }
+        });
     }
 
     // Escape HTML for security
