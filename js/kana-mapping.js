@@ -50,4 +50,4 @@ const KANA_MAPPING = {
     'ふぁ': ['fa'], 'ふぃ': ['fi'], 'ふぇ': ['fe'], 'ふぉ': ['fo']
 };
 
-window.KANA_MAPPING = KANA_MAPPING;
+export { KANA_MAPPING };

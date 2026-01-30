@@ -25,7 +25,7 @@ window.addEventListener('offline', () => {
 });
 
 // Initialize Supabase with improved error handling
-async function initializeSupabase() {
+export async function initializeSupabase() {
   // Prevent multiple simultaneous initializations
   if (isInitializing) {
     return initializationPromise;
@@ -37,7 +37,7 @@ async function initializeSupabase() {
 
   isInitializing = true;
   initializationPromise = performInitialization();
-  
+
   try {
     const result = await initializationPromise;
     isInitializing = false;
@@ -64,7 +64,7 @@ async function performInitialization() {
 
     // Load Supabase from CDN
     await loadSupabaseFromCDN();
-    
+
     // Create client
     supabase = window.supabase.createClient(
       SUPABASE_CONFIG.url,
@@ -102,7 +102,7 @@ async function loadSupabaseFromCDN() {
     } catch (error) {
       lastError = error;
       console.warn(`Supabase CDN load attempt ${attempt} failed:`, error);
-      
+
       if (attempt < maxRetries) {
         // Wait before retry (exponential backoff)
         await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
@@ -138,12 +138,12 @@ async function attemptLoadSupabase(attempt) {
 }
 
 // Database operations for typing statistics
-const TypingStats = {
+export const TypingStats = {
   // Save typing session results with improved error handling
   async saveSession(sessionData) {
     // Always save to localStorage first for reliability
     const localSaved = this.saveToLocalStorage(sessionData);
-    
+
     if (!supabase || !isOnline) {
       console.warn("Supabase not available or offline, using localStorage only");
       return localSaved;
@@ -185,13 +185,13 @@ const TypingStats = {
         saved_at: new Date().toISOString(),
         source: 'localStorage'
       };
-      
+
       // Limit localStorage size (keep last 100 sessions)
       existingData.push(newSession);
       if (existingData.length > 100) {
         existingData.splice(0, existingData.length - 100);
       }
-      
+
       localStorage.setItem('typing_sessions', JSON.stringify(existingData));
       console.log("Session saved to localStorage");
       return true;
@@ -266,7 +266,7 @@ const TypingStats = {
   // Calculate planet statistics from data
   calculatePlanetStats(data) {
     const stats = {};
-    
+
     data.forEach((session) => {
       if (!stats[session.planet]) {
         stats[session.planet] = {
@@ -411,7 +411,7 @@ const TypingStats = {
 };
 
 // Practice texts management with fallback
-const PracticeTexts = {
+export const PracticeTexts = {
   // Get practice texts for a specific planet
   async getTextsByPlanet(planet) {
     if (!supabase) {
@@ -561,9 +561,9 @@ const PracticeTexts = {
 };
 
 // Enhanced error handling function
-function handleSupabaseError(error, fallbackData = null) {
+export function handleSupabaseError(error, fallbackData = null) {
   console.error("Supabase operation failed:", error);
-  
+
   // Log additional context for debugging
   if (error.code) {
     console.error("Error code:", error.code);
@@ -571,15 +571,6 @@ function handleSupabaseError(error, fallbackData = null) {
   if (error.message) {
     console.error("Error message:", error.message);
   }
-  
+
   return fallbackData;
 }
-
-// Export for global access
-window.CosmicSupabase = {
-  initializeSupabase,
-  TypingStats,
-  PracticeTexts,
-  handleSupabaseError,
-  isConnected: () => !!supabase,
-};

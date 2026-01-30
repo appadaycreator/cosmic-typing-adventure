@@ -1,6 +1,6 @@
 // Language Manager for Cosmic Typing Adventure
 
-class LanguageManager {
+export class LanguageManager {
     constructor() {
         this.practiceTexts = {};
         this.loadPracticeTexts();

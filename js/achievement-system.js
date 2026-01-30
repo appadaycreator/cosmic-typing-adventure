@@ -1,6 +1,6 @@
 // Achievement System for Cosmic Typing Adventure
 
-class AchievementSystem {
+export class AchievementSystem {
   constructor(userStats) {
     this.achievements = {
       firstTyping: {
@@ -84,7 +84,7 @@ class AchievementSystem {
         unlocked: false
       }
     };
-    
+
     this.loadAchievements();
     if (userStats) {
       this.checkAchievements(userStats);
@@ -115,20 +115,20 @@ class AchievementSystem {
 
   checkAchievements(userStats) {
     const newlyUnlocked = [];
-    
+
     Object.values(this.achievements).forEach(achievement => {
       if (!achievement.unlocked && achievement.condition(userStats)) {
         achievement.unlocked = true;
         newlyUnlocked.push(achievement);
       }
     });
-    
+
     if (newlyUnlocked.length > 0) {
       this.saveAchievements();
       this.showAchievementNotification(newlyUnlocked);
       this.updateAchievementDisplay();
     }
-    
+
     return newlyUnlocked;
   }
 
@@ -146,14 +146,14 @@ class AchievementSystem {
           </div>
         </div>
       `;
-      
+
       document.body.appendChild(notification);
-      
+
       // Animate in
       setTimeout(() => {
         notification.classList.remove('translate-x-full');
       }, 100);
-      
+
       // Animate out and remove
       setTimeout(() => {
         notification.classList.add('translate-x-full');
@@ -161,7 +161,7 @@ class AchievementSystem {
           document.body.removeChild(notification);
         }, 500);
       }, 3000);
-      
+
       // Play achievement sound
       if (window.audioManager) {
         window.audioManager.playAchievement();
@@ -172,9 +172,9 @@ class AchievementSystem {
   updateAchievementDisplay() {
     const achievementList = document.getElementById('achievementList');
     if (!achievementList) return;
-    
+
     achievementList.innerHTML = '';
-    
+
     Object.values(this.achievements).forEach(achievement => {
       const achievementElement = document.createElement('div');
       achievementElement.className = `achievement-item p-2 bg-gray-800 rounded flex items-center space-x-3 ${achievement.unlocked ? '' : 'opacity-50'}`;
@@ -185,7 +185,7 @@ class AchievementSystem {
           <div class="text-xs ${achievement.unlocked ? 'text-gray-400' : 'text-gray-600'}">${achievement.description.ja}</div>
         </div>
       `;
-      
+
       achievementList.appendChild(achievementElement);
     });
   }

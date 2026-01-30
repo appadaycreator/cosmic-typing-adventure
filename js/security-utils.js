@@ -1,11 +1,11 @@
 // Security utilities for Cosmic Typing Adventure
 
 // Input validation and sanitization utilities
-const SecurityUtils = {
+export const SecurityUtils = {
     // Sanitize HTML content
     sanitizeHtml(input) {
         if (typeof input !== 'string') return '';
-        
+
         const div = document.createElement('div');
         div.textContent = input;
         return div.innerHTML;
@@ -14,7 +14,7 @@ const SecurityUtils = {
     // Sanitize text content (remove all HTML)
     sanitizeText(input) {
         if (typeof input !== 'string') return '';
-        
+
         const div = document.createElement('div');
         div.innerHTML = input;
         return div.textContent || div.innerText || '';
@@ -90,7 +90,7 @@ const SecurityUtils = {
     // Validate email format
     validateEmail(email) {
         if (typeof email !== 'string') return false;
-        
+
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email.trim());
     },
@@ -98,7 +98,7 @@ const SecurityUtils = {
     // Validate URL format
     validateUrl(url) {
         if (typeof url !== 'string') return false;
-        
+
         try {
             new URL(url);
             return true;
@@ -114,7 +114,7 @@ const SecurityUtils = {
         }
 
         const sanitized = this.sanitizeText(text);
-        
+
         if (sanitized.length < 10) {
             throw new Error('Text must be at least 10 characters long');
         }
@@ -143,7 +143,7 @@ const SecurityUtils = {
     // Validate user statistics
     validateUserStats(stats) {
         const requiredFields = ['wpm', 'accuracy', 'totalTyped', 'totalErrors'];
-        
+
         for (const field of requiredFields) {
             if (!(field in stats)) {
                 throw new Error(`Missing required field: ${field}`);
@@ -174,14 +174,14 @@ const SecurityUtils = {
     generateSecureToken(length = 32) {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         let result = '';
-        
+
         const array = new Uint8Array(length);
         crypto.getRandomValues(array);
-        
+
         for (let i = 0; i < length; i++) {
             result += chars.charAt(array[i] % chars.length);
         }
-        
+
         return result;
     },
 
@@ -190,7 +190,7 @@ const SecurityUtils = {
         if (typeof data !== 'string') {
             data = JSON.stringify(data);
         }
-        
+
         // Simple hash function (for production, use proper crypto)
         let hash = 0;
         for (let i = 0; i < data.length; i++) {
@@ -198,7 +198,7 @@ const SecurityUtils = {
             hash = ((hash << 5) - hash) + char;
             hash = hash & hash; // Convert to 32-bit integer
         }
-        
+
         return hash.toString(36);
     },
 
@@ -207,14 +207,14 @@ const SecurityUtils = {
         if (typeof data !== 'string') {
             data = JSON.stringify(data);
         }
-        
+
         // Simple XOR encryption (for production, use proper crypto)
         let encrypted = '';
         for (let i = 0; i < data.length; i++) {
             const charCode = data.charCodeAt(i) ^ key.charCodeAt(i % key.length);
             encrypted += String.fromCharCode(charCode);
         }
-        
+
         return btoa(encrypted); // Base64 encode
     },
 
@@ -223,12 +223,12 @@ const SecurityUtils = {
         try {
             const decoded = atob(encryptedData);
             let decrypted = '';
-            
+
             for (let i = 0; i < decoded.length; i++) {
                 const charCode = decoded.charCodeAt(i) ^ key.charCodeAt(i % key.length);
                 decrypted += String.fromCharCode(charCode);
             }
-            
+
             return decrypted;
         } catch (error) {
             throw new Error('Failed to decrypt data');
@@ -237,7 +237,7 @@ const SecurityUtils = {
 };
 
 // XSS Protection utilities
-const XSSProtection = {
+export const XSSProtection = {
     // Check for XSS patterns
     detectXSS(input) {
         const xssPatterns = [
@@ -264,7 +264,7 @@ const XSSProtection = {
     // Sanitize user input for display
     sanitizeForDisplay(input) {
         if (typeof input !== 'string') return '';
-        
+
         return input
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
@@ -281,7 +281,7 @@ const XSSProtection = {
         }
 
         const sanitized = SecurityUtils.sanitizeHtml(content);
-        
+
         if (XSSProtection.detectXSS(sanitized)) {
             throw new Error('Content contains potentially harmful code');
         }
@@ -291,7 +291,7 @@ const XSSProtection = {
 };
 
 // CSRF Protection utilities
-const CSRFProtection = {
+export const CSRFProtection = {
     // Generate CSRF token
     generateCSRFToken() {
         return SecurityUtils.generateSecureToken(32);
@@ -314,7 +314,7 @@ const CSRFProtection = {
 };
 
 // Content Security Policy utilities
-const CSPUtils = {
+export const CSPUtils = {
     // Generate CSP header
     generateCSPHeader() {
         return [
@@ -351,7 +351,7 @@ const CSPUtils = {
 };
 
 // Data validation utilities
-const DataValidation = {
+export const DataValidation = {
     // Validate user profile data
     validateUserProfile(profile) {
         const required = ['username', 'email'];
@@ -383,7 +383,7 @@ const DataValidation = {
     // Validate typing session data
     validateTypingSession(session) {
         const required = ['text', 'wpm', 'accuracy', 'duration'];
-        
+
         for (const field of required) {
             if (!(field in session)) {
                 throw new Error(`Missing required field: ${field}`);
@@ -413,7 +413,7 @@ const DataValidation = {
 };
 
 // Security monitoring utilities
-const SecurityMonitoring = {
+export const SecurityMonitoring = {
     // Track security events
     securityEvents: [],
 
@@ -472,7 +472,7 @@ const SecurityMonitoring = {
 };
 
 // Initialize security features
-const initSecurity = () => {
+export const initSecurity = () => {
     // Setup global error handler for security
     window.addEventListener('error', (event) => {
         SecurityMonitoring.logSecurityEvent({
@@ -505,18 +505,9 @@ const initSecurity = () => {
     console.log('Security features initialized');
 };
 
-// Export security utilities for global access
-// window.SecurityUtils = SecurityUtils;
-// window.XSSProtection = XSSProtection;
-// window.CSRFProtection = CSRFProtection;
-// window.CSPUtils = CSPUtils;
-// window.DataValidation = DataValidation;
-// window.SecurityMonitoring = SecurityMonitoring;
-// window.initSecurity = initSecurity;
-
 // Initialize when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initSecurity);
-} else {
-    initSecurity();
-} 
+// if (document.readyState === 'loading') {
+//     document.addEventListener('DOMContentLoaded', initSecurity);
+// } else {
+//     initSecurity();
+// }

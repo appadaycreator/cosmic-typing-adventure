@@ -11,20 +11,20 @@ class CoreTests {
     // Run all core tests
     async runAllTests() {
         console.log('🧪 Starting core tests...');
-        
+
         const tests = [
-            this.testDOMIntegrity(),
-            this.testLocalStorage(),
-            this.testUserDataStructure(),
-            this.testTypingEngine(),
-            this.testAudioSystem(),
-            this.testPerformance(),
-            this.testErrorHandling()
+            this.testDOMIntegrity,
+            this.testLocalStorage,
+            this.testUserDataStructure,
+            this.testTypingEngine,
+            this.testAudioSystem,
+            this.testPerformance,
+            this.testErrorHandling
         ];
 
         for (const test of tests) {
             try {
-                await test();
+                await test.call(this);
                 this.passedTests++;
             } catch (error) {
                 this.failedTests++;
@@ -47,7 +47,7 @@ class CoreTests {
         ];
 
         const missingElements = criticalElements.filter(id => !document.getElementById(id));
-        
+
         if (missingElements.length > 0) {
             throw new Error(`Critical DOM elements missing: ${missingElements.join(', ')}`);
         }
@@ -60,16 +60,16 @@ class CoreTests {
     async testLocalStorage() {
         const testKey = 'cosmicTyping_test';
         const testValue = 'test_value';
-        
+
         try {
             localStorage.setItem(testKey, testValue);
             const retrieved = localStorage.getItem(testKey);
             localStorage.removeItem(testKey);
-            
+
             if (retrieved !== testValue) {
                 throw new Error('LocalStorage read/write failed');
             }
-            
+
             console.log('✅ LocalStorage test passed');
             this.testResults.push({ name: 'LocalStorage', status: 'passed' });
         } catch (error) {
@@ -121,16 +121,16 @@ class CoreTests {
         const testText = 'Hello world';
         const testInput = 'Hello worl';
         const expectedAccuracy = Math.round((9 / 10) * 100);
-        
+
         let correct = 0;
         for (let i = 0; i < testInput.length; i++) {
             if (testInput[i] === testText[i]) {
                 correct++;
             }
         }
-        
+
         const actualAccuracy = Math.round((correct / testInput.length) * 100);
-        
+
         if (actualAccuracy !== expectedAccuracy) {
             throw new Error(`Accuracy calculation failed: expected ${expectedAccuracy}%, got ${actualAccuracy}%`);
         }
@@ -153,14 +153,14 @@ class CoreTests {
     // Test performance
     async testPerformance() {
         const startTime = performance.now();
-        
+
         // Simulate some work
         for (let i = 0; i < 1000; i++) {
             Math.random();
         }
-        
+
         const duration = performance.now() - startTime;
-        
+
         if (duration > 100) {
             throw new Error(`Performance test took too long: ${duration.toFixed(2)}ms`);
         }
@@ -172,14 +172,14 @@ class CoreTests {
     // Test error handling
     async testErrorHandling() {
         let errorCaught = false;
-        
+
         try {
             // Intentionally throw an error
             throw new Error('Test error');
         } catch (error) {
             errorCaught = true;
         }
-        
+
         if (!errorCaught) {
             throw new Error('Error handling not working');
         }
@@ -194,7 +194,7 @@ class CoreTests {
         console.log(`✅ Passed: ${this.passedTests}`);
         console.log(`❌ Failed: ${this.failedTests}`);
         console.log(`📈 Success Rate: ${((this.passedTests / (this.passedTests + this.failedTests)) * 100).toFixed(1)}%`);
-        
+
         if (this.failedTests > 0) {
             console.log('\n❌ Failed Tests:');
             this.testResults
@@ -220,7 +220,7 @@ class CoreTests {
     // Test data validation
     testDataValidation(data, schema) {
         const errors = [];
-        
+
         for (const [key, type] of Object.entries(schema)) {
             if (!(key in data)) {
                 errors.push(`Missing required field: ${key}`);
@@ -228,11 +228,11 @@ class CoreTests {
                 errors.push(`Invalid type for ${key}: expected ${type}, got ${typeof data[key]}`);
             }
         }
-        
+
         if (errors.length > 0) {
             throw new Error(`Data validation failed: ${errors.join(', ')}`);
         }
-        
+
         return true;
     }
 
@@ -241,11 +241,11 @@ class CoreTests {
         const startTime = performance.now();
         const result = fn();
         const duration = performance.now() - startTime;
-        
+
         if (duration > maxDuration) {
             throw new Error(`${context} took too long: ${duration.toFixed(2)}ms (max: ${maxDuration}ms)`);
         }
-        
+
         return result;
     }
 
@@ -254,11 +254,11 @@ class CoreTests {
         const startTime = performance.now();
         const result = await fn();
         const duration = performance.now() - startTime;
-        
+
         if (duration > maxDuration) {
             throw new Error(`${context} took too long: ${duration.toFixed(2)}ms (max: ${maxDuration}ms)`);
         }
-        
+
         return result;
     }
 

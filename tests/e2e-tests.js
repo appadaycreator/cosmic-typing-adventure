@@ -32,8 +32,8 @@ class CosmicE2ETests {
   async waitForApp() {
     return new Promise((resolve) => {
       const checkApp = () => {
-        if (window.cosmicApp && window.cosmicApp.elements) {
-          this.app = window.cosmicApp;
+        if (window.app && window.app.elements) {
+          this.app = window.app;
           resolve();
         } else {
           setTimeout(checkApp, 100);

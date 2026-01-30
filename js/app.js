@@ -1,13 +1,38 @@
 // Main App Logic for Cosmic Typing Adventure
 
-class CosmicTypingApp {
+import { TypingEngine } from './typing-engine.js';
+import { LanguageManager } from './language-manager.js';
+import { SoundManager } from './sound-manager.js';
+import { initUtils } from './common.js';
+import { initializeSupabase, TypingStats, PracticeTexts } from './supabase-config.js';
+import { AchievementSystem } from './achievement-system.js';
+import { ShipUpgradeSystem } from './ship-upgrade-system.js';
+import { SecurityUtils } from './security-utils.js';
+
+export class CosmicTypingApp {
   constructor() {
+    this.soundManager = new SoundManager();
     this.languageManager = new LanguageManager();
     this.currentPlanet = null;
     this.typingEngine = null;
     this.currentText = "";
     this.isPracticeActive = false;
     this.userInput = '';
+
+    // User stats initialization
+    this.userStats = {
+      level: 1,
+      xp: 0,
+      nextLevelXp: 1000,
+      totalWPM: 0
+    };
+
+    // Initialize systems
+    this.achievementSystem = new AchievementSystem(this.userStats);
+    this.shipUpgradeSystem = new ShipUpgradeSystem(this.soundManager, this.userStats);
+
+    // Make app available globally
+    window.app = this;
 
     // DOM elements
     this.elements = {
@@ -41,6 +66,9 @@ class CosmicTypingApp {
 
     // Initialize app
     this.init();
+
+    // Run common utils initialization
+    initUtils();
   }
 
   async init() {
@@ -92,8 +120,8 @@ class CosmicTypingApp {
 
   async testSupabaseConnection() {
     try {
-      if (window.CosmicSupabase && window.CosmicSupabase.TypingStats) {
-        const history = await window.CosmicSupabase.TypingStats.getHistory(1);
+      if (TypingStats) {
+        const history = await TypingStats.getHistory(1);
         console.log("[Supabaseテスト] 接続成功, 履歴サンプル:", history);
       }
     } catch (error) {
@@ -255,7 +283,7 @@ class CosmicTypingApp {
   }
 
   initializeTypingEngine() {
-    this.typingEngine = new TypingEngine();
+    this.typingEngine = new TypingEngine(this.soundManager);
     this.typingEngine.init({
       textDisplay: this.elements.textDisplay,
       typingInput: this.elements.typingInput,
@@ -329,7 +357,7 @@ class CosmicTypingApp {
       this.currentText = textObj.content || textObj.text || textObj;
       this.elements.textDisplay.textContent = this.currentText;
       // ローマ字表記を下に追加
-      let romanized = window.wanakana ? window.wanakana.toRomaji(this.currentText) : this.currentText;
+      let romanized = this.currentText;
       let romanElem = document.getElementById('romanized-text');
       if (!romanElem) {
         romanElem = document.createElement('div');
@@ -533,8 +561,8 @@ class CosmicTypingApp {
       let saved = false;
 
       // Try to save to Supabase first
-      if (window.CosmicSupabase && window.CosmicSupabase.TypingStats) {
-        saved = await window.CosmicSupabase.TypingStats.saveSession(sessionData);
+      if (TypingStats) {
+        saved = await TypingStats.saveSession(sessionData);
       }
 
       // Always save to localStorage as backup
@@ -602,10 +630,10 @@ class CosmicTypingApp {
 
   async loadPracticeTextsFromAPI() {
     try {
-      if (window.CosmicSupabase && window.CosmicSupabase.PracticeTexts) {
+      if (PracticeTexts) {
         const planets = ["earth", "mars", "jupiter", "saturn"];
         for (const planet of planets) {
-          const texts = await window.CosmicSupabase.PracticeTexts.getTextsByPlanet(planet);
+          const texts = await PracticeTexts.getTextsByPlanet(planet);
           if (texts && texts.length > 0) {
             // ローカルpracticeTextsの定義は削除
           }
@@ -619,8 +647,8 @@ class CosmicTypingApp {
 
   async getUserStats() {
     try {
-      if (window.CosmicSupabase && window.CosmicSupabase.TypingStats) {
-        const stats = await window.CosmicSupabase.TypingStats.getOverallStats();
+      if (TypingStats) {
+        const stats = await TypingStats.getOverallStats();
         return stats;
       }
     } catch (error) {
@@ -697,7 +725,7 @@ class CosmicTypingApp {
   updateRomanizedText() {
     if (!this.elements.textDisplay) return;
     const text = this.elements.textDisplay.textContent;
-    let romanized = window.wanakana ? window.wanakana.toRomaji(text) : text;
+    let romanized = text;
     let romanElem = document.getElementById('romanized-text');
     if (!romanElem) {
       romanElem = document.createElement('div');
@@ -721,11 +749,12 @@ class CosmicTypingApp {
 }
 
 // Initialize app when DOM is ready
+// Initialize app when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
   window.app = new CosmicTypingApp();
 });
 
-// CosmicTypingAppインスタンスがwindow.appとして存在する前提
+// Export startMission to window for HTML onclick handlers
 window.startMission = function (missionType) {
   if (!window.app) {
     console.error('CosmicTypingAppインスタンスが初期化されていません');
@@ -741,12 +770,6 @@ window.startMission = function (missionType) {
 
   // Check if it is time attack
   if (typeof missionType === 'string' && missionType.startsWith('timeAttack')) {
-    // Implement Time Attack Start Logic
-    // For now, we reuse selectPlanet logic, but we need to pass time limit
-    // Currently selectPlanet takes 'planet name'. 
-    // Let's handle Time Attack separately or adjust app architecture.
-    // Since existing architecture is planet-based, let's treat Time Attack as a special flow or map it to a planet for now,
-    // but ideally we should update selectPlanet to accept options.
     console.warn("Time Attack is not fully integrated in startMission yet without refactoring.");
     return;
   }

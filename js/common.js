@@ -1,7 +1,7 @@
 // Common utilities for Cosmic Typing Adventure - Optimized Version
 
 // Performance monitoring utilities
-const PerformanceUtils = {
+export const PerformanceUtils = {
     // Measure execution time
     measureTime(fn, label = 'Function') {
         const start = performance.now();
@@ -50,7 +50,7 @@ const PerformanceUtils = {
 };
 
 // Image optimization utilities
-const ImageUtils = {
+export const ImageUtils = {
     // Lazy load images
     lazyLoadImages() {
         const images = document.querySelectorAll('img[data-src]');
@@ -89,7 +89,7 @@ const ImageUtils = {
 };
 
 // DOM optimization utilities
-const DOMUtils = {
+export const DOMUtils = {
     // Batch DOM updates
     batchDOMUpdates(updates) {
         requestAnimationFrame(() => {
@@ -100,7 +100,7 @@ const DOMUtils = {
     // Efficient element creation
     createElement(tag, attributes = {}, children = []) {
         const element = document.createElement(tag);
-        
+
         // Set attributes
         Object.entries(attributes).forEach(([key, value]) => {
             if (key === 'className') {
@@ -142,7 +142,7 @@ const DOMUtils = {
 };
 
 // Storage utilities with performance optimization
-const StorageUtils = {
+export const StorageUtils = {
     // Efficient localStorage operations
     setItem(key, value) {
         try {
@@ -179,7 +179,7 @@ const StorageUtils = {
     cleanupOldData(maxAge = 30 * 24 * 60 * 60 * 1000) { // 30 days
         const now = Date.now();
         const keys = Object.keys(localStorage);
-        
+
         keys.forEach(key => {
             try {
                 const item = JSON.parse(localStorage.getItem(key));
@@ -194,7 +194,7 @@ const StorageUtils = {
 };
 
 // Network utilities
-const NetworkUtils = {
+export const NetworkUtils = {
     // Check online status
     isOnline() {
         return navigator.onLine;
@@ -216,7 +216,7 @@ const NetworkUtils = {
     async fetchWithTimeout(url, options = {}, timeout = 5000) {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), timeout);
-        
+
         try {
             const response = await fetch(url, {
                 ...options,
@@ -232,12 +232,12 @@ const NetworkUtils = {
 };
 
 // Animation utilities
-const AnimationUtils = {
+export const AnimationUtils = {
     // Smooth scroll to element
     scrollToElement(element, offset = 0) {
         const elementPosition = element.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.pageYOffset - offset;
-        
+
         window.scrollTo({
             top: offsetPosition,
             behavior: 'smooth'
@@ -248,20 +248,20 @@ const AnimationUtils = {
     fadeIn(element, duration = 300) {
         element.style.opacity = '0';
         element.style.display = 'block';
-        
+
         let start = performance.now();
-        
+
         function animate(currentTime) {
             const elapsed = currentTime - start;
             const progress = Math.min(elapsed / duration, 1);
-            
+
             element.style.opacity = progress;
-            
+
             if (progress < 1) {
                 requestAnimationFrame(animate);
             }
         }
-        
+
         requestAnimationFrame(animate);
     },
 
@@ -269,26 +269,26 @@ const AnimationUtils = {
     fadeOut(element, duration = 300) {
         let start = performance.now();
         const initialOpacity = parseFloat(getComputedStyle(element).opacity) || 1;
-        
+
         function animate(currentTime) {
             const elapsed = currentTime - start;
             const progress = Math.min(elapsed / duration, 1);
-            
+
             element.style.opacity = initialOpacity * (1 - progress);
-            
+
             if (progress < 1) {
                 requestAnimationFrame(animate);
             } else {
                 element.style.display = 'none';
             }
         }
-        
+
         requestAnimationFrame(animate);
     }
 };
 
 // Error handling utilities
-const ErrorUtils = {
+export const ErrorUtils = {
     // Global error handler
     setupGlobalErrorHandler() {
         window.addEventListener('error', (event) => {
@@ -324,16 +324,16 @@ const ErrorUtils = {
 };
 
 // Accessibility utilities
-const AccessibilityUtils = {
+export const AccessibilityUtils = {
     // Focus management
     trapFocus(element) {
         const focusableElements = element.querySelectorAll(
             'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
         );
-        
+
         const firstElement = focusableElements[0];
         const lastElement = focusableElements[focusableElements.length - 1];
-        
+
         element.addEventListener('keydown', (e) => {
             if (e.key === 'Tab') {
                 if (e.shiftKey) {
@@ -361,10 +361,10 @@ const AccessibilityUtils = {
         announcement.style.width = '1px';
         announcement.style.height = '1px';
         announcement.style.overflow = 'hidden';
-        
+
         document.body.appendChild(announcement);
         announcement.textContent = message;
-        
+
         setTimeout(() => {
             document.body.removeChild(announcement);
         }, 1000);
@@ -372,35 +372,15 @@ const AccessibilityUtils = {
 };
 
 // Initialize utilities
-const initUtils = () => {
+export const initUtils = () => {
     // Setup global error handler
     ErrorUtils.setupGlobalErrorHandler();
-    
+
     // Optimize image loading
     ImageUtils.optimizeImageLoading();
-    
+
     // Cleanup old data
     StorageUtils.cleanupOldData();
-    
+
     console.log('Common utilities initialized');
 };
-
-// Export utilities for global access
-// window.CosmicUtils = {
-//     PerformanceUtils,
-//     ImageUtils,
-//     DOMUtils,
-//     StorageUtils,
-//     NetworkUtils,
-//     AnimationUtils,
-//     ErrorUtils,
-//     AccessibilityUtils,
-//     initUtils
-// };
-
-// Initialize when DOM is ready
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initUtils);
-} else {
-    initUtils();
-} 

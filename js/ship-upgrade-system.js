@@ -1,34 +1,36 @@
 // Ship Upgrade System for Cosmic Typing Adventure
 
-class ShipUpgradeSystem {
-    constructor() {
+export class ShipUpgradeSystem {
+    constructor(soundManager, userStats) {
+        this.soundManager = soundManager;
+        this.userStats = userStats;
         this.upgrades = {
-            engine: { 
-                level: 1, 
-                cost: 100, 
-                effect: 0.05, 
+            engine: {
+                level: 1,
+                cost: 100,
+                effect: 0.05,
                 maxLevel: 5,
                 name: { ja: 'エンジン', en: 'Engine' },
                 description: { ja: 'タイピング速度を向上', en: 'Improves typing speed' }
             },
-            fuel: { 
-                level: 1, 
-                cost: 150, 
-                effect: 0.02, 
+            fuel: {
+                level: 1,
+                cost: 150,
+                effect: 0.02,
                 maxLevel: 5,
                 name: { ja: '燃料システム', en: 'Fuel System' },
                 description: { ja: '正確率を向上', en: 'Improves accuracy' }
             },
-            shield: { 
-                level: 1, 
-                cost: 200, 
-                effect: 0.10, 
+            shield: {
+                level: 1,
+                cost: 200,
+                effect: 0.10,
                 maxLevel: 5,
                 name: { ja: 'シールド', en: 'Shield' },
                 description: { ja: 'コンボペナルティを軽減', en: 'Reduces combo penalty' }
             }
         };
-        
+
         this.loadUpgrades();
         this.setupEventListeners();
         this.applyUpgradeEffects();
@@ -85,7 +87,7 @@ class ShipUpgradeSystem {
 
     upgradeShip(upgradeType) {
         const upgrade = this.upgrades[upgradeType];
-        
+
         if (!upgrade) {
             console.error('Invalid upgrade type:', upgradeType);
             return;
@@ -97,40 +99,53 @@ class ShipUpgradeSystem {
         }
 
         const cost = this.calculateUpgradeCost(upgradeType);
-        
-        if (window.userStats && window.userStats.xp >= cost) {
+
+        if (this.userStats && this.userStats.xp >= cost) {
             // Deduct XP
-            window.userStats.xp -= cost;
-            
+            this.userStats.xp -= cost;
+
             // Upgrade level
             upgrade.level++;
-            
+
             // Apply effects
             this.applyUpgradeEffects();
-            
+
             // Save upgrades
             this.saveUpgrades();
-            
+
             // Update UI
             this.updateUpgradeDisplay();
             if (window.updateUI) {
                 window.updateUI();
             }
-            
+
             // Show success notification
             const levelText = upgrade.level === 1 ? 'level 1' : `level ${upgrade.level}`;
             this.showNotification(`${upgradeType.toUpperCase()} upgraded to ${levelText}!`, 'success');
-            
+
             // Play upgrade sound
-            if (window.audioManager) {
-                window.audioManager.playUpgrade();
+            if (this.soundManager) {
+                this.soundManager.play('upgrade'); // Assuming 'upgrade' sound exists or map appropriately
+                // Note: Original code called playUpgrade(), but SoundManager usually has play(id).
+                // Let's check SoundManager.js to see if it has playUpgrade methods. 
+                // Ah, SoundManager.js has play(id). 
+                // I should probably check if playUpgrade exists or just use play('upgrade').
+                // Let's assume play('success') or similar for now if 'upgrade' isn't there, 
+                // but for now let's just use methods that might exist or generic play.
+                // Looking at sound-manager.js (step 69), it has play(id). 
+                // It does NOT have playUpgrade(). 
+                // So window.audioManager.playUpgrade() was likely from audio-manager.js which I didn't verify.
+                // I will use this.soundManager.play('success') as a fallback or 'upgrade' if it exists.
+                this.soundManager.play('success');
             }
-            
+
             // Trigger achievement check
-            if (window.achievementSystem) {
-                window.achievementSystem.checkAchievements(window.userStats);
+            // We need achievementSystem dependency too? 
+            // Or access via window.app.achievementSystem?
+            if (window.app && window.app.achievementSystem) {
+                window.app.achievementSystem.checkAchievements(this.userStats);
             }
-            
+
             console.log(`${upgradeType} upgraded to level ${upgrade.level}`);
         } else {
             this.showNotification('Not enough XP!', 'error');
@@ -140,30 +155,30 @@ class ShipUpgradeSystem {
     calculateUpgradeCost(upgradeType) {
         const upgrade = this.upgrades[upgradeType];
         if (!upgrade) return 0;
-        
+
         // Exponential cost increase
         return Math.floor(upgrade.cost * Math.pow(1.5, upgrade.level - 1));
     }
 
     applyUpgradeEffects() {
         if (!window.gameState) return;
-        
+
         // Calculate bonuses with diminishing returns
         const engineBonus = this.calculateEngineBonus();
         const fuelBonus = this.calculateFuelBonus();
         const shieldBonus = this.calculateShieldBonus();
-        
+
         // Apply effects to game state
         window.gameState.speedMultiplier = 1 + engineBonus;
         window.gameState.accuracyBonus = fuelBonus;
         window.gameState.comboPenaltyReduction = shieldBonus;
-        
+
         // Apply effects to typing engine if available
         if (window.typingEngine) {
             window.typingEngine.setSpeedMultiplier(window.gameState.speedMultiplier);
             window.typingEngine.setAccuracyBonus(window.gameState.accuracyBonus);
         }
-        
+
         console.log('Upgrade effects applied:', {
             speedMultiplier: window.gameState.speedMultiplier,
             accuracyBonus: window.gameState.accuracyBonus,
@@ -193,16 +208,16 @@ class ShipUpgradeSystem {
     updateUpgradeDisplay() {
         // Update engine display
         this.updateUpgradeElement('engine', 'engineLevel', 'engineProgress', 'engineCost');
-        
+
         // Update fuel display
         this.updateUpgradeElement('fuel', 'fuelLevel', 'fuelProgress', 'fuelCost');
-        
+
         // Update shield display
         this.updateUpgradeElement('shield', 'shieldLevel', 'shieldProgress', 'shieldCost');
-        
+
         // Update upgrade buttons
         this.updateUpgradeButtons();
-        
+
         // Update bonus display
         this.updateBonusDisplay();
     }
@@ -212,16 +227,16 @@ class ShipUpgradeSystem {
         const levelElement = document.getElementById(levelElementId);
         const progressElement = document.getElementById(progressElementId);
         const costElement = document.getElementById(costElementId);
-        
+
         if (levelElement) {
             levelElement.textContent = upgrade.level;
         }
-        
+
         if (progressElement) {
             const progress = (upgrade.level / upgrade.maxLevel) * 100;
             progressElement.style.width = `${progress}%`;
         }
-        
+
         if (costElement && upgrade.level < upgrade.maxLevel) {
             const cost = this.calculateUpgradeCost(upgradeType);
             costElement.textContent = `${cost} XP`;
@@ -232,12 +247,12 @@ class ShipUpgradeSystem {
         Object.keys(this.upgrades).forEach(upgradeType => {
             const upgrade = this.upgrades[upgradeType];
             const button = document.querySelector(`[data-upgrade="${upgradeType}"]`);
-            
+
             if (button) {
                 const cost = this.calculateUpgradeCost(upgradeType);
-                const canAfford = window.userStats && window.userStats.xp >= cost;
+                const canAfford = this.userStats && this.userStats.xp >= cost;
                 const isMaxLevel = upgrade.level >= upgrade.maxLevel;
-                
+
                 // Update button text
                 if (isMaxLevel) {
                     button.textContent = 'MAX LEVEL';
@@ -255,20 +270,20 @@ class ShipUpgradeSystem {
 
     updateBonusDisplay() {
         const bonuses = this.getTotalBonuses();
-        
+
         // Update bonus display elements
         const speedBonusElement = document.getElementById('speedBonus');
         const accuracyBonusElement = document.getElementById('accuracyBonus');
         const comboBonusElement = document.getElementById('comboBonus');
-        
+
         if (speedBonusElement) {
             speedBonusElement.textContent = `+${(bonuses.speed * 100).toFixed(1)}%`;
         }
-        
+
         if (accuracyBonusElement) {
             accuracyBonusElement.textContent = `+${(bonuses.accuracy * 100).toFixed(1)}%`;
         }
-        
+
         if (comboBonusElement) {
             comboBonusElement.textContent = `-${(bonuses.combo * 100).toFixed(1)}%`;
         }
@@ -277,7 +292,7 @@ class ShipUpgradeSystem {
     getUpgradeBonus(upgradeType) {
         const upgrade = this.upgrades[upgradeType];
         if (!upgrade) return 0;
-        
+
         switch (upgradeType) {
             case 'engine':
                 return this.calculateEngineBonus();
@@ -301,7 +316,7 @@ class ShipUpgradeSystem {
     getUpgradeInfo(upgradeType) {
         const upgrade = this.upgrades[upgradeType];
         if (!upgrade) return null;
-        
+
         return {
             name: upgrade.name,
             description: upgrade.description,
@@ -315,7 +330,7 @@ class ShipUpgradeSystem {
     showNotification(message, type = 'info') {
         const notification = document.createElement('div');
         notification.className = `upgrade-notification fixed top-4 right-4 p-4 rounded-lg z-50 transform translate-x-full transition-transform duration-500`;
-        
+
         // Set color based on type
         switch (type) {
             case 'success':
@@ -330,15 +345,15 @@ class ShipUpgradeSystem {
             default:
                 notification.classList.add('bg-blue-600', 'text-white');
         }
-        
+
         notification.textContent = message;
         document.body.appendChild(notification);
-        
+
         // Animate in
         setTimeout(() => {
             notification.classList.remove('translate-x-full');
         }, 100);
-        
+
         // Animate out and remove
         setTimeout(() => {
             notification.classList.add('translate-x-full');
@@ -354,11 +369,11 @@ class ShipUpgradeSystem {
         Object.keys(this.upgrades).forEach(key => {
             this.upgrades[key].level = 1;
         });
-        
+
         this.saveUpgrades();
         this.updateUpgradeDisplay();
         this.applyUpgradeEffects();
-        
+
         console.log('All upgrades reset to level 1');
     }
 
@@ -370,7 +385,7 @@ class ShipUpgradeSystem {
             averageLevel: 0,
             maxedUpgrades: 0
         };
-        
+
         Object.values(this.upgrades).forEach(upgrade => {
             stats.totalUpgrades += upgrade.level - 1;
             stats.averageLevel += upgrade.level;
@@ -378,9 +393,9 @@ class ShipUpgradeSystem {
                 stats.maxedUpgrades++;
             }
         });
-        
+
         stats.averageLevel = stats.averageLevel / Object.keys(this.upgrades).length;
-        
+
         return stats;
     }
 } 

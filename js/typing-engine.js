@@ -1,7 +1,10 @@
 // Typing Engine for Cosmic Typing Adventure - Security Enhanced Version
 
-class TypingEngine {
-    constructor() {
+import { KANA_MAPPING } from './kana-mapping.js';
+
+export class TypingEngine {
+    constructor(soundManager) {
+        this.soundManager = soundManager;
         this.currentText = '';
         this.typedText = '';
         this.currentIndex = 0;
@@ -137,7 +140,7 @@ class TypingEngine {
     tokenizeText() {
         this.tokens = [];
         let text = this.currentText;
-        const mapping = window.KANA_MAPPING || {};
+        const mapping = KANA_MAPPING || {};
 
         // Simple greedy tokenizer
         let i = 0;
@@ -165,8 +168,8 @@ class TypingEngine {
                     bestMatch = { kana: char, patterns: mapping[char] };
                     matchLen = 1;
                 } else {
-                    // Fallback to wanakana or exact match
-                    const fallback = window.wanakana ? window.wanakana.toRomaji(char) : char;
+                    // Fallback to exact match as wanakana is optional/removed
+                    const fallback = char;
                     bestMatch = { kana: char, patterns: [fallback] };
                     matchLen = 1;
                 }
@@ -214,7 +217,7 @@ class TypingEngine {
         const nextInput = this.currentInput + inputChar;
 
         // Provide visual/sound feedback - SoundManager hook
-        if (window.soundManager) window.soundManager.play('type');
+        if (this.soundManager) this.soundManager.play('type');
 
         // Check against patterns
         const isValid = token.patterns.some(p => p.startsWith(nextInput));
@@ -255,7 +258,7 @@ class TypingEngine {
                 }
             }
 
-            if (window.soundManager) window.soundManager.play('error');
+            if (this.soundManager) this.soundManager.play('error');
         }
 
         this.displayText();
@@ -383,7 +386,8 @@ class TypingEngine {
             }
         }
         // 日本語→ローマ字変換
-        const expectedRomaji = window.wanakana ? window.wanakana.toRomaji(this.currentText) : this.currentText;
+        // Simplified fallback since wanakana is not present
+        const expectedRomaji = this.currentText;
         const inputRomaji = input;
 
         if (inputRomaji.length > this.typedText.length) {
@@ -498,7 +502,7 @@ class TypingEngine {
     recalculateErrors() {
         this.errors.clear();
         this.totalErrors = 0;
-        const expectedRomaji = window.wanakana ? window.wanakana.toRomaji(this.currentText) : this.currentText;
+        const expectedRomaji = this.currentText;
         for (let i = 0; i < this.typedText.length; i++) {
             if (this.typedText[i] !== expectedRomaji[i]) {
                 this.addError(i, expectedRomaji[i], this.typedText[i]);

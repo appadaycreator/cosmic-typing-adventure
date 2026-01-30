@@ -1,4 +1,4 @@
-class SoundManager {
+export class SoundManager {
     constructor() {
         this.enabled = true;
         this.volume = 0.5;
@@ -91,4 +91,3 @@ class SoundManager {
     }
 }
 
-window.soundManager = new SoundManager();
