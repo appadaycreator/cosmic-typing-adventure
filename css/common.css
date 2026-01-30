@@ -5,6 +5,92 @@
     box-sizing: border-box;
 }
 
+/* 通知システムのスタイル */
+#notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    max-width: 400px;
+}
+
+.notification {
+    background: white;
+    border-radius: 8px;
+    padding: 16px 48px 16px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.notification-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.notification-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.notification-close:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.notification-info {
+    border-left: 4px solid #3b82f6;
+}
+
+.notification-warning {
+    border-left: 4px solid #f59e0b;
+    background-color: #fffbeb;
+}
+
+.notification-error {
+    border-left: 4px solid #ef4444;
+    background-color: #fef2f2;
+}
+
+.notification-critical {
+    border-left: 4px solid #dc2626;
+    background-color: #fef2f2;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(220, 38, 38, 0.5);
+    }
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;

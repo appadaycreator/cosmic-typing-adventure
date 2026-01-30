@@ -1,6 +1,6 @@
 {
   "name": "cosmic-typing-adventure",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "宇宙テーマのタイピング練習アプリケーション - 楽しくタイピングスキルを向上",
   "type": "module",
   "main": "js/app.js",

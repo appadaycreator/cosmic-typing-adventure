@@ -8,6 +8,9 @@ import { initializeSupabase, TypingStats, PracticeTexts } from './supabase-confi
 import { AchievementSystem } from './achievement-system.js';
 import { ShipUpgradeSystem } from './ship-upgrade-system.js';
 import { SecurityUtils } from './security-utils.js';
+import { logger } from './logger.js';
+import { DOMUtils } from './dom-utils.js';
+import { errorHandler } from './error-handler.js';
 
 export class CosmicTypingApp {
   constructor() {
@@ -82,9 +85,13 @@ export class CosmicTypingApp {
       this.initializeTypingEngine();
       this.showPlanetSelection();
 
-      console.log("CosmicTypingApp initialized successfully");
+      logger.info("CosmicTypingApp initialized successfully");
     } catch (error) {
-      console.error("Failed to initialize CosmicTypingApp:", error);
+      logger.error("Failed to initialize CosmicTypingApp:", error);
+      errorHandler.handleError(error, {
+        userMessage: 'アプリケーションの初期化に失敗しました。オフラインモードで起動します。',
+        showNotification: false
+      });
       // Continue with offline functionality
       this.getDOMElements();
       this.setupEventListeners();
@@ -96,24 +103,20 @@ export class CosmicTypingApp {
   async initSupabase() {
     try {
       // Wait for DOM to be ready
-      if (document.readyState === 'loading') {
-        await new Promise(resolve => {
-          document.addEventListener('DOMContentLoaded', resolve);
-        });
-      }
+      await DOMUtils.ready();
 
       // Initialize Supabase
       const success = await initializeSupabase();
       if (success) {
-        console.log("Supabase initialized successfully");
+        logger.info("Supabase initialized successfully");
 
         // Test connection with fallback
         await this.testSupabaseConnection();
       } else {
-        console.warn("Supabase initialization failed, continuing with offline mode");
+        logger.warn("Supabase initialization failed, continuing with offline mode");
       }
     } catch (error) {
-      console.error("Supabase initialization error:", error);
+      logger.error("Supabase initialization error:", error);
       // Continue with offline functionality
     }
   }
@@ -122,10 +125,10 @@ export class CosmicTypingApp {
     try {
       if (TypingStats) {
         const history = await TypingStats.getHistory(1);
-        console.log("[Supabaseテスト] 接続成功, 履歴サンプル:", history);
+        logger.debug("[Supabaseテスト] 接続成功, 履歴サンプル:", history);
       }
     } catch (error) {
-      console.warn("[Supabaseテスト] 接続テスト失敗:", error);
+      logger.warn("[Supabaseテスト] 接続テスト失敗:", error);
       // Continue with offline functionality
     }
   }
