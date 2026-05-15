@@ -31,8 +31,7 @@ const STATIC_RESOURCES = [
 
 // 動的キャッシュ対象
 const DYNAMIC_RESOURCES = [
-  'https://cdn.jsdelivr.net/npm/chart.js',
-  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2'
+  'https://cdn.jsdelivr.net/npm/chart.js'
 ];
 
 // インストール時の処理
@@ -228,8 +227,7 @@ function isDynamicResource(request) {
 // APIリクエストかどうかの判定
 function isApiRequest(request) {
   const url = new URL(request.url);
-  return url.pathname.startsWith('/api/') || 
-         url.hostname.includes('supabase.co');
+  return url.pathname.startsWith('/api/');
 }
 
 // メッセージ処理

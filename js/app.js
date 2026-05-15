@@ -121,14 +121,8 @@ export class CosmicTypingApp {
       if (success) {
         logger.info("Supabase initialized successfully");
 
-        // Get Supabase client for leaderboard
-        if (window.supabase) {
-          this.supabaseClient = window.supabase.createClient(
-            "https://heosgwasjtspuczbllrp.supabase.co",
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imhlb3Nnd2FzanRzcHVjemJsbHJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzNjQ3NjMsImV4cCI6MjA2Nzk0MDc2M30.zNaIL1IXFQgcoWgk5EX5t5mOkewLB1-9rrqqS_jR0Zc"
-          );
-          this.leaderboardManager = new LeaderboardManager(this.supabaseClient);
-        }
+        // No Supabase: use local leaderboard only
+        this.leaderboardManager = new LeaderboardManager(null);
 
         // Test connection with fallback
         await this.testSupabaseConnection();

@@ -133,14 +133,10 @@
         import { errorHandler } from './error-handler.js';
         import { DOMUtils } from './js/dom-utils.js';
         import { TextManagerUI } from './js/text-manager-ui.js';
-        import { initializeSupabase } from './js/supabase-config.js';
 
         // Initialize app
         async function init() {
             try {
-                // Initialize Supabase
-                const supabase = await initializeSupabase();
-                
                 // Initialize Text Manager UI
                 const textManagerUI = new TextManagerUI('text-manager-container');
                 await textManagerUI.init();
