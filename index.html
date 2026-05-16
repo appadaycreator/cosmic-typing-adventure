@@ -1347,6 +1347,27 @@
             }
         });
     </script>
+
+<script>
+// アフィリエイトクリックトラッキング（GTM経由でGA4に送信）
+document.addEventListener('click', function(e) {
+    var el = e.target.closest('.js-track-affiliate');
+    if (!el) return;
+    var itemName = el.getAttribute('data-item-name') || 'unknown';
+    var platform = el.getAttribute('data-platform') || 'unknown';
+    var linkType = el.getAttribute('data-link-type') || 'affiliate_link';
+    // GTMのdataLayerへpush
+    if (window.dataLayer) {
+        window.dataLayer.push({
+            event: 'affiliate_click',
+            affiliate_item: itemName,
+            affiliate_platform: platform,
+            affiliate_link_type: linkType,
+            page_url: window.location.href
+        });
+    }
+}, true);
+</script>
 </body>
 
 </html>
