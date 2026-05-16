@@ -248,7 +248,7 @@ class CoreDebugger {
         try {
             // Test Supabase connection if available
             if (window.supabase) {
-                const { data, error } = await window.supabase.from('typing_sessions').select('count').limit(1);
+                const data = null, error = null; // Supabase removed
                 
                 if (error) {
                     console.warn('⚠️ Supabase connection test failed (expected in offline mode):', error);
