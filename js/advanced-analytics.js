@@ -590,9 +590,19 @@ export class AdvancedAnalytics {
         }
 
         const ctx = canvas.getContext('2d');
-        
+
         // データ準備
         const data = this.getPerformanceChartData();
+        // プレースホルダー制御
+        const placeholder = document.getElementById('performanceChartPlaceholder');
+        if (data && data.labels && data.labels.length > 0) {
+            if (placeholder) placeholder.style.display = 'none';
+            canvas.style.display = 'block';
+        } else {
+            if (placeholder) placeholder.style.display = 'flex';
+            canvas.style.display = 'none';
+            return;
+        }
         const hasData = this.progressTrends.length > 0;
         
         // 既存のチャートを破棄

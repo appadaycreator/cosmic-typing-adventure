@@ -44,7 +44,7 @@ export class TextManager {
    */
   async loadTextsFromJSON() {
     try {
-      const response = await fetch('/data/practice-texts.json');
+      const response = await fetch('./data/practice-texts.json');
       if (!response.ok) {
         throw new Error('Failed to fetch practice texts');
       }
