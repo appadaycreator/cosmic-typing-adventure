@@ -789,14 +789,104 @@ class MobileOptimizer {
                 <li><code>js/app.js</code> - アプリメインロジック（showResults P2対応・hideAllSections拡張）</li>
                 <li><code>js/streak.js</code> - 連続練習ストリーク管理</li>
                 <li><code>js/heatmap.js</code> - キーヒートマップ（SVGキーボード色分け）</li>
-                <li><code>js/features.js</code> - 残り文字数・デイリーチャレンジ・チュートリアル・WPMグラフ・ベストスコア・XP管理</li>
+                <li><code>js/features.js</code> - 残り文字数・進行バー・デイリーチャレンジ・チュートリアル・WPMグラフ（通常+TA）・ベストスコア・XP管理・実績解放</li>
                 <li><code>js/language-manager.js</code> - テキスト取得（重複回避ロジック追加）</li>
                 <li><code>data/practice-texts.json</code> - 練習テキスト220件（5カテゴリ: daily/business/programming/literature/code_snippets）</li>
             </ul>
         </div>
 
         <div class="feature-card">
-            <h4>localStorage キー一覧</h4>
+            <h2>Round 4 追加機能（2026-05-26）</h2>
+
+            <div class="feature-card" style="margin-top:12px;">
+                <h3>P0-1: タイムアタックシェアIDバグ修正</h3>
+                <p><strong>目的:</strong> タイムアタック結果シェア時にWPM/精度が常に「?」になっていた問題を修正</p>
+                <p><strong>変更:</strong> <code>shareTimeAttackResults()</code> 内のquerySelectorを <code>ta-finalWPM</code> / <code>ta-finalAccuracy</code> に修正</p>
+            </div>
+
+            <div class="feature-card" style="margin-top:12px;">
+                <h3>P1-1: タイピング進行バー</h3>
+                <p><strong>目的:</strong> 現在のテキストのどこまで入力したかを1.5pxの細いバーで視覚化</p>
+                <p><strong>仕様:</strong></p>
+                <ul>
+                    <li>要素: <code>#typingProgressBar</code>（typingInterface内、テキストエリア上部）</li>
+                    <li>更新タイミング: <code>typingInput</code> の <code>input</code> イベント毎</li>
+                    <li>算出式: <code>(入力文字数 / テキスト全長) * 100%</code></li>
+                    <li>カラー: 緑→シアンのグラデーション（linear-gradient）</li>
+                </ul>
+                <p><strong>実装箇所:</strong> <code>features.js</code> の <code>initRemainingChars</code>IIFE内</p>
+            </div>
+
+            <div class="feature-card" style="margin-top:12px;">
+                <h3>P1-2: データインポート機能</h3>
+                <p><strong>目的:</strong> 設定画面の「データをアップロード」ボタンが無反応だった問題を修正</p>
+                <p><strong>仕様:</strong></p>
+                <ul>
+                    <li>JSONファイルを選択 → FileReaderで読み込み → <code>cosmicTyping_</code> プレフィックスのキーのみlocalStorageに復元</li>
+                    <li>成功時: 件数トースト表示 → 1.5秒後にページリロード</li>
+                    <li>失敗時: エラートースト表示</li>
+                </ul>
+                <p><strong>実装箇所:</strong> <code>app.html</code> スクリプトブロック内 <code>setupImport()</code> IIFE</p>
+            </div>
+
+            <div class="feature-card" style="margin-top:12px;">
+                <h3>P2-1: 実績（Achievement）自動解放システム</h3>
+                <p><strong>目的:</strong> 実績リストが常にグレーのまま（解放されない）問題を修正</p>
+                <p><strong>実績定義:</strong></p>
+                <table style="width:100%;border-collapse:collapse;font-size:0.9em;">
+                    <tr style="background:#1e3a5f"><th style="padding:6px;">ID</th><th style="padding:6px;">名称</th><th style="padding:6px;">解放条件</th></tr>
+                    <tr><td><code>first_flight</code></td><td>初回航行</td><td>セッション1回完了</td></tr>
+                    <tr><td><code>speed_pilot</code></td><td>スピードパイロット</td><td>最高WPM ≥ 50</td></tr>
+                    <tr><td><code>planet_finder</code></td><td>惑星発見者</td><td>セッション1回完了</td></tr>
+                </table>
+                <p><strong>ストレージ:</strong> <code>cosmicTyping_achievements</code> = JSON配列（解放済みID）</p>
+                <p><strong>動作:</strong> 結果パネル表示時にMutationObserver経由で自動チェック → 新規解放時トースト通知</p>
+                <p><strong>実装箇所:</strong> <code>features.js</code> 末尾 <code>AchievementUnlocker</code> IIFE</p>
+            </div>
+
+            <div class="feature-card" style="margin-top:12px;">
+                <h3>P2-2: 宇宙船強化ボタン機能実装</h3>
+                <p><strong>目的:</strong> 艦隊画面の強化ボタンが無反応だった問題を修正</p>
+                <p><strong>仕様:</strong></p>
+                <table style="width:100%;border-collapse:collapse;font-size:0.9em;">
+                    <tr style="background:#1e3a5f"><th style="padding:6px;">部品</th><th style="padding:6px;">初期コスト</th><th style="padding:6px;">最大Lv</th><th style="padding:6px;">効果</th></tr>
+                    <tr><td>エンジン</td><td>100 XP × 現在Lv</td><td>Lv.5</td><td>タイピング速度 +5%/Lv</td></tr>
+                    <tr><td>燃料システム</td><td>150 XP × 現在Lv</td><td>Lv.5</td><td>正確率ボーナス +2%/Lv</td></tr>
+                    <tr><td>シールド</td><td>200 XP × 現在Lv</td><td>Lv.5</td><td>ミス時ペナルティ -10%/Lv</td></tr>
+                </table>
+                <p><strong>ストレージ:</strong> <code>cosmicTyping_shipUpgrades</code> = <code>{"engine":1,"fuel":1,"shield":1}</code></p>
+                <p><strong>実装箇所:</strong> <code>app.html</code> スクリプトブロック内 <code>upgradeShip(type)</code> / <code>refreshShipUpgradeUI()</code></p>
+            </div>
+
+            <div class="feature-card" style="margin-top:12px;">
+                <h3>P3-1: タイムアタック中のWPMグラフ表示</h3>
+                <p><strong>目的:</strong> タイムアタック中もWPM推移グラフを確認できるようにする</p>
+                <p><strong>仕様:</strong></p>
+                <ul>
+                    <li>追加要素: <code>#taWpmChartContainer</code> / <code>#taLiveWPMChart</code>（timeAttackInterface内）</li>
+                    <li>WPM取得元: <code>#timeAttackWPM</code>（タイムアタック用リアルタイム表示）</li>
+                    <li>タイムアタックボタン押下で <code>isTimeAttackMode=true</code> としてトラッキング開始</li>
+                    <li>通常モードと独立したChartインスタンス（<code>taChartInstance</code>）を使用</li>
+                </ul>
+                <p><strong>実装箇所:</strong> <code>features.js</code> の <code>initWPMChart</code> IIFE（<code>startTracking(timeAttack)</code> 引数で分岐）</p>
+            </div>
+
+            <div class="feature-card" style="margin-top:12px;">
+                <h3>P3-2: キーボードショートカット</h3>
+                <p><strong>目的:</strong> マウスなしでゲームを操作できる利便性向上</p>
+                <p><strong>仕様:</strong></p>
+                <table style="width:100%;border-collapse:collapse;font-size:0.9em;">
+                    <tr style="background:#1e3a5f"><th style="padding:6px;">キー</th><th style="padding:6px;">動作</th><th style="padding:6px;">条件</th></tr>
+                    <tr><td><code>Enter</code></td><td>タイピング開始</td><td>startBtnが表示中 かつ 入力欄にフォーカスなし</td></tr>
+                    <tr><td><code>Escape</code></td><td>一時停止</td><td>pauseBtnが表示中 かつ 入力欄にフォーカスなし</td></tr>
+                </table>
+                <p>各ボタンに <code>title</code> 属性でショートカット表示（ホバー時にツールチップ）</p>
+                <p><strong>実装箇所:</strong> <code>app.html</code> スクリプトブロック内 <code>setupKeyboardShortcuts()</code> IIFE</p>
+            </div>
+        </div>
+
+        <div class="feature-card">
+            <h4>localStorage キー一覧（全キー）</h4>
             <table style="width:100%;border-collapse:collapse;font-size:0.9em;">
                 <tr style="background:#1e3a5f"><th style="padding:6px;text-align:left;">キー</th><th style="padding:6px;">型</th><th style="padding:6px;">説明</th></tr>
                 <tr><td><code>cosmicTyping_streak</code></td><td>JSON</td><td>連続練習ストリーク {lastDate, count, maxCount}</td></tr>
@@ -805,16 +895,23 @@ class MobileOptimizer {
                 <tr><td><code>cosmicTyping_tutorialDone</code></td><td>string</td><td>チュートリアル完了フラグ</td></tr>
                 <tr><td><code>cosmicTyping_bestWPM</code></td><td>number</td><td>自己ベストWPM</td></tr>
                 <tr><td><code>cosmicTyping_bestAccuracy</code></td><td>number</td><td>自己ベスト正確率</td></tr>
+                <tr><td><code>cosmicTyping_totalSessions</code></td><td>number</td><td>累積セッション数</td></tr>
+                <tr><td><code>cosmicTyping_avgWPM</code></td><td>number</td><td>累積平均WPM</td></tr>
                 <tr><td><code>cosmicTyping_xp</code></td><td>number</td><td>累積XP</td></tr>
                 <tr><td><code>cosmicTyping_level</code></td><td>number</td><td>現在レベル</td></tr>
                 <tr><td><code>cosmicTyping_fontSize</code></td><td>string</td><td>フォントサイズ設定 (xs/sm/md/lg/xl)</td></tr>
                 <tr><td><code>cosmicTyping_pilotName</code></td><td>string</td><td>パイロット名</td></tr>
+                <tr><td><code>cosmicTyping_sound</code></td><td>string</td><td>効果音ON/OFF ('true'/'false')</td></tr>
+                <tr><td><code>cosmicTyping_bgm</code></td><td>string</td><td>BGM ON/OFF ('true'/'false')</td></tr>
                 <tr><td><code>cosmicTyping_lastTimeAttack</code></td><td>number</td><td>最後のタイムアタック秒数</td></tr>
+                <tr><td><code>cosmicTyping_dailyActive</code></td><td>string</td><td>デイリーチャレンジ進行中フラグ</td></tr>
+                <tr><td><code>cosmicTyping_achievements</code></td><td>JSON</td><td>解放済み実績IDの配列（Round4追加）</td></tr>
+                <tr><td><code>cosmicTyping_shipUpgrades</code></td><td>JSON</td><td>宇宙船強化レベル {engine, fuel, shield}（Round4追加）</td></tr>
             </table>
         </div>
 
         <p style="text-align: center; margin-top: 40px; color: #9ca3af;">
-            最終更新: 2026年5月26日 | Cosmic Typing Adventure Development Team
+            最終更新: 2026年5月26日 Round4 | Cosmic Typing Adventure Development Team
         </p>
     </div>
 </body>

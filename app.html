@@ -789,6 +789,13 @@
                         </div>
                     </div>
 
+                    <!-- P1: タイピング進行バー -->
+                    <div class="mt-2 mb-1">
+                        <div class="w-full bg-gray-700 rounded-full h-1.5">
+                            <div id="typingProgressBar" class="h-1.5 rounded-full transition-all duration-200" style="width:0%;background:linear-gradient(90deg,#10b981,#06b6d4);"></div>
+                        </div>
+                    </div>
+
                     <!-- P1: 残り文字数カウンター -->
                     <div id="remainingChars" class="hidden text-right pr-1 mt-1">
                         <span class="text-xs text-gray-400">残り <span id="remainingCount" class="font-bold">0</span> 文字</span>
@@ -804,17 +811,17 @@
                     <div class="flex justify-center space-x-4 mt-4">
                         <button onclick="startTyping()" id="startBtn"
                             class="bg-energy-green hover:bg-green-600 px-8 py-3 rounded-lg font-bold transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
-                            aria-label="タイピング練習を開始">
+                            aria-label="タイピング練習を開始" title="開始 [Enter]">
                             <i class="fas fa-play mr-2" aria-hidden="true"></i>開始
                         </button>
                         <button onclick="pauseTyping()" id="pauseBtn"
                             class="bg-planet-orange hover:bg-orange-600 px-8 py-3 rounded-lg font-bold transition-all shadow-lg hover:shadow-xl transform hover:scale-105 hidden"
-                            aria-label="タイピング練習を一時停止">
+                            aria-label="タイピング練習を一時停止" title="一時停止 [Esc]">
                             <i class="fas fa-pause mr-2" aria-hidden="true"></i>一時停止
                         </button>
                         <button onclick="resetTyping()" id="resetBtn"
                             class="bg-gray-600 hover:bg-gray-700 px-8 py-3 rounded-lg font-bold transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
-                            aria-label="タイピング練習をリセット">
+                            aria-label="タイピング練習をリセット" title="リセット">
                             <i class="fas fa-redo mr-2" aria-hidden="true"></i>リセット
                         </button>
                     </div>
@@ -912,10 +919,16 @@
                             rows="3" placeholder="ここに入力してください..." disabled></textarea>
                     </div>
 
+                    <!-- P3-1: タイムアタック用WPMグラフ -->
+                    <div id="taWpmChartContainer" class="hidden mt-3 bg-gray-900 rounded-lg p-3 border border-gray-700">
+                        <div class="text-xs text-gray-400 mb-1 font-orbitron">⚡ WPM 推移</div>
+                        <canvas id="taLiveWPMChart" height="55"></canvas>
+                    </div>
+
                     <!-- Controls -->
                     <div class="flex justify-center space-x-4 mt-4">
                         <button onclick="resetTimeAttack()"
-                            class="bg-gray-600 hover:bg-gray-700 px-6 py-2 rounded-lg font-bold transition-colors">
+                            class="bg-gray-600 hover:bg-gray-700 px-6 py-2 rounded-lg font-bold transition-colors" title="リセット">
                             <i class="fas fa-redo mr-2"></i>リセット
                         </button>
                     </div>
@@ -1535,8 +1548,8 @@
         // F5: タイムアタック結果シェアカード
         function shareTimeAttackResults() {
             const panel = document.getElementById('timeAttackResults');
-            const wpm = panel ? (panel.querySelector('[id="finalWPM"]') || {}).textContent || '?' : '?';
-            const acc = panel ? (panel.querySelector('[id="finalAccuracy"]') || {}).textContent || '?' : '?';
+            const wpm = panel ? (panel.querySelector('[id="ta-finalWPM"]') || {}).textContent || '?' : '?';
+            const acc = panel ? (panel.querySelector('[id="ta-finalAccuracy"]') || {}).textContent || '?' : '?';
             const rating = (document.getElementById('performanceRating') || {}).textContent || '?';
             const text = `🚀 Cosmic Typing Adventure - タイムアタック\n⌨️ WPM: ${wpm} | 正確率: ${acc}% | 評価: ${rating}\nhttps://appadaycreator.com/cosmic-typing-adventure/`;
             if (navigator.clipboard) {
@@ -1628,6 +1641,113 @@
             const last = parseInt(localStorage.getItem('cosmicTyping_lastTimeAttack') || '60');
             window.app?.startTimeAttack(last);
         }
+
+        // P1-2: データインポート
+        (function setupImport() {
+            document.addEventListener('DOMContentLoaded', function () {
+                var fileInput = document.getElementById('importFile');
+                if (!fileInput) return;
+                fileInput.addEventListener('change', function (e) {
+                    var file = e.target.files[0];
+                    if (!file) return;
+                    var reader = new FileReader();
+                    reader.onload = function (ev) {
+                        try {
+                            var data = JSON.parse(ev.target.result);
+                            var count = 0;
+                            Object.keys(data).forEach(function (key) {
+                                if (key.startsWith('cosmicTyping_')) {
+                                    localStorage.setItem(key, data[key]);
+                                    count++;
+                                }
+                            });
+                            showToast('✅ ' + count + '件のデータを復元しました。ページを再読み込みします。');
+                            setTimeout(function () { window.location.reload(); }, 1500);
+                        } catch (err) {
+                            showToast('❌ データの読み込みに失敗しました');
+                        }
+                    };
+                    reader.readAsText(file);
+                    fileInput.value = '';
+                });
+            });
+        })();
+
+        // P2-2: 宇宙船強化
+        function upgradeShip(type) {
+            var costs = { engine: 100, fuel: 150, shield: 200 };
+            var cost = costs[type] || 100;
+            var xp = parseInt(localStorage.getItem('cosmicTyping_xp') || 0);
+            var upgrades = JSON.parse(localStorage.getItem('cosmicTyping_shipUpgrades') || '{"engine":1,"fuel":1,"shield":1}');
+            var currentLv = upgrades[type] || 1;
+            if (currentLv >= 5) {
+                showToast('🚀 すでに最大レベルです（Lv.5）');
+                return;
+            }
+            var actualCost = cost * currentLv;
+            if (xp < actualCost) {
+                showToast('❌ XPが不足しています（必要: ' + actualCost + ' XP）');
+                return;
+            }
+            upgrades[type] = currentLv + 1;
+            localStorage.setItem('cosmicTyping_shipUpgrades', JSON.stringify(upgrades));
+            localStorage.setItem('cosmicTyping_xp', xp - actualCost);
+            refreshShipUpgradeUI();
+            // ヘッダーXP表示も更新
+            var xpEl = document.getElementById('userXP');
+            if (xpEl) xpEl.textContent = (xp - actualCost) + ' XP';
+            showToast('🔧 ' + { engine: 'エンジン', fuel: '燃料システム', shield: 'シールド' }[type] + ' Lv.' + upgrades[type] + ' に強化しました！');
+        }
+        function refreshShipUpgradeUI() {
+            var upgrades = JSON.parse(localStorage.getItem('cosmicTyping_shipUpgrades') || '{"engine":1,"fuel":1,"shield":1}');
+            var costs = { engine: 100, fuel: 150, shield: 200 };
+            ['engine', 'fuel', 'shield'].forEach(function (type) {
+                var lv = upgrades[type] || 1;
+                var lvEl = document.getElementById(type + 'Level');
+                var progEl = document.getElementById(type + 'Progress');
+                if (lvEl) lvEl.textContent = lv;
+                if (progEl) progEl.style.width = (lv / 5 * 100) + '%';
+                var btn = document.querySelector('[data-upgrade="' + type + '"]');
+                if (btn) {
+                    if (lv >= 5) {
+                        btn.textContent = '最大Lv';
+                        btn.disabled = true;
+                        btn.style.opacity = '0.5';
+                    } else {
+                        btn.textContent = '強化 (' + (costs[type] * lv) + ' XP)';
+                    }
+                }
+            });
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            refreshShipUpgradeUI();
+            document.querySelectorAll('[data-upgrade]').forEach(function (btn) {
+                btn.addEventListener('click', function () { upgradeShip(btn.dataset.upgrade); });
+            });
+        });
+
+        // P3-2: キーボードショートカット（Enter=開始、Escape=一時停止）
+        (function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', function (e) {
+                var active = document.activeElement;
+                var isInputFocused = active && (active.tagName === 'TEXTAREA' || active.tagName === 'INPUT');
+                if (isInputFocused) return;
+                if (e.key === 'Enter') {
+                    var startBtn = document.getElementById('startBtn');
+                    if (startBtn && !startBtn.classList.contains('hidden') && startBtn.style.display !== 'none') {
+                        e.preventDefault();
+                        startTyping();
+                        showToast('⌨️ Enterキーで開始');
+                    }
+                } else if (e.key === 'Escape') {
+                    var pauseBtn = document.getElementById('pauseBtn');
+                    if (pauseBtn && !pauseBtn.classList.contains('hidden') && pauseBtn.style.display !== 'none') {
+                        e.preventDefault();
+                        pauseTyping();
+                    }
+                }
+            });
+        })();
 
         // Reset all data
         function resetAllData() {
