@@ -629,6 +629,21 @@
                     <div id="missionSelection" class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
                         <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-4 text-center">ミッション選択</h3>
 
+                        <!-- P2: デイリーチャレンジ -->
+                        <div class="mb-4">
+                            <button id="dailyChallengeBtn" onclick="DailyChallengeManager.start()"
+                                class="w-full mission-btn bg-yellow-900 hover:bg-yellow-800 p-3 rounded-lg border border-yellow-500 transition-colors flex items-center justify-between">
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-xl">⭐</span>
+                                    <div class="text-left">
+                                        <div class="font-bold text-sm">デイリーチャレンジ</div>
+                                        <div class="text-xs text-gray-300">毎日変わるお題に挑戦</div>
+                                    </div>
+                                </div>
+                                <span id="dailyChallengeBadge" class="text-xs px-2 py-1 rounded font-bold" style="background:#92400e;">🌟 未挑戦</span>
+                            </button>
+                        </div>
+
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                             <button onclick="startMission('basic')"
                                 class="mission-btn bg-blue-900 hover:bg-blue-800 p-4 rounded-lg transition-colors border border-blue-500">
@@ -772,6 +787,17 @@
                                 <!-- 入力候補がここに表示されます -->
                             </div>
                         </div>
+                    </div>
+
+                    <!-- P1: 残り文字数カウンター -->
+                    <div id="remainingChars" class="hidden text-right pr-1 mt-1">
+                        <span class="text-xs text-gray-400">残り <span id="remainingCount" class="font-bold">0</span> 文字</span>
+                    </div>
+
+                    <!-- P4: リアルタイムWPMグラフ -->
+                    <div id="wpmChartContainer" class="hidden mt-3 bg-gray-900 rounded-lg p-3 border border-gray-700">
+                        <div class="text-xs text-gray-400 mb-1 font-orbitron">⚡ WPM 推移</div>
+                        <canvas id="liveWPMChart" height="55"></canvas>
                     </div>
 
                     <!-- Game Controls -->
@@ -1260,6 +1286,32 @@
             </div>
         </section>
 
+        <!-- P3: 初回チュートリアルモーダル -->
+        <div id="tutorialModal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4">
+            <div class="bg-cosmic-card rounded-2xl border border-blue-500 p-6 max-w-md w-full shadow-2xl">
+                <div class="text-center mb-4">
+                    <div class="text-4xl mb-2" id="tutorialIcon">🚀</div>
+                    <h2 class="font-orbitron font-bold text-xl text-cosmic-cyan" id="tutorialTitle">Cosmic Typing へようこそ！</h2>
+                </div>
+                <p class="text-gray-300 text-sm text-center mb-6 leading-relaxed" id="tutorialText">
+                    宇宙をテーマにしたタイピング練習ゲームです。<br>ミッションを選んで宇宙を探索しましょう！
+                </p>
+                <!-- ステップインジケーター -->
+                <div class="flex justify-center space-x-2 mb-6">
+                    <div class="w-2 h-2 rounded-full bg-cosmic-cyan tutorial-dot" id="dot0"></div>
+                    <div class="w-2 h-2 rounded-full bg-gray-600 tutorial-dot" id="dot1"></div>
+                    <div class="w-2 h-2 rounded-full bg-gray-600 tutorial-dot" id="dot2"></div>
+                </div>
+                <div class="flex justify-between">
+                    <button onclick="TutorialManager.skip()" class="text-gray-400 hover:text-white text-sm transition-colors">スキップ</button>
+                    <button onclick="TutorialManager.next()" id="tutorialNextBtn"
+                        class="bg-energy-green hover:bg-green-600 px-6 py-2 rounded-lg font-bold transition-colors text-sm">
+                        次へ →
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Settings Section -->
         <section id="settingsSection" class="section-content hidden">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -1490,6 +1542,21 @@
             }
         }
 
+        // ==========================================
+        // P0: ゲームコントロール グローバル関数（バグ修正）
+        // ==========================================
+        function startTyping()          { window.app?.startPractice(); }
+        function pauseTyping()          { window.app?.pausePractice(); }
+        function resetTyping()          { window.app?.resetPractice(); }
+        function playAgain()            { window.app?.retryPractice(); }
+        function selectNewMission()     { window.app?.showPlanetSelection(); }
+        function backToMissionSelection() { window.app?.showPlanetSelection(); }
+        function resetTimeAttack()      { window.app?.showPlanetSelection(); }
+        function playTimeAttackAgain()  {
+            const last = parseInt(localStorage.getItem('cosmicTyping_lastTimeAttack') || '60');
+            window.app?.startTimeAttack(last);
+        }
+
         // Reset all data
         function resetAllData() {
             if (confirm('すべてのデータを削除しますか？この操作は取り消せません。')) {
@@ -1514,6 +1581,8 @@
     <script src="js/streak.js"></script>
     <!-- F3: キーヒートマップ -->
     <script src="js/heatmap.js"></script>
+    <!-- P1-P4: 新機能（残り文字数・デイリー・チュートリアル・WPMグラフ） -->
+    <script src="js/features.js"></script>
     <!-- Load application scripts -->
     <script type="module" src="js/app.js"></script>
 
