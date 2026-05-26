@@ -822,6 +822,10 @@
 
                 <!-- Results Panel -->
                 <div id="resultsPanel" class="bg-cosmic-card rounded-xl p-6 border border-blue-500 hidden">
+                    <!-- P1: ベストスコアバナー（動的挿入） -->
+                    <div id="bestScoreBanner" class="hidden text-center py-2 px-4 rounded-lg mb-3 font-bold text-sm" style="background:linear-gradient(135deg,#92400e,#78350f);border:1px solid #f97316;">
+                        🏆 自己ベスト更新！おめでとうございます！
+                    </div>
                     <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-4 text-center">ミッション完了!</h3>
 
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
@@ -919,6 +923,10 @@
 
                 <!-- Time Attack Results -->
                 <div id="timeAttackResults" class="bg-cosmic-card rounded-xl p-6 border border-blue-500 hidden">
+                    <!-- P1: ベストスコアバナー（タイムアタック用） -->
+                    <div id="ta-bestScoreBanner" class="hidden text-center py-2 px-4 rounded-lg mb-3 font-bold text-sm" style="background:linear-gradient(135deg,#92400e,#78350f);border:1px solid #f97316;">
+                        🏆 自己ベスト更新！おめでとうございます！
+                    </div>
                     <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-4 text-center">タイムアタック完了!</h3>
 
                     <!-- Performance Rating -->
@@ -929,15 +937,15 @@
 
                     <div class="grid grid-cols-2 sm:grid-cols-5 gap-4 mb-6">
                         <div class="text-center">
-                            <div class="text-2xl font-bold text-energy-green" id="finalWPM">0</div>
+                            <div class="text-2xl font-bold text-energy-green" id="ta-finalWPM">0</div>
                             <div class="text-sm text-gray-400">WPM</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-2xl font-bold text-cosmic-cyan" id="finalAccuracy">0%</div>
+                            <div class="text-2xl font-bold text-cosmic-cyan" id="ta-finalAccuracy">0%</div>
                             <div class="text-sm text-gray-400">正確率</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-2xl font-bold text-planet-orange" id="finalCombo">0</div>
+                            <div class="text-2xl font-bold text-planet-orange" id="ta-finalCombo">0</div>
                             <div class="text-sm text-gray-400">最大コンボ</div>
                         </div>
                         <div class="text-center">
@@ -1145,7 +1153,7 @@
                         <div class="text-sm text-gray-400 mb-2">
                             進捗: <span id="achievementProgress">0/0</span>
                         </div>
-                        <div id="achievementList" class="space-y-2 max-h-40 overflow-y-auto">
+                        <div id="achievementListStats" class="space-y-2 max-h-40 overflow-y-auto">
                             <!-- Achievements will be populated here -->
                         </div>
                     </div>
@@ -1541,6 +1549,70 @@
                 showToast('❌ お使いのブラウザは未対応です');
             }
         }
+
+        // ==========================================
+        // P0: 設定セクション 機能接続
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', function () {
+            // フォントサイズ
+            var fontSel = document.getElementById('fontSizeSelect');
+            var savedSize = localStorage.getItem('cosmicTyping_fontSize') || 'md';
+            var applyFontSize = function (size) {
+                var td = document.getElementById('textDisplay');
+                if (td) {
+                    td.className = td.className.replace(/font-size-\S+/g, '').trim() + ' font-size-' + size;
+                }
+            };
+            if (fontSel) {
+                fontSel.value = savedSize;
+                applyFontSize(savedSize);
+                fontSel.addEventListener('change', function (e) {
+                    applyFontSize(e.target.value);
+                    localStorage.setItem('cosmicTyping_fontSize', e.target.value);
+                });
+            }
+            // 言語ボタン
+            document.querySelectorAll('[data-language]').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    window.app && window.app.languageManager && window.app.languageManager.setLanguage(btn.dataset.language);
+                    document.querySelectorAll('[data-language]').forEach(function (b) {
+                        b.classList.toggle('bg-blue-600', b.dataset.language === btn.dataset.language);
+                        b.classList.toggle('bg-gray-600', b.dataset.language !== btn.dataset.language);
+                        b.classList.toggle('text-white', true);
+                        b.classList.toggle('text-gray-300', false);
+                    });
+                    showToast('🌐 言語を ' + (btn.dataset.language === 'ja' ? '日本語' : 'English') + ' に変更しました');
+                });
+            });
+            // パイロット名
+            var nameInp = document.getElementById('pilotName');
+            if (nameInp) {
+                var savedName = localStorage.getItem('cosmicTyping_pilotName') || '宇宙探険家';
+                nameInp.value = savedName;
+                nameInp.addEventListener('input', function () {
+                    localStorage.setItem('cosmicTyping_pilotName', nameInp.value);
+                });
+            }
+            // 効果音
+            var soundChk = document.getElementById('soundEffects');
+            if (soundChk) {
+                soundChk.checked = localStorage.getItem('cosmicTyping_sound') !== 'false';
+                soundChk.addEventListener('change', function () {
+                    localStorage.setItem('cosmicTyping_sound', soundChk.checked ? 'true' : 'false');
+                    if (window.app && window.app.soundManager) window.app.soundManager.enabled = soundChk.checked;
+                    showToast(soundChk.checked ? '🔊 効果音ON' : '🔇 効果音OFF');
+                });
+            }
+            // BGM
+            var bgmChk = document.getElementById('backgroundMusic');
+            if (bgmChk) {
+                bgmChk.checked = localStorage.getItem('cosmicTyping_bgm') === 'true';
+                bgmChk.addEventListener('change', function () {
+                    localStorage.setItem('cosmicTyping_bgm', bgmChk.checked ? 'true' : 'false');
+                    showToast(bgmChk.checked ? '🎵 BGM ON' : '🎵 BGM OFF');
+                });
+            }
+        });
 
         // ==========================================
         // P0: ゲームコントロール グローバル関数（バグ修正）

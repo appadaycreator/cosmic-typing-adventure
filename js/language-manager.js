@@ -34,9 +34,16 @@ export class LanguageManager {
             if (textId) {
                 return this.textManager.getTextById(textId);
             } else {
-                // Get random text based on planet difficulty
+                // P4: 直近5件の重複回避
                 const filters = this.getPlanetFilters(planetKey);
-                return this.textManager.getRandomText(filters);
+                const allFiltered = this.textManager.getFilteredTexts(filters);
+                if (allFiltered.length === 0) return this.textManager.getRandomText(filters);
+                const recent = this._recentIds || [];
+                const candidates = allFiltered.filter(t => !recent.includes(t.id));
+                const pool = candidates.length > 0 ? candidates : allFiltered;
+                const pick = pool[Math.floor(Math.random() * pool.length)];
+                this._recentIds = [...recent.slice(-4), pick.id];
+                return pick;
             }
         }
 

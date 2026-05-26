@@ -294,3 +294,166 @@ window.TutorialManager = (function () {
         });
     });
 })();
+
+// ==========================================
+// P1追加: ベストスコア記録・表示
+// ==========================================
+(function BestScoreManager() {
+    var KEY_WPM = 'cosmicTyping_bestWPM';
+    var KEY_ACC = 'cosmicTyping_bestAccuracy';
+    var KEY_SESSIONS = 'cosmicTyping_totalSessions';
+    var KEY_AVG_WPM = 'cosmicTyping_avgWPM';
+
+    function getBest(key) { return parseFloat(localStorage.getItem(key) || 0); }
+
+    function checkAndUpdate(wpm, accuracy) {
+        var isNewBest = false;
+        if (wpm > getBest(KEY_WPM)) {
+            localStorage.setItem(KEY_WPM, wpm);
+            isNewBest = true;
+        }
+        if (accuracy > getBest(KEY_ACC)) {
+            localStorage.setItem(KEY_ACC, accuracy);
+        }
+        // 平均WPM更新
+        var sessions = parseInt(localStorage.getItem(KEY_SESSIONS) || 0) + 1;
+        var prevAvg = parseFloat(localStorage.getItem(KEY_AVG_WPM) || 0);
+        var newAvg = ((prevAvg * (sessions - 1)) + wpm) / sessions;
+        localStorage.setItem(KEY_SESSIONS, sessions);
+        localStorage.setItem(KEY_AVG_WPM, newAvg.toFixed(1));
+        return isNewBest;
+    }
+
+    function updateStatsDisplay() {
+        var el = document.getElementById('bestWPM');
+        if (el) el.textContent = getBest(KEY_WPM).toFixed(1);
+        var accEl = document.getElementById('bestAccuracy');
+        if (accEl) accEl.textContent = getBest(KEY_ACC).toFixed(1) + '%';
+        var avgEl = document.getElementById('avgWPM');
+        if (avgEl) avgEl.textContent = parseFloat(localStorage.getItem(KEY_AVG_WPM) || 0).toFixed(1);
+        var sessEl = document.getElementById('totalSessions');
+        if (sessEl) sessEl.textContent = localStorage.getItem(KEY_SESSIONS) || 0;
+    }
+
+    function onResultsVisible(panel, bannerId) {
+        var wpmEl = panel.querySelector('[id="finalWPM"],[id="ta-finalWPM"]') || panel.querySelector('.text-energy-green');
+        var accEl = panel.querySelector('[id="finalAccuracy"],[id="ta-finalAccuracy"]');
+        if (!wpmEl) return;
+        var wpm = parseFloat(wpmEl.textContent || 0);
+        var acc = parseFloat((accEl || {}).textContent || 0);
+        if (wpm <= 0) return;
+        var isNew = checkAndUpdate(wpm, acc);
+        var banner = document.getElementById(bannerId);
+        if (banner) banner.classList.toggle('hidden', !isNew);
+        if (isNew) showToast('🏆 自己ベスト更新！ WPM: ' + wpm.toFixed(1));
+        updateStatsDisplay();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        updateStatsDisplay();
+        var pairs = [
+            { id: 'resultsPanel', bannerId: 'bestScoreBanner' },
+            { id: 'timeAttackResults', bannerId: 'ta-bestScoreBanner' }
+        ];
+        pairs.forEach(function (pair) {
+            var el = document.getElementById(pair.id);
+            if (!el) return;
+            new MutationObserver(function (muts) {
+                muts.forEach(function (m) {
+                    var t = m.target;
+                    if (t.style.display !== 'none' && !t.classList.contains('hidden')) {
+                        setTimeout(function () { onResultsVisible(t, pair.bannerId); }, 50);
+                    }
+                });
+            }).observe(el, { attributes: true, attributeFilter: ['style', 'class'] });
+        });
+    });
+})();
+
+// ==========================================
+// P3: XP・レベルアップ管理
+// ==========================================
+(function XPManager() {
+    var KEY_XP = 'cosmicTyping_xp';
+    var KEY_LV = 'cosmicTyping_level';
+    var XP_PER_LEVEL = [0, 1000, 3000, 6000, 10000, 15000, 21000, 28000, 36000, 45000];
+
+    function getXP() { return parseInt(localStorage.getItem(KEY_XP) || 0); }
+    function getLevel() { return parseInt(localStorage.getItem(KEY_LV) || 1); }
+
+    function calcLevel(xp) {
+        for (var i = XP_PER_LEVEL.length - 1; i >= 0; i--) {
+            if (xp >= XP_PER_LEVEL[i]) return i + 1;
+        }
+        return 1;
+    }
+
+    function calcXPGain(wpm, accuracy) {
+        var base = Math.round(wpm * 2);
+        var accBonus = accuracy >= 95 ? 1.5 : accuracy >= 85 ? 1.2 : 1.0;
+        return Math.round(base * accBonus);
+    }
+
+    function addXP(gain) {
+        var prevXP = getXP();
+        var prevLevel = calcLevel(prevXP);
+        var newXP = prevXP + gain;
+        var newLevel = calcLevel(newXP);
+        localStorage.setItem(KEY_XP, newXP);
+        localStorage.setItem(KEY_LV, newLevel);
+        updateDisplay();
+        showToast('✨ +' + gain + ' XP 獲得！');
+        if (newLevel > prevLevel) {
+            setTimeout(function () {
+                showToast('🎉 レベルアップ！ Lv.' + prevLevel + ' → Lv.' + newLevel);
+            }, 800);
+        }
+    }
+
+    function updateDisplay() {
+        var xp = getXP();
+        var lv = calcLevel(xp);
+        var lvEl = document.getElementById('userLevel');
+        var xpEl = document.getElementById('userXP');
+        if (lvEl) lvEl.textContent = 'Lv.' + lv;
+        if (xpEl) {
+            var nextLvXP = XP_PER_LEVEL[Math.min(lv, XP_PER_LEVEL.length - 1)] || xp + 1000;
+            xpEl.textContent = xp + ' XP';
+        }
+        // 統計タブ
+        var totalXP = document.getElementById('totalXP');
+        if (totalXP) totalXP.textContent = xp;
+        var currentLevel = document.getElementById('currentLevel');
+        if (currentLevel) currentLevel.textContent = lv;
+    }
+
+    function onResultsVisible(panel) {
+        var wpmEl = panel.querySelector('[id="finalWPM"],[id="ta-finalWPM"]') || panel.querySelector('.text-energy-green');
+        var accEl = panel.querySelector('[id="finalAccuracy"],[id="ta-finalAccuracy"]');
+        if (!wpmEl) return;
+        var wpm = parseFloat(wpmEl.textContent || 0);
+        var acc = parseFloat((accEl || {}).textContent || 0);
+        if (wpm <= 0) return;
+        var gain = calcXPGain(wpm, acc);
+        addXP(gain);
+        // earnedXP表示更新
+        var earnedEl = document.getElementById('earnedXP');
+        if (earnedEl) earnedEl.textContent = gain;
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        updateDisplay();
+        ['resultsPanel', 'timeAttackResults'].forEach(function (id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            new MutationObserver(function (muts) {
+                muts.forEach(function (m) {
+                    var t = m.target;
+                    if (t.style.display !== 'none' && !t.classList.contains('hidden')) {
+                        setTimeout(function () { onResultsVisible(t); }, 100);
+                    }
+                });
+            }).observe(el, { attributes: true, attributeFilter: ['style', 'class'] });
+        });
+    });
+})();

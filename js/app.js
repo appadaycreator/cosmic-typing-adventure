@@ -341,6 +341,8 @@ export class CosmicTypingApp {
 
   startTimeAttack(seconds) {
     this.currentPlanet = 'timeAttack'; // Pseudo planet name
+    // P2: もう一度用に記録
+    localStorage.setItem('cosmicTyping_lastTimeAttack', String(seconds));
 
     this.typingEngine.mode = 'timeAttack';
     this.typingEngine.timeLimit = seconds;
@@ -454,6 +456,13 @@ export class CosmicTypingApp {
 
   showResults(results) {
     this.hideAllSections();
+
+    // P2: タイムアタックは専用結果パネルを使用
+    if (results.mode === 'timeAttack') {
+      this._showTimeAttackResults(results);
+      return;
+    }
+
     if (this.elements.results) {
       this.elements.results.style.display = "block";
 
@@ -461,10 +470,10 @@ export class CosmicTypingApp {
       if (titleElem) {
         if (results.cause === 'death') {
           titleElem.textContent = "MISSION FAILED";
-          titleElem.style.color = "#ef4444"; // Red
+          titleElem.style.color = "#ef4444";
         } else if (results.cause === 'timeout') {
           titleElem.textContent = "TIME UP!";
-          titleElem.style.color = "#fbbf24"; // Amber
+          titleElem.style.color = "#fbbf24";
         } else {
           titleElem.textContent = "ミッション完了!";
           titleElem.style.color = "var(--cosmic-cyan)";
@@ -488,6 +497,33 @@ export class CosmicTypingApp {
     this.updateButtonStates();
   }
 
+  // P2: タイムアタック専用結果表示
+  _showTimeAttackResults(results) {
+    const panel = document.getElementById('timeAttackResults');
+    if (!panel) return;
+    panel.style.display = 'block';
+
+    // パフォーマンス評価（rank）
+    const ratingEl = document.getElementById('performanceRating');
+    if (ratingEl) {
+      ratingEl.textContent = (results.rank || 'C') + '級';
+      ratingEl.style.color = results.rankColor || '#9ca3af';
+    }
+
+    // 各統計値（重複ID回避のためta-プレフィックス付きIDを使用）
+    const set = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val;
+    };
+    set('ta-finalWPM', results.wpm.toFixed(1));
+    set('ta-finalAccuracy', results.accuracy.toFixed(1) + '%');
+    set('ta-finalCombo', (results.combo || 0) + 'x');
+    set('timeUsed', Math.round(results.timeUsed || results.duration || 0) + '秒');
+    set('totalTyped', results.totalTyped || 0);
+
+    this.updateButtonStates();
+  }
+
   hideAllSections() {
     if (this.elements.planetSelection) {
       this.elements.planetSelection.style.display = "none";
@@ -498,6 +534,11 @@ export class CosmicTypingApp {
     if (this.elements.results) {
       this.elements.results.style.display = "none";
     }
+    // P2: タイムアタック専用UIも非表示
+    const taInterface = document.getElementById('timeAttackInterface');
+    if (taInterface) taInterface.style.display = "none";
+    const taResults = document.getElementById('timeAttackResults');
+    if (taResults) taResults.style.display = "none";
   }
 
   startPractice() {

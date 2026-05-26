@@ -747,8 +747,74 @@ class MobileOptimizer {
             </ul>
         </div>
 
+        <h2>✅ 実装済み機能（2026年5月）</h2>
+
+        <div class="feature-card">
+            <h4>F1〜F5: 第1フェーズ実装</h4>
+            <ul>
+                <li><strong>F1 LP→ゲーム統合</strong>: ストリーク有ユーザーをapp.htmlへ自動リダイレクト（<code>?lp</code>パラメータで回避可）</li>
+                <li><strong>F2 連続練習ストリーク</strong>: <code>js/streak.js</code>による日次ストリーク追跡・ヘッダーに🔥表示</li>
+                <li><strong>F3 苦手キーヒートマップ</strong>: <code>js/heatmap.js</code>によるQWERTYキーボードSVG色分け（統計タブ）</li>
+                <li><strong>F4 コードモード強化</strong>: <code>data/practice-texts.json</code>にcode_snippets 20件追加・コードモードボタン設置</li>
+                <li><strong>F5 結果シェアカード</strong>: ClipboardAPIによるWPM・正確率・評価のコピー機能</li>
+            </ul>
+        </div>
+
+        <div class="feature-card">
+            <h4>P0〜P4: 第2フェーズ（バグ修正＋機能追加）</h4>
+            <ul>
+                <li><strong>P0 ゲームボタン全修正</strong>: startTyping/pauseTyping/resetTyping/playAgain等8関数をwindowグローバル公開</li>
+                <li><strong>P1 残り文字数カウンター</strong>: タイピング中に「残りN文字」をリアルタイム表示（色変化付き）</li>
+                <li><strong>P2 デイリーチャレンジ</strong>: 日付シードで毎日異なる惑星お題・完了バッジ・ストリーク連携</li>
+                <li><strong>P3 初回チュートリアルモーダル</strong>: 初回訪問時3ステップ説明・スキップ可・localStorage管理</li>
+                <li><strong>P4 リアルタイムWPMグラフ</strong>: Chart.jsで3秒ごとWPM折れ線グラフ表示</li>
+            </ul>
+        </div>
+
+        <div class="feature-card">
+            <h4>P0〜P4: 第3フェーズ（設定・UI・ゲームシステム改善）</h4>
+            <ul>
+                <li><strong>P0 設定機能接続</strong>: フォントサイズ・言語・効果音・BGM・パイロット名が実際に動作するよう接続</li>
+                <li><strong>P1 ベストスコア記録</strong>: localStorageにbestWPM/bestAccuracy保存・自己ベスト更新時🏆バナー表示・統計ページ反映</li>
+                <li><strong>P2 タイムアタックUI有効化</strong>: <code>timeAttackResults</code>パネルを実際に表示するよう<code>app.js showResults()</code>を修正</li>
+                <li><strong>P3 XP・レベルアップ表示</strong>: ゲーム完了時にXP計算（WPM×2×正確率補正）・LvUPトースト通知・localStorage永続化</li>
+                <li><strong>P4 テキスト重複回避</strong>: <code>language-manager.js</code>で直近5件の履歴管理・同テキストの連続出題を防止</li>
+            </ul>
+        </div>
+
+        <div class="feature-card">
+            <h4>ファイル構成（2026年5月現在）</h4>
+            <ul>
+                <li><code>app.html</code> - メインゲームUI（設定・タイムアタック・チュートリアル・残り文字数等）</li>
+                <li><code>js/app.js</code> - アプリメインロジック（showResults P2対応・hideAllSections拡張）</li>
+                <li><code>js/streak.js</code> - 連続練習ストリーク管理</li>
+                <li><code>js/heatmap.js</code> - キーヒートマップ（SVGキーボード色分け）</li>
+                <li><code>js/features.js</code> - 残り文字数・デイリーチャレンジ・チュートリアル・WPMグラフ・ベストスコア・XP管理</li>
+                <li><code>js/language-manager.js</code> - テキスト取得（重複回避ロジック追加）</li>
+                <li><code>data/practice-texts.json</code> - 練習テキスト220件（5カテゴリ: daily/business/programming/literature/code_snippets）</li>
+            </ul>
+        </div>
+
+        <div class="feature-card">
+            <h4>localStorage キー一覧</h4>
+            <table style="width:100%;border-collapse:collapse;font-size:0.9em;">
+                <tr style="background:#1e3a5f"><th style="padding:6px;text-align:left;">キー</th><th style="padding:6px;">型</th><th style="padding:6px;">説明</th></tr>
+                <tr><td><code>cosmicTyping_streak</code></td><td>JSON</td><td>連続練習ストリーク {lastDate, count, maxCount}</td></tr>
+                <tr><td><code>cosmicTyping_keyMisses</code></td><td>JSON</td><td>キーごとのミス回数 {key: {hits, misses}}</td></tr>
+                <tr><td><code>cosmicTyping_daily_YYYY-MM-DD</code></td><td>string</td><td>デイリーチャレンジ完了フラグ</td></tr>
+                <tr><td><code>cosmicTyping_tutorialDone</code></td><td>string</td><td>チュートリアル完了フラグ</td></tr>
+                <tr><td><code>cosmicTyping_bestWPM</code></td><td>number</td><td>自己ベストWPM</td></tr>
+                <tr><td><code>cosmicTyping_bestAccuracy</code></td><td>number</td><td>自己ベスト正確率</td></tr>
+                <tr><td><code>cosmicTyping_xp</code></td><td>number</td><td>累積XP</td></tr>
+                <tr><td><code>cosmicTyping_level</code></td><td>number</td><td>現在レベル</td></tr>
+                <tr><td><code>cosmicTyping_fontSize</code></td><td>string</td><td>フォントサイズ設定 (xs/sm/md/lg/xl)</td></tr>
+                <tr><td><code>cosmicTyping_pilotName</code></td><td>string</td><td>パイロット名</td></tr>
+                <tr><td><code>cosmicTyping_lastTimeAttack</code></td><td>number</td><td>最後のタイムアタック秒数</td></tr>
+            </table>
+        </div>
+
         <p style="text-align: center; margin-top: 40px; color: #9ca3af;">
-            最終更新: 2024年12月 | Cosmic Typing Adventure Development Team
+            最終更新: 2026年5月26日 | Cosmic Typing Adventure Development Team
         </p>
     </div>
 </body>
