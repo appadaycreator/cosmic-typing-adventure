@@ -66,7 +66,8 @@ export class LanguageManager {
             'earth': { difficulty: 1, category: 'daily' },
             'mars': { difficulty: 2, category: 'business' },
             'jupiter': { difficulty: 2, category: 'programming' },
-            'saturn': { difficulty: 3, category: 'literature' }
+            'saturn': { difficulty: 3, category: 'literature' },
+            'code': { difficulty: 3, category: 'code_snippets' }
         };
 
         return planetFilterMap[planetKey] || {};

@@ -497,6 +497,12 @@
 
                 <!-- User Info & Mobile Menu Toggle -->
                 <div class="flex items-center space-x-4">
+                    <!-- 連続練習ストリーク -->
+                    <div id="streakDisplay" class="hidden sm:flex items-center space-x-1 bg-cosmic-card px-3 py-1 rounded-lg border border-orange-700">
+                        <span class="text-planet-orange text-sm">🔥</span>
+                        <span class="text-sm font-orbitron font-bold text-planet-orange" id="streakCount">0</span>
+                        <span class="text-xs text-gray-400">日連続</span>
+                    </div>
                     <div class="hidden sm:flex items-center space-x-3 bg-cosmic-card px-3 py-1 rounded-lg">
                         <i class="fas fa-star text-planet-orange"></i>
                         <span class="text-sm font-orbitron" id="userLevel">Lv.1</span>
@@ -658,6 +664,14 @@
                                 <i class="fas fa-heartbeat text-2xl text-red-500 mb-2"></i>
                                 <div class="font-bold">サバイバル</div>
                                 <div class="text-sm text-gray-300">ミス３回で終了</div>
+                            </button>
+
+                            <!-- Code Snippets Mode Button -->
+                            <button onclick="startMission('code')"
+                                class="mission-btn bg-gray-900 hover:bg-gray-800 p-4 rounded-lg transition-colors border border-cyan-600 col-span-full sm:col-span-2">
+                                <i class="fas fa-code text-2xl text-cosmic-cyan mb-2"></i>
+                                <div class="font-bold">💻 コードモード</div>
+                                <div class="text-sm text-gray-300">実際のコードをタイピング練習</div>
                             </button>
                         </div>
 
@@ -1092,6 +1106,15 @@
                     </div>
 
                     <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
+                        <h3 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-4">
+                            <i class="fas fa-keyboard mr-2"></i>キーヒートマップ
+                        </h3>
+                        <div id="keyHeatmapContainer" class="text-sm text-gray-400 text-center py-4">
+                            データが不足しています<br>タイピングでキーを入力すると色分けされます
+                        </div>
+                    </div>
+
+                    <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
                         <h3 class="font-orbitron font-bold text-lg text-cosmic-cyan mb-4">実績</h3>
                         <div class="text-sm text-gray-400 mb-2">
                             進捗: <span id="achievementProgress">0/0</span>
@@ -1422,6 +1445,51 @@
             }
         }
         
+        // トースト通知
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1e3a8a;color:#fff;padding:12px 24px;border-radius:8px;z-index:9999;font-weight:bold;border:1px solid #06b6d4;box-shadow:0 4px 16px rgba(6,182,212,0.3);';
+            document.body.appendChild(toast);
+            setTimeout(function () { toast.remove(); }, 2500);
+        }
+
+        // F5: 結果シェアカード
+        function shareResults() {
+            const panel = document.getElementById('resultsPanel');
+            const wpm = panel ? (panel.querySelector('[id="finalWPM"]') || {}).textContent || '?' : '?';
+            const acc = panel ? (panel.querySelector('[id="finalAccuracy"]') || {}).textContent || '?' : '?';
+            const combo = panel ? (panel.querySelector('[id="finalCombo"]') || {}).textContent || '?' : '?';
+            const text = `🚀 Cosmic Typing Adventure\n⌨️ WPM: ${wpm} | 正確率: ${acc}% | コンボ: ${combo}\nhttps://appadaycreator.com/cosmic-typing-adventure/`;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(function () {
+                    showToast('📋 クリップボードにコピーしました！');
+                }).catch(function () {
+                    showToast('❌ コピーに失敗しました');
+                });
+            } else {
+                showToast('❌ お使いのブラウザは未対応です');
+            }
+        }
+
+        // F5: タイムアタック結果シェアカード
+        function shareTimeAttackResults() {
+            const panel = document.getElementById('timeAttackResults');
+            const wpm = panel ? (panel.querySelector('[id="finalWPM"]') || {}).textContent || '?' : '?';
+            const acc = panel ? (panel.querySelector('[id="finalAccuracy"]') || {}).textContent || '?' : '?';
+            const rating = (document.getElementById('performanceRating') || {}).textContent || '?';
+            const text = `🚀 Cosmic Typing Adventure - タイムアタック\n⌨️ WPM: ${wpm} | 正確率: ${acc}% | 評価: ${rating}\nhttps://appadaycreator.com/cosmic-typing-adventure/`;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(function () {
+                    showToast('📋 クリップボードにコピーしました！');
+                }).catch(function () {
+                    showToast('❌ コピーに失敗しました');
+                });
+            } else {
+                showToast('❌ お使いのブラウザは未対応です');
+            }
+        }
+
         // Reset all data
         function resetAllData() {
             if (confirm('すべてのデータを削除しますか？この操作は取り消せません。')) {
@@ -1442,6 +1510,10 @@
         }
     </script>
     
+    <!-- F2: 連続練習ストリーク -->
+    <script src="js/streak.js"></script>
+    <!-- F3: キーヒートマップ -->
+    <script src="js/heatmap.js"></script>
     <!-- Load application scripts -->
     <script type="module" src="js/app.js"></script>
 

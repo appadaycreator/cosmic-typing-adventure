@@ -466,6 +466,18 @@ select,input[type=text],input[type=number],input[type=email],textarea{min-height
 </head>
 
 <body class="font-noto text-white cosmic-gradient star-field min-h-screen"><a href="#main" class="sr-only">本文へスキップ</a>
+<!-- F1: リピーターユーザーを直接ゲームへリダイレクト -->
+<script>
+(function(){
+    try {
+        var streak = localStorage.getItem('cosmicTyping_streak');
+        var hasPlayed = streak && JSON.parse(streak).count > 0;
+        if (hasPlayed && !location.search.includes('lp')) {
+            window.location.replace('./app.html');
+        }
+    } catch(e) {}
+})();
+</script>
     <!-- スキップリンク（アクセシビリティ） -->
     <a href="#features" class="skip-link">メインコンテンツへスキップ</a>
 

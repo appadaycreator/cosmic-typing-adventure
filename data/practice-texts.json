@@ -2,8 +2,8 @@
   "metadata": {
     "version": "2.0.0",
     "lastUpdated": "2026-01-30",
-    "totalTexts": 200,
-    "totalCategories": 4,
+    "totalTexts": 220,
+    "totalCategories": 5,
     "difficultyLevels": {
       "1": "初級",
       "2": "中級",
@@ -29,6 +29,11 @@
     "literature": {
       "name": "文学",
       "description": "文学作品からの抜粋",
+      "difficulty": 3
+    },
+    "code_snippets": {
+      "name": "コードスニペット",
+      "description": "実際のプログラムコード（英語・記号）のタイピング練習",
       "difficulty": 3
     }
   },
@@ -1832,6 +1837,186 @@
       "content": "司祭たちは、夜の闇の中で、漁師の小屋に身を潜めていた。",
       "wordCount": 30,
       "charCount": 32
+    },
+    {
+      "id": "code_001",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "変数宣言 (JS)",
+      "content": "const message = 'Hello, World!';",
+      "wordCount": 4,
+      "charCount": 32
+    },
+    {
+      "id": "code_002",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "関数定義 (Python)",
+      "content": "def greet(name):\n    return f'Hello, {name}!'",
+      "wordCount": 6,
+      "charCount": 43
+    },
+    {
+      "id": "code_003",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "for ループ (JS)",
+      "content": "for (let i = 0; i < 10; i++) { console.log(i); }",
+      "wordCount": 10,
+      "charCount": 49
+    },
+    {
+      "id": "code_004",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "配列操作 (JS)",
+      "content": "const nums = [1, 2, 3, 4, 5].filter(n => n % 2 === 0);",
+      "wordCount": 8,
+      "charCount": 55
+    },
+    {
+      "id": "code_005",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "クラス定義 (Python)",
+      "content": "class Player:\n    def __init__(self, name):\n        self.name = name",
+      "wordCount": 7,
+      "charCount": 64
+    },
+    {
+      "id": "code_006",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "非同期処理 (JS)",
+      "content": "async function fetchData(url) { const res = await fetch(url); return res.json(); }",
+      "wordCount": 9,
+      "charCount": 81
+    },
+    {
+      "id": "code_007",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "条件分岐 (JS)",
+      "content": "if (score >= 90) { grade = 'A'; } else if (score >= 70) { grade = 'B'; } else { grade = 'C'; }",
+      "wordCount": 17,
+      "charCount": 95
+    },
+    {
+      "id": "code_008",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "リスト内包表記 (Python)",
+      "content": "squares = [x ** 2 for x in range(10) if x % 2 == 0]",
+      "wordCount": 10,
+      "charCount": 52
+    },
+    {
+      "id": "code_009",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "Arrow関数 (JS)",
+      "content": "const add = (a, b) => a + b; const mul = (a, b) => a * b;",
+      "wordCount": 12,
+      "charCount": 59
+    },
+    {
+      "id": "code_010",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "オブジェクト操作 (JS)",
+      "content": "const user = { name: 'Alice', age: 30, role: 'admin' };",
+      "wordCount": 8,
+      "charCount": 56
+    },
+    {
+      "id": "code_011",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "try-catch (JS)",
+      "content": "try { JSON.parse(data); } catch (err) { console.error(err.message); }",
+      "wordCount": 8,
+      "charCount": 69
+    },
+    {
+      "id": "code_012",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "map/reduce (JS)",
+      "content": "const total = [10, 20, 30].reduce((acc, val) => acc + val, 0);",
+      "wordCount": 8,
+      "charCount": 62
+    },
+    {
+      "id": "code_013",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "import/export (JS)",
+      "content": "import { useState, useEffect } from 'react';",
+      "wordCount": 5,
+      "charCount": 44
+    },
+    {
+      "id": "code_014",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "デコレータ (Python)",
+      "content": "@staticmethod\ndef validate(value):\n    return value > 0",
+      "wordCount": 5,
+      "charCount": 51
+    },
+    {
+      "id": "code_015",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "正規表現 (JS)",
+      "content": "const email = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/;",
+      "wordCount": 3,
+      "charCount": 67
+    },
+    {
+      "id": "code_016",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "Promise chain (JS)",
+      "content": "fetch('/api/data').then(r => r.json()).then(d => render(d)).catch(handleError);",
+      "wordCount": 7,
+      "charCount": 78
+    },
+    {
+      "id": "code_017",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "辞書操作 (Python)",
+      "content": "scores = {'Alice': 95, 'Bob': 87, 'Carol': 92}\nbest = max(scores, key=scores.get)",
+      "wordCount": 8,
+      "charCount": 80
+    },
+    {
+      "id": "code_018",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "CSS変数",
+      "content": ":root { --primary: #06b6d4; --bg: #0a0a1a; --text: #e5e7eb; }",
+      "wordCount": 6,
+      "charCount": 60
+    },
+    {
+      "id": "code_019",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "Git コマンド",
+      "content": "git add -A && git commit -m 'feat: add new feature' && git push origin main",
+      "wordCount": 10,
+      "charCount": 75
+    },
+    {
+      "id": "code_020",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "SQL クエリ",
+      "content": "SELECT name, email FROM users WHERE active = 1 ORDER BY name LIMIT 10;",
+      "wordCount": 11,
+      "charCount": 70
     }
   ]
 }
