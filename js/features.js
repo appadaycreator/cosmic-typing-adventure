@@ -511,7 +511,7 @@ window.TutorialManager = (function () {
     var DEFS = [
         { id: 'first_flight',    icon: 'fas fa-medal',      iconColor: 'text-yellow-400',  title: '初回航行',         desc: '最初のタイピングを完了',       check: function(s) { return s.sessions >= 1; } },
         { id: 'speed_pilot',     icon: 'fas fa-rocket',     iconColor: 'text-cosmic-cyan', title: 'スピードパイロット', desc: '50 WPMを達成',                check: function(s) { return s.bestWPM >= 50; } },
-        { id: 'planet_finder',   icon: 'fas fa-globe',      iconColor: 'text-energy-green', title: '惑星発見者',       desc: '最初の惑星を発見',             check: function(s) { return s.sessions >= 1; } },
+        { id: 'planet_finder',   icon: 'fas fa-globe',      iconColor: 'text-energy-green', title: '惑星発見者',       desc: '3回のセッションを完了',        check: function(s) { return s.sessions >= 3; } },
         { id: 'accuracy_master', icon: 'fas fa-crosshairs', iconColor: 'text-red-400',     title: '精密操縦士',       desc: '正確率100%を達成',             check: function(s) { return s.bestAccuracy >= 100; } },
         { id: 'speed_demon',     icon: 'fas fa-bolt',       iconColor: 'text-planet-orange', title: 'ハイパードライブ', desc: '80 WPMを達成',                check: function(s) { return s.bestWPM >= 80; } },
         { id: 'marathon_pilot',  icon: 'fas fa-flag',       iconColor: 'text-purple-400',  title: 'マラソンパイロット', desc: '10セッション完了',             check: function(s) { return s.sessions >= 10; } },
@@ -684,12 +684,10 @@ window.TutorialManager = (function () {
     var interval = null;
 
     function update() {
-        var wpmEl = document.getElementById('liveWPM') || document.getElementById('timeAttackWPM');
-        var accEl = document.getElementById('liveAccuracy') || document.getElementById('timeAttackAccuracy');
-        var comboEl = document.getElementById('timeAttackCombo');
+        var wpmEl = document.getElementById('liveWPM');
+        var accEl = document.getElementById('liveAccuracy');
         var wpm = wpmEl ? parseFloat(wpmEl.textContent) || 0 : 0;
         var acc = accEl ? parseFloat(accEl.textContent) || 100 : 100;
-        var combo = comboEl ? parseInt(comboEl.textContent) || 0 : 0;
         var speedBar = document.getElementById('speedBar');
         var fuelBar = document.getElementById('fuelBar');
         var shieldBar = document.getElementById('shieldBar');
@@ -698,10 +696,12 @@ window.TutorialManager = (function () {
         var comboDisp = document.getElementById('currentCombo');
         if (speedBar) speedBar.style.width = Math.min(100, wpm / 1.5).toFixed(1) + '%';
         if (fuelBar) fuelBar.style.width = Math.min(100, acc).toFixed(1) + '%';
-        if (shieldBar) shieldBar.style.width = Math.min(100, combo * 5).toFixed(1) + '%';
+        // ライブコンボの取得元がないためシールドバーは精度で代替
+        if (shieldBar) shieldBar.style.width = Math.min(100, acc).toFixed(1) + '%';
         if (wpmDisp) wpmDisp.textContent = wpm.toFixed(1) + ' WPM';
         if (accDisp) accDisp.textContent = acc.toFixed(1) + '%';
-        if (comboDisp) comboDisp.textContent = combo + 'x';
+        // comboはセッション完了時にのみ確定するため「−」表示
+        if (comboDisp && comboDisp.textContent === '0x') comboDisp.textContent = '−';
     }
 
     function start() { if (!interval) interval = setInterval(update, 250); }
@@ -767,18 +767,23 @@ window.TutorialManager = (function () {
     document.addEventListener('DOMContentLoaded', function() {
         var startBtn = document.getElementById('startBtn');
         if (!startBtn) return;
-        startBtn.addEventListener('click', function() {
-            if (active) return;
+        // キャプチャフェーズで先行実行し、app.jsのstartPractice()をブロック
+        startBtn.addEventListener('click', function(e) {
             var ti = document.getElementById('typingInterface');
             if (!ti || ti.classList.contains('hidden')) return;
+            // カウントダウン中の重複クリック防止
+            if (active) { e.stopImmediatePropagation(); return; }
+            e.stopImmediatePropagation(); // app.jsのlistenerをブロック
             var inp = document.getElementById('typingInput');
             if (inp) inp.disabled = true;
             show(function() {
+                // GO!後にタイマー開始（WPM計測の正確性を保証）
+                if (window.app) window.app.startPractice();
                 if (inp) {
                     inp.disabled = false;
-                    if (navigator.maxTouchPoints > 0) inp.focus();
+                    inp.focus();
                 }
             });
-        });
+        }, true); // capture=trueでonclick属性より先に実行
     });
 })();

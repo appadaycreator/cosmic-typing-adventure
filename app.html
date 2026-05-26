@@ -817,7 +817,7 @@
 
                     <!-- Game Controls -->
                     <div class="flex justify-center space-x-4 mt-4">
-                        <button onclick="startTyping()" id="startBtn"
+                        <button onclick="" id="startBtn"
                             class="bg-energy-green hover:bg-green-600 px-8 py-3 rounded-lg font-bold transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
                             aria-label="タイピング練習を開始" title="開始 [Enter]">
                             <i class="fas fa-play mr-2" aria-hidden="true"></i>開始
@@ -833,6 +833,10 @@
                             <i class="fas fa-redo mr-2" aria-hidden="true"></i>リセット
                         </button>
                     </div>
+                    <p class="text-center text-xs text-gray-500 mt-2">
+                        <kbd class="px-1 py-0.5 bg-gray-700 rounded text-gray-300">Enter</kbd> 開始 &nbsp;
+                        <kbd class="px-1 py-0.5 bg-gray-700 rounded text-gray-300">Esc</kbd> 一時停止
+                    </p>
                 </div>
 
                 <!-- Results Panel -->
@@ -1875,7 +1879,7 @@
                     var startBtn = document.getElementById('startBtn');
                     if (startBtn && !startBtn.classList.contains('hidden') && startBtn.style.display !== 'none') {
                         e.preventDefault();
-                        startTyping();
+                        startBtn.click(); // CountdownManagerのcaptureリスナーを経由させる
                         showToast('⌨️ Enterキーで開始');
                     }
                 } else if (e.key === 'Escape') {
@@ -1905,6 +1909,24 @@
             alert('すべてのデータが削除されました。ページを再読み込みします。');
             window.location.reload();
         }
+
+        // P1-2: TAボタンクリック時にタイマー表示を選択秒数に更新
+        (function initTATimerDisplay() {
+            document.addEventListener('DOMContentLoaded', function() {
+                document.querySelectorAll('.time-attack-btn').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        var sec = parseInt(btn.dataset.timeAttack || 60);
+                        var el = document.getElementById('timeAttackTimer');
+                        if (el) {
+                            var m = Math.floor(sec / 60);
+                            var s = sec % 60;
+                            el.textContent = m.toString().padStart(2,'0') + ':' + s.toString().padStart(2,'0');
+                            el.classList.remove('text-red-500','animate-pulse');
+                        }
+                    });
+                });
+            });
+        })();
     </script>
     
     <!-- F2: 連続練習ストリーク -->

@@ -942,9 +942,31 @@ class MobileOptimizer {
             <p>コミット: 5de9085 | localStorage追加キー: <code>cosmicTyping_planetCount</code></p>
         </div>
 
+        <div class="feature-card">
+            <h2>Round 7 バグ修正・品質改善（2026-05-27）</h2>
+            <ul>
+                <li><strong>P0-1: CountdownManager タイミングバグ修正</strong><br>
+                    <em>問題</em>: startBtn クリック時、<code>startTyping()</code> と app.js の addEventListener の両方が即座に <code>startPractice()</code> を呼び出し、カウントダウン中（3秒間）にWPMタイマーが動作していた。<br>
+                    <em>修正</em>: CountdownManager を <code>{ capture: true }</code> キャプチャフェーズで登録し、<code>e.stopImmediatePropagation()</code> で他のリスナーをブロック。GO! 表示後のコールバック内でのみ <code>window.app.startPractice()</code> を呼び出す。startBtn の onclick 属性を空文字に変更。<br>
+                    <em>キーボードショートカット対応</em>: Enterキーのハンドラを <code>startTyping()</code> から <code>startBtn.click()</code> に変更し、カウントダウンを経由させる。</li>
+                <li><strong>P0-2: SidebarUpdater コンボ上書きバグ修正</strong><br>
+                    <em>問題</em>: SidebarUpdater が <code>timeAttackCombo</code>（timeAttackInterface 内）を参照していたが、このインターフェイスは実際には使用されていないため常に 0 → サイドバーのコンボが常に「0x」と表示。<br>
+                    <em>修正</em>: <code>timeAttackCombo</code> 参照を削除。コンボ表示は「−」（ライブコンボ非対応）に変更。shieldBar は精度（accuracy）で代替表示。</li>
+                <li><strong>P1-1: アチーブメント「惑星発見者」条件重複修正</strong><br>
+                    <em>問題</em>: <code>first_flight</code> と <code>planet_finder</code> が両方 <code>sessions >= 1</code> で同時アンロック。<br>
+                    <em>修正</em>: <code>planet_finder</code> の条件を <code>sessions >= 3</code>・説明文を「3回のセッションを完了」に変更。</li>
+                <li><strong>P1-2: タイムアタック初期タイマー表示修正</strong><br>
+                    <em>問題</em>: <code>timeAttackTimer</code> の初期値が「01:00」ハードコードで、30秒・3分・5分を選択しても表示が変わらなかった。<br>
+                    <em>修正</em>: <code>initTATimerDisplay()</code> IIFE を app.html に追加。各 <code>.time-attack-btn</code> クリック時に <code>data-time-attack</code> 値を MM:SS 形式に変換して即座に表示更新。</li>
+                <li><strong>P2-2: キーボードショートカットのUI可視化</strong><br>
+                    ゲームコントロールボタン下部に <kbd>Enter</kbd> 開始 / <kbd>Esc</kbd> 一時停止 のショートカットヒントを常時表示。</li>
+            </ul>
+            <p>コミット: 未確定 | 変更ファイル: <code>js/features.js</code>, <code>app.html</code></p>
+        </div>
+
         <p style="text-align: center; margin-top: 40px; color: #9ca3af;">
-            最終更新: 2026年5月27日 Round6 | Cosmic Typing Adventure Development Team
+            最終更新: 2026年5月27日 Round7 | Cosmic Typing Adventure Development Team
         </p>
     </div>
 </body>
-</html> 
+</html>
