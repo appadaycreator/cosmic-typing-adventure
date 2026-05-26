@@ -1,35 +1,46 @@
 // P1-P4 新機能モジュール
 
 // ==========================================
-// P1: 残り文字数カウンター + タイピング進行バー
+// P1: 残り文字数カウンター + タイピング進行バー（通常・TA両対応）
 // ==========================================
 (function initRemainingChars() {
-    function attachCounter(inputId, counterId, wrapperId) {
-        document.addEventListener('DOMContentLoaded', function () {
-            const inp = document.getElementById(inputId);
-            if (!inp) return;
+    function updateProgressBar(typed, textLen) {
+        var bar = document.getElementById('typingProgressBar');
+        if (bar && textLen > 0) {
+            bar.style.width = Math.min(100, (typed / textLen) * 100).toFixed(1) + '%';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // 通常モード
+        var inp = document.getElementById('typingInput');
+        if (inp) {
             inp.addEventListener('input', function () {
-                const text = window.app && window.app.currentText ? window.app.currentText : '';
+                var text = window.app && window.app.currentText ? window.app.currentText : '';
                 if (!text) return;
-                const typed = inp.value.length;
-                const remaining = Math.max(0, text.length - typed);
-                const counter = document.getElementById(counterId);
-                const wrap = document.getElementById(wrapperId);
+                var typed = inp.value.length;
+                var remaining = Math.max(0, text.length - typed);
+                var counter = document.getElementById('remainingCount');
+                var wrap = document.getElementById('remainingChars');
                 if (counter) counter.textContent = remaining;
                 if (wrap) {
                     wrap.classList.remove('hidden');
-                    const pct = text.length > 0 ? remaining / text.length : 1;
+                    var pct = remaining / text.length;
                     wrap.querySelector('span').style.color = pct < 0.1 ? '#10b981' : pct < 0.3 ? '#f97316' : '#9ca3af';
                 }
-                // タイピング進行バー更新
-                var bar = document.getElementById('typingProgressBar');
-                if (bar && text.length > 0) {
-                    bar.style.width = Math.min(100, (typed / text.length) * 100).toFixed(1) + '%';
-                }
+                updateProgressBar(typed, text.length);
             });
-        });
-    }
-    attachCounter('typingInput', 'remainingCount', 'remainingChars');
+        }
+        // タイムアタックモード（進行バーのみ）
+        var taInp = document.getElementById('timeAttackInput');
+        if (taInp) {
+            taInp.addEventListener('input', function () {
+                var text = window.app && window.app.currentText ? window.app.currentText : '';
+                if (!text) return;
+                updateProgressBar(taInp.value.length, text.length);
+            });
+        }
+    });
 })();
 
 // ==========================================
@@ -321,10 +332,11 @@ window.TutorialManager = (function () {
     var KEY_ACC = 'cosmicTyping_bestAccuracy';
     var KEY_SESSIONS = 'cosmicTyping_totalSessions';
     var KEY_AVG_WPM = 'cosmicTyping_avgWPM';
+    var KEY_TOTAL_SEC = 'cosmicTyping_totalSeconds';
 
     function getBest(key) { return parseFloat(localStorage.getItem(key) || 0); }
 
-    function checkAndUpdate(wpm, accuracy) {
+    function checkAndUpdate(wpm, accuracy, durationSec) {
         var isNewBest = false;
         if (wpm > getBest(KEY_WPM)) {
             localStorage.setItem(KEY_WPM, wpm);
@@ -333,12 +345,16 @@ window.TutorialManager = (function () {
         if (accuracy > getBest(KEY_ACC)) {
             localStorage.setItem(KEY_ACC, accuracy);
         }
-        // 平均WPM更新
         var sessions = parseInt(localStorage.getItem(KEY_SESSIONS) || 0) + 1;
         var prevAvg = parseFloat(localStorage.getItem(KEY_AVG_WPM) || 0);
         var newAvg = ((prevAvg * (sessions - 1)) + wpm) / sessions;
         localStorage.setItem(KEY_SESSIONS, sessions);
         localStorage.setItem(KEY_AVG_WPM, newAvg.toFixed(1));
+        // P1-1: 総練習時間累積
+        if (durationSec > 0) {
+            var prevSec = parseInt(localStorage.getItem(KEY_TOTAL_SEC) || 0);
+            localStorage.setItem(KEY_TOTAL_SEC, prevSec + Math.round(durationSec));
+        }
         return isNewBest;
     }
 
@@ -351,6 +367,12 @@ window.TutorialManager = (function () {
         if (avgEl) avgEl.textContent = parseFloat(localStorage.getItem(KEY_AVG_WPM) || 0).toFixed(1);
         var sessEl = document.getElementById('totalSessions');
         if (sessEl) sessEl.textContent = localStorage.getItem(KEY_SESSIONS) || 0;
+        // P1-1: 総練習時間
+        var timeEl = document.getElementById('totalTime');
+        if (timeEl) {
+            var totalSec = parseInt(localStorage.getItem(KEY_TOTAL_SEC) || 0);
+            timeEl.textContent = totalSec < 60 ? totalSec + '秒' : Math.floor(totalSec / 60) + '分';
+        }
     }
 
     function onResultsVisible(panel, bannerId) {
@@ -360,7 +382,10 @@ window.TutorialManager = (function () {
         var wpm = parseFloat(wpmEl.textContent || 0);
         var acc = parseFloat((accEl || {}).textContent || 0);
         if (wpm <= 0) return;
-        var isNew = checkAndUpdate(wpm, acc);
+        // セッション経過時間をapp.jsのtypingEngineから取得（可能なら）
+        var dur = 0;
+        try { dur = window.app && window.app.typingEngine ? (window.app.typingEngine.getResults() || {}).duration || 0 : 0; } catch(e) {}
+        var isNew = checkAndUpdate(wpm, acc, dur);
         var banner = document.getElementById(bannerId);
         if (banner) banner.classList.toggle('hidden', !isNew);
         if (isNew) showToast('🏆 自己ベスト更新！ WPM: ' + wpm.toFixed(1));
@@ -482,30 +507,15 @@ window.TutorialManager = (function () {
 (function AchievementUnlocker() {
     var KEY = 'cosmicTyping_achievements';
     var DEFS = [
-        {
-            id: 'first_flight',
-            icon: 'fas fa-medal',
-            iconColor: 'text-yellow-400',
-            title: '初回航行',
-            desc: '最初のタイピングを完了',
-            check: function (stats) { return stats.sessions >= 1; }
-        },
-        {
-            id: 'speed_pilot',
-            icon: 'fas fa-rocket',
-            iconColor: 'text-cosmic-cyan',
-            title: 'スピードパイロット',
-            desc: '50 WPMを達成',
-            check: function (stats) { return stats.bestWPM >= 50; }
-        },
-        {
-            id: 'planet_finder',
-            icon: 'fas fa-globe',
-            iconColor: 'text-energy-green',
-            title: '惑星発見者',
-            desc: '最初の惑星を発見',
-            check: function (stats) { return stats.sessions >= 1; }
-        }
+        { id: 'first_flight',    icon: 'fas fa-medal',      iconColor: 'text-yellow-400',  title: '初回航行',         desc: '最初のタイピングを完了',       check: function(s) { return s.sessions >= 1; } },
+        { id: 'speed_pilot',     icon: 'fas fa-rocket',     iconColor: 'text-cosmic-cyan', title: 'スピードパイロット', desc: '50 WPMを達成',                check: function(s) { return s.bestWPM >= 50; } },
+        { id: 'planet_finder',   icon: 'fas fa-globe',      iconColor: 'text-energy-green', title: '惑星発見者',       desc: '最初の惑星を発見',             check: function(s) { return s.sessions >= 1; } },
+        { id: 'accuracy_master', icon: 'fas fa-crosshairs', iconColor: 'text-red-400',     title: '精密操縦士',       desc: '正確率100%を達成',             check: function(s) { return s.bestAccuracy >= 100; } },
+        { id: 'speed_demon',     icon: 'fas fa-bolt',       iconColor: 'text-planet-orange', title: 'ハイパードライブ', desc: '80 WPMを達成',                check: function(s) { return s.bestWPM >= 80; } },
+        { id: 'marathon_pilot',  icon: 'fas fa-flag',       iconColor: 'text-purple-400',  title: 'マラソンパイロット', desc: '10セッション完了',             check: function(s) { return s.sessions >= 10; } },
+        { id: 'streak_3',        icon: 'fas fa-fire',       iconColor: 'text-orange-400',  title: '3日連続',          desc: '3日連続で練習',                check: function(s) { return s.streak >= 3; } },
+        { id: 'daily_hero',      icon: 'fas fa-star',       iconColor: 'text-yellow-300',  title: 'デイリーヒーロー', desc: 'デイリーチャレンジを完了',      check: function(s) { return s.dailyDone; } },
+        { id: 'code_master',     icon: 'fas fa-code',       iconColor: 'text-cosmic-cyan', title: 'コードパイロット',  desc: 'コードモードで1回完了',         check: function(s) { return s.codeDone; } }
     ];
 
     function getUnlocked() {
@@ -513,9 +523,16 @@ window.TutorialManager = (function () {
     }
 
     function getCurrentStats() {
+        var streakData = {};
+        try { streakData = JSON.parse(localStorage.getItem('cosmicTyping_streak') || '{}'); } catch(e) {}
+        var today = new Date().toISOString().split('T')[0];
         return {
-            sessions: parseInt(localStorage.getItem('cosmicTyping_totalSessions') || 0),
-            bestWPM: parseFloat(localStorage.getItem('cosmicTyping_bestWPM') || 0)
+            sessions:     parseInt(localStorage.getItem('cosmicTyping_totalSessions') || 0),
+            bestWPM:      parseFloat(localStorage.getItem('cosmicTyping_bestWPM') || 0),
+            bestAccuracy: parseFloat(localStorage.getItem('cosmicTyping_bestAccuracy') || 0),
+            streak:       parseInt(streakData.count || 0),
+            dailyDone:    !!localStorage.getItem('cosmicTyping_daily_' + today),
+            codeDone:     !!localStorage.getItem('cosmicTyping_codeDone')
         };
     }
 
@@ -580,4 +597,71 @@ window.TutorialManager = (function () {
     });
 
     window.AchievementUnlocker = { check: checkAndUnlock };
+})();
+
+// ==========================================
+// P1-2: 最近の発見リスト（DiscoveryManager）
+// ==========================================
+(function DiscoveryManager() {
+    var KEY = 'cosmicTyping_discoveries';
+    var MAX = 5;
+    var PLANET_NAMES = {
+        earth: '🌍 地球', mars: '🔴 火星', jupiter: '🪐 木星',
+        saturn: '🪐 土星', code: '💻 コード', basic: '📚 基礎',
+        exploration: '🚀 探索', speed: '⚡ 高速', accuracy: '🎯 精密', survival: '💀 サバイバル'
+    };
+
+    function load() {
+        try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch(e) { return []; }
+    }
+
+    function addDiscovery(planet, wpm) {
+        var list = load();
+        var now = new Date();
+        var time = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
+        list.unshift({ planet: planet, wpm: wpm, time: time });
+        if (list.length > MAX) list = list.slice(0, MAX);
+        localStorage.setItem(KEY, JSON.stringify(list));
+        render(list);
+    }
+
+    function render(list) {
+        var el = document.getElementById('discoveryList');
+        if (!el) return;
+        if (list.length === 0) {
+            el.innerHTML = '<div class="text-sm text-gray-400 text-center py-4">まだ発見はありません<br>タイピングで宇宙を探索しよう！</div>';
+            return;
+        }
+        el.innerHTML = list.map(function(d) {
+            var name = PLANET_NAMES[d.planet] || ('🪐 ' + d.planet);
+            return '<div class="flex justify-between items-center text-sm py-1 border-b border-gray-700">' +
+                '<span>' + name + '</span>' +
+                '<span class="text-energy-green font-bold">' + (d.wpm || 0) + ' WPM</span>' +
+                '<span class="text-gray-500 text-xs">' + d.time + '</span>' +
+                '</div>';
+        }).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        render(load());
+        ['resultsPanel', 'timeAttackResults'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            new MutationObserver(function(muts) {
+                muts.forEach(function(m) {
+                    var t = m.target;
+                    if (t.style.display !== 'none' && !t.classList.contains('hidden')) {
+                        setTimeout(function() {
+                            var planet = (window.app && window.app.currentPlanet) || 'unknown';
+                            var wpmEl = t.querySelector('[id="finalWPM"],[id="ta-finalWPM"]');
+                            var wpm = wpmEl ? parseFloat(wpmEl.textContent || 0) : 0;
+                            if (wpm > 0) addDiscovery(planet, wpm.toFixed(1));
+                            // コードモード完了フラグ
+                            if (planet === 'code') localStorage.setItem('cosmicTyping_codeDone', '1');
+                        }, 150);
+                    }
+                });
+            }).observe(el, { attributes: true, attributeFilter: ['style', 'class'] });
+        });
+    });
 })();

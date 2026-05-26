@@ -436,6 +436,14 @@
             }
         }
 
+        /* P3-2: コードモード表示 */
+        .code-mode-text {
+            font-family: 'Courier New', Consolas, monospace !important;
+            font-size: 1.0rem !important;
+            letter-spacing: 0.05em;
+            color: #a5f3fc;
+        }
+
         /* スキップリンク（アクセシビリティ） */
         .skip-link {
             position: absolute;
@@ -682,7 +690,7 @@
                             </button>
 
                             <!-- Code Snippets Mode Button -->
-                            <button onclick="startMission('code')"
+                            <button onclick="startCodeMission()"
                                 class="mission-btn bg-gray-900 hover:bg-gray-800 p-4 rounded-lg transition-colors border border-cyan-600 col-span-full sm:col-span-2">
                                 <i class="fas fa-code text-2xl text-cosmic-cyan mb-2"></i>
                                 <div class="font-bold">💻 コードモード</div>
@@ -854,18 +862,22 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-center space-x-4">
+                    <div class="flex flex-wrap justify-center gap-2">
                         <button onclick="shareResults()"
-                            class="bg-cosmic-cyan hover:bg-blue-500 px-6 py-2 rounded-lg font-bold transition-colors">
-                            <i class="fas fa-share mr-2"></i>結果をシェア
+                            class="bg-cosmic-cyan hover:bg-blue-500 px-4 py-2 rounded-lg font-bold transition-colors text-sm">
+                            <i class="fas fa-share mr-1"></i>シェア
+                        </button>
+                        <button onclick="shareToX()"
+                            class="bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg font-bold transition-colors text-sm border border-gray-600">
+                            𝕏 Xでシェア
                         </button>
                         <button onclick="playAgain()"
-                            class="bg-energy-green hover:bg-green-600 px-6 py-2 rounded-lg font-bold transition-colors">
-                            <i class="fas fa-play mr-2"></i>もう一度
+                            class="bg-energy-green hover:bg-green-600 px-4 py-2 rounded-lg font-bold transition-colors text-sm">
+                            <i class="fas fa-play mr-1"></i>もう一度
                         </button>
                         <button onclick="selectNewMission()"
-                            class="bg-planet-orange hover:bg-orange-600 px-6 py-2 rounded-lg font-bold transition-colors">
-                            <i class="fas fa-globe mr-2"></i>別の惑星
+                            class="bg-planet-orange hover:bg-orange-600 px-4 py-2 rounded-lg font-bold transition-colors text-sm">
+                            <i class="fas fa-globe mr-1"></i>別の惑星
                         </button>
                     </div>
                 </div>
@@ -971,18 +983,22 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-center space-x-4">
+                    <div class="flex flex-wrap justify-center gap-2">
                         <button onclick="shareTimeAttackResults()"
-                            class="bg-cosmic-cyan hover:bg-blue-500 px-6 py-2 rounded-lg font-bold transition-colors">
-                            <i class="fas fa-share mr-2"></i>結果をシェア
+                            class="bg-cosmic-cyan hover:bg-blue-500 px-4 py-2 rounded-lg font-bold transition-colors text-sm">
+                            <i class="fas fa-share mr-1"></i>シェア
+                        </button>
+                        <button onclick="shareTimeAttackToX()"
+                            class="bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg font-bold transition-colors text-sm border border-gray-600">
+                            𝕏 Xでシェア
                         </button>
                         <button onclick="playTimeAttackAgain()"
-                            class="bg-energy-green hover:bg-green-600 px-6 py-2 rounded-lg font-bold transition-colors">
-                            <i class="fas fa-play mr-2"></i>もう一度
+                            class="bg-energy-green hover:bg-green-600 px-4 py-2 rounded-lg font-bold transition-colors text-sm">
+                            <i class="fas fa-play mr-1"></i>もう一度
                         </button>
                         <button onclick="backToMissionSelection()"
-                            class="bg-planet-orange hover:bg-orange-600 px-6 py-2 rounded-lg font-bold transition-colors">
-                            <i class="fas fa-arrow-left mr-2"></i>戻る
+                            class="bg-planet-orange hover:bg-orange-600 px-4 py-2 rounded-lg font-bold transition-colors text-sm">
+                            <i class="fas fa-arrow-left mr-1"></i>戻る
                         </button>
                     </div>
                 </div>
@@ -1469,13 +1485,13 @@
             if (targetSection) {
                 targetSection.classList.remove('hidden');
                 
-                // Update charts when showing stats section
                 if (sectionName === 'stats' && window.app?.advancedAnalytics) {
                     setTimeout(() => {
                         window.app.advancedAnalytics.createPerformanceChart();
                         window.app.advancedAnalytics.createKeyStatsChart();
                     }, 100);
                 }
+                if (sectionName === 'fleet') { checkShipUnlock(); }
             }
         }
         
@@ -1630,6 +1646,15 @@
         // ==========================================
         // P0: ゲームコントロール グローバル関数（バグ修正）
         // ==========================================
+        // P3-2: コードモード（monospaceフォント適用）
+        function startCodeMission() {
+            startMission('code');
+            setTimeout(function() {
+                var td = document.getElementById('textDisplay');
+                if (td) { td.classList.add('code-mode-text'); }
+            }, 300);
+        }
+
         function startTyping()          { window.app?.startPractice(); }
         function pauseTyping()          { window.app?.pausePractice(); }
         function resetTyping()          { window.app?.resetPractice(); }
@@ -1640,6 +1665,54 @@
         function playTimeAttackAgain()  {
             const last = parseInt(localStorage.getItem('cosmicTyping_lastTimeAttack') || '60');
             window.app?.startTimeAttack(last);
+        }
+
+        // P2-2: Xでシェア
+        function shareToX() {
+            var panel = document.getElementById('resultsPanel');
+            var wpm = panel ? (panel.querySelector('[id="finalWPM"]') || {}).textContent || '?' : '?';
+            var acc = panel ? (panel.querySelector('[id="finalAccuracy"]') || {}).textContent || '?' : '?';
+            var text = '🚀 Cosmic Typing Adventure で WPM ' + wpm + ' / 正確率 ' + acc + '% を達成！ #タイピング #CosmicTyping\nhttps://appadaycreator.com/cosmic-typing-adventure/';
+            window.open('https://x.com/intent/tweet?text=' + encodeURIComponent(text), '_blank', 'noopener');
+        }
+        function shareTimeAttackToX() {
+            var panel = document.getElementById('timeAttackResults');
+            var wpm = panel ? (panel.querySelector('[id="ta-finalWPM"]') || {}).textContent || '?' : '?';
+            var rating = (document.getElementById('performanceRating') || {}).textContent || '?';
+            var text = '🚀 Cosmic Typing Adventure タイムアタックで WPM ' + wpm + ' / 評価 ' + rating + ' を達成！ #タイピング #CosmicTyping\nhttps://appadaycreator.com/cosmic-typing-adventure/';
+            window.open('https://x.com/intent/tweet?text=' + encodeURIComponent(text), '_blank', 'noopener');
+        }
+
+        // P3-1: 宇宙船アンロック確認
+        function checkShipUnlock() {
+            var avgWPM = parseFloat(localStorage.getItem('cosmicTyping_avgWPM') || 0);
+            var sessions = parseInt(localStorage.getItem('cosmicTyping_totalSessions') || 0);
+            var ships = document.querySelectorAll('.ship-card');
+            if (ships.length < 2) return;
+            // スピードクルーザー（2番目）: 平均WPM40以上
+            if (avgWPM >= 40) {
+                var s = ships[1];
+                var badge = s.querySelector('span');
+                if (badge && badge.textContent === 'LOCKED') {
+                    badge.textContent = 'UNLOCKED';
+                    badge.className = 'text-xs bg-energy-green text-black px-2 py-1 rounded';
+                    s.classList.remove('opacity-50');
+                    s.querySelector('h4').classList.remove('text-gray-500');
+                    s.querySelector('h4').classList.add('text-energy-green');
+                }
+            }
+            // エクスプローラー（3番目）: 5セッション以上
+            if (sessions >= 5) {
+                var s2 = ships[2];
+                var badge2 = s2 ? s2.querySelector('span') : null;
+                if (badge2 && badge2.textContent === 'LOCKED') {
+                    badge2.textContent = 'UNLOCKED';
+                    badge2.className = 'text-xs bg-energy-green text-black px-2 py-1 rounded';
+                    s2.classList.remove('opacity-50');
+                    var h4 = s2.querySelector('h4');
+                    if (h4) { h4.classList.remove('text-gray-500'); h4.classList.add('text-cosmic-cyan'); }
+                }
+            }
         }
 
         // P1-2: データインポート
@@ -1699,6 +1772,7 @@
             showToast('🔧 ' + { engine: 'エンジン', fuel: '燃料システム', shield: 'シールド' }[type] + ' Lv.' + upgrades[type] + ' に強化しました！');
         }
         function refreshShipUpgradeUI() {
+            checkShipUnlock();
             var upgrades = JSON.parse(localStorage.getItem('cosmicTyping_shipUpgrades') || '{"engine":1,"fuel":1,"shield":1}');
             var costs = { engine: 100, fuel: 150, shield: 200 };
             ['engine', 'fuel', 'shield'].forEach(function (type) {
@@ -1721,6 +1795,7 @@
         }
         document.addEventListener('DOMContentLoaded', function () {
             refreshShipUpgradeUI();
+            checkShipUnlock();
             document.querySelectorAll('[data-upgrade]').forEach(function (btn) {
                 btn.addEventListener('click', function () { upgradeShip(btn.dataset.upgrade); });
             });
