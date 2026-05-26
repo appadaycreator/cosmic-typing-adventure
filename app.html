@@ -981,6 +981,10 @@
                             <div class="text-2xl font-bold text-yellow-400" id="totalTyped">0</div>
                             <div class="text-sm text-gray-400">入力文字数</div>
                         </div>
+                        <div class="text-center col-span-2 sm:col-span-1">
+                            <div class="text-2xl font-bold text-purple-400" id="ta-earnedXP">0</div>
+                            <div class="text-sm text-gray-400">獲得XP</div>
+                        </div>
                     </div>
 
                     <div class="flex flex-wrap justify-center gap-2">
@@ -1655,12 +1659,24 @@
             }, 300);
         }
 
-        function startTyping()          { window.app?.startPractice(); }
+        function _clearCodeMode() {
+            document.getElementById('textDisplay')?.classList.remove('code-mode-text');
+        }
+        function startTyping() {
+            window.app?.startPractice();
+            // P3-2: モバイルで入力欄にフォーカス
+            if (navigator.maxTouchPoints > 0) {
+                setTimeout(function() {
+                    var inp = document.getElementById('typingInput');
+                    if (inp) inp.focus();
+                }, 300);
+            }
+        }
         function pauseTyping()          { window.app?.pausePractice(); }
-        function resetTyping()          { window.app?.resetPractice(); }
-        function playAgain()            { window.app?.retryPractice(); }
-        function selectNewMission()     { window.app?.showPlanetSelection(); }
-        function backToMissionSelection() { window.app?.showPlanetSelection(); }
+        function resetTyping()          { _clearCodeMode(); window.app?.resetPractice(); }
+        function playAgain()            { _clearCodeMode(); window.app?.retryPractice(); }
+        function selectNewMission()     { _clearCodeMode(); window.app?.showPlanetSelection(); }
+        function backToMissionSelection() { _clearCodeMode(); window.app?.showPlanetSelection(); }
         function resetTimeAttack()      { window.app?.showPlanetSelection(); }
         function playTimeAttackAgain()  {
             const last = parseInt(localStorage.getItem('cosmicTyping_lastTimeAttack') || '60');
@@ -1799,7 +1815,55 @@
             document.querySelectorAll('[data-upgrade]').forEach(function (btn) {
                 btn.addEventListener('click', function () { upgradeShip(btn.dataset.upgrade); });
             });
+
+            // P1-2: 詳細分析タブ
+            document.querySelectorAll('[data-analytics]').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.analytics-content').forEach(function(c) { c.classList.add('hidden'); c.innerHTML = ''; });
+                    var type = btn.dataset.analytics;
+                    var target = document.getElementById(type + 'Analytics') || document.getElementById(type === 'keys' ? 'keyAnalysis' : type === 'progress' ? 'progressTrends' : type + 'Analytics');
+                    if (!target) return;
+                    target.classList.remove('hidden');
+                    target.innerHTML = buildAnalyticsHTML(type);
+                });
+            });
         });
+
+        function buildAnalyticsHTML(type) {
+            var sessions = parseInt(localStorage.getItem('cosmicTyping_totalSessions') || 0);
+            var bestWPM = parseFloat(localStorage.getItem('cosmicTyping_bestWPM') || 0).toFixed(1);
+            var avgWPM = parseFloat(localStorage.getItem('cosmicTyping_avgWPM') || 0).toFixed(1);
+            var totalSec = parseInt(localStorage.getItem('cosmicTyping_totalSeconds') || 0);
+            var today = new Date().toISOString().split('T')[0];
+            var discoveries = [];
+            try { discoveries = JSON.parse(localStorage.getItem('cosmicTyping_discoveries') || '[]'); } catch(e) {}
+            var keyMisses = {};
+            try { keyMisses = JSON.parse(localStorage.getItem('cosmicTyping_keyMisses') || '{}'); } catch(e) {}
+
+            if (type === 'daily') {
+                var todaySess = discoveries.filter(function(d) { return d.time; }).length;
+                return '<div class="space-y-2 text-sm"><p>📅 今日の記録</p><p>セッション（直近）: <b>' + todaySess + '件</b></p><p>累積セッション: <b>' + sessions + '回</b></p><p>平均WPM: <b>' + avgWPM + '</b></p></div>';
+            }
+            if (type === 'weekly') {
+                return '<div class="space-y-2 text-sm"><p>📊 週間サマリー</p><p>累積セッション: <b>' + sessions + '回</b></p><p>最高WPM: <b>' + bestWPM + '</b></p><p>平均WPM: <b>' + avgWPM + '</b></p></div>';
+            }
+            if (type === 'monthly') {
+                var mins = totalSec < 60 ? totalSec + '秒' : Math.floor(totalSec / 60) + '分';
+                return '<div class="space-y-2 text-sm"><p>📆 月間サマリー</p><p>累積練習時間: <b>' + mins + '</b></p><p>累積セッション: <b>' + sessions + '回</b></p></div>';
+            }
+            if (type === 'keys') {
+                var weak = Object.entries(keyMisses).filter(function(e) { return e[1].misses > 0; }).sort(function(a,b) { return b[1].misses - a[1].misses; }).slice(0, 5);
+                if (weak.length === 0) return '<div class="text-sm text-gray-400">データ不足。もっとタイピングしよう！</div>';
+                return '<div class="space-y-1 text-sm"><p>⌨️ 苦手キートップ5</p>' + weak.map(function(e) {
+                    var pct = Math.round(e[1].misses / (e[1].hits + e[1].misses) * 100);
+                    return '<p><b class="text-red-400">' + e[0] + '</b>: ミス率 ' + pct + '%</p>';
+                }).join('') + '</div>';
+            }
+            if (type === 'progress') {
+                return '<div class="space-y-2 text-sm"><p>📈 進歩トレンド</p><p>最高WPM: <b class="text-energy-green">' + bestWPM + '</b></p><p>平均WPM: <b>' + avgWPM + '</b></p><p>総セッション: <b>' + sessions + '回</b></p><p class="text-xs text-gray-400">継続は力なり！毎日練習しよう</p></div>';
+            }
+            return '';
+        }
 
         // P3-2: キーボードショートカット（Enter=開始、Escape=一時停止）
         (function setupKeyboardShortcuts() {
@@ -1826,21 +1890,20 @@
 
         // Reset all data
         function resetAllData() {
-            if (confirm('すべてのデータを削除しますか？この操作は取り消せません。')) {
-                // Clear localStorage
-                const keysToRemove = [];
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    if (key.startsWith('cosmicTyping_')) {
-                        keysToRemove.push(key);
-                    }
-                }
-                keysToRemove.forEach(key => localStorage.removeItem(key));
-                
-                // Reload page
-                alert('すべてのデータが削除されました。ページを再読み込みします。');
-                window.location.reload();
+            if (!confirm('すべてのデータを削除しますか？この操作は取り消せません。')) return;
+            var typed = prompt('本当に削除する場合は「DELETE」と入力してください');
+            if (typed !== 'DELETE') {
+                showToast('❌ キャンセルしました');
+                return;
             }
+            var keysToRemove = [];
+            for (var i = 0; i < localStorage.length; i++) {
+                var k = localStorage.key(i);
+                if (k && k.startsWith('cosmicTyping_')) keysToRemove.push(k);
+            }
+            keysToRemove.forEach(function(k) { localStorage.removeItem(k); });
+            alert('すべてのデータが削除されました。ページを再読み込みします。');
+            window.location.reload();
         }
     </script>
     

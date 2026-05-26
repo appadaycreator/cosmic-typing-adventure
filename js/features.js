@@ -479,9 +479,11 @@ window.TutorialManager = (function () {
         if (wpm <= 0) return;
         var gain = calcXPGain(wpm, acc);
         addXP(gain);
-        // earnedXP表示更新
+        // earnedXP / ta-earnedXP 表示更新
         var earnedEl = document.getElementById('earnedXP');
         if (earnedEl) earnedEl.textContent = gain;
+        var taEarnedEl = document.getElementById('ta-earnedXP');
+        if (taEarnedEl) taEarnedEl.textContent = gain;
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -623,6 +625,15 @@ window.TutorialManager = (function () {
         if (list.length > MAX) list = list.slice(0, MAX);
         localStorage.setItem(KEY, JSON.stringify(list));
         render(list);
+        // P1-1: 発見した惑星カウント更新
+        var cnt = Math.min(12, parseInt(localStorage.getItem('cosmicTyping_planetCount') || 0) + 1);
+        localStorage.setItem('cosmicTyping_planetCount', cnt);
+        var pdEl = document.getElementById('planetsDiscovered');
+        if (pdEl) pdEl.textContent = cnt + '/12';
+        var expBar = document.getElementById('explorationBar');
+        if (expBar) expBar.style.width = Math.round(cnt / 12 * 100) + '%';
+        var tpEl = document.getElementById('totalPlanets');
+        if (tpEl) tpEl.textContent = cnt;
     }
 
     function render(list) {
@@ -662,6 +673,112 @@ window.TutorialManager = (function () {
                     }
                 });
             }).observe(el, { attributes: true, attributeFilter: ['style', 'class'] });
+        });
+    });
+})();
+
+// ==========================================
+// P0-1: 宇宙船ステータスバー リアルタイム更新
+// ==========================================
+(function SidebarUpdater() {
+    var interval = null;
+
+    function update() {
+        var wpmEl = document.getElementById('liveWPM') || document.getElementById('timeAttackWPM');
+        var accEl = document.getElementById('liveAccuracy') || document.getElementById('timeAttackAccuracy');
+        var comboEl = document.getElementById('timeAttackCombo');
+        var wpm = wpmEl ? parseFloat(wpmEl.textContent) || 0 : 0;
+        var acc = accEl ? parseFloat(accEl.textContent) || 100 : 100;
+        var combo = comboEl ? parseInt(comboEl.textContent) || 0 : 0;
+        var speedBar = document.getElementById('speedBar');
+        var fuelBar = document.getElementById('fuelBar');
+        var shieldBar = document.getElementById('shieldBar');
+        var wpmDisp = document.getElementById('currentWPM');
+        var accDisp = document.getElementById('currentAccuracy');
+        var comboDisp = document.getElementById('currentCombo');
+        if (speedBar) speedBar.style.width = Math.min(100, wpm / 1.5).toFixed(1) + '%';
+        if (fuelBar) fuelBar.style.width = Math.min(100, acc).toFixed(1) + '%';
+        if (shieldBar) shieldBar.style.width = Math.min(100, combo * 5).toFixed(1) + '%';
+        if (wpmDisp) wpmDisp.textContent = wpm.toFixed(1) + ' WPM';
+        if (accDisp) accDisp.textContent = acc.toFixed(1) + '%';
+        if (comboDisp) comboDisp.textContent = combo + 'x';
+    }
+
+    function start() { if (!interval) interval = setInterval(update, 250); }
+    function stop() {
+        if (interval) { clearInterval(interval); interval = null; }
+        var speedBar = document.getElementById('speedBar');
+        if (speedBar) speedBar.style.width = '0%';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var startBtn = document.getElementById('startBtn');
+        if (startBtn) startBtn.addEventListener('click', function() { setTimeout(start, 400); });
+        document.querySelectorAll('.time-attack-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() { setTimeout(start, 400); });
+        });
+        ['resultsPanel','timeAttackResults'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            new MutationObserver(function(muts) {
+                muts.forEach(function(m) {
+                    if (m.target.style.display !== 'none' && !m.target.classList.contains('hidden')) stop();
+                });
+            }).observe(el, { attributes: true, attributeFilter: ['style','class'] });
+        });
+    });
+})();
+
+// ==========================================
+// P3-1: カウントダウン（3・2・1・GO!）
+// ==========================================
+(function CountdownManager() {
+    var overlay = null;
+    var active = false;
+
+    function ensureOverlay() {
+        if (overlay && document.getElementById('countdownOverlay')) return;
+        overlay = document.createElement('div');
+        overlay.id = 'countdownOverlay';
+        overlay.style.cssText = 'position:absolute;inset:0;background:rgba(10,10,26,0.88);display:none;align-items:center;justify-content:center;z-index:20;border-radius:8px;font-family:Orbitron,monospace;pointer-events:none;';
+        overlay.innerHTML = '<span id="countdownNum" style="font-size:3.5rem;font-weight:900;color:#06b6d4;text-shadow:0 0 24px #06b6d4;transition:color 0.2s;"></span>';
+        var td = document.getElementById('typingInterface');
+        if (td) { td.style.position = 'relative'; td.appendChild(overlay); }
+    }
+
+    function show(onDone) {
+        ensureOverlay();
+        active = true;
+        overlay.style.display = 'flex';
+        var nums = ['3','2','1','GO!'];
+        var idx = 0;
+        (function tick() {
+            if (idx >= nums.length) { overlay.style.display = 'none'; active = false; onDone(); return; }
+            var numEl = document.getElementById('countdownNum');
+            if (numEl) {
+                numEl.textContent = nums[idx];
+                numEl.style.color = nums[idx] === 'GO!' ? '#10b981' : '#06b6d4';
+                numEl.style.textShadow = nums[idx] === 'GO!' ? '0 0 24px #10b981' : '0 0 24px #06b6d4';
+            }
+            idx++; setTimeout(tick, 700);
+        })();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var startBtn = document.getElementById('startBtn');
+        if (!startBtn) return;
+        startBtn.addEventListener('click', function() {
+            if (active) return;
+            var ti = document.getElementById('typingInterface');
+            if (!ti || ti.classList.contains('hidden')) return;
+            var inp = document.getElementById('typingInput');
+            if (inp) inp.disabled = true;
+            show(function() {
+                if (inp) {
+                    inp.disabled = false;
+                    if (navigator.maxTouchPoints > 0) inp.focus();
+                }
+            });
         });
     });
 })();
