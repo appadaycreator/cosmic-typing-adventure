@@ -16,7 +16,10 @@
         var inp = document.getElementById('typingInput');
         if (inp) {
             inp.addEventListener('input', function () {
-                var text = window.app && window.app.currentText ? window.app.currentText : '';
+                // typingEngine.currentText → textDisplay.textContent の順にフォールバック
+                var text = (window.app && window.app.typingEngine && window.app.typingEngine.currentText)
+                    ? window.app.typingEngine.currentText
+                    : (document.getElementById('textDisplay') ? document.getElementById('textDisplay').textContent.trim() : '');
                 if (!text) return;
                 var typed = inp.value.length;
                 var remaining = Math.max(0, text.length - typed);
@@ -35,7 +38,9 @@
         var taInp = document.getElementById('timeAttackInput');
         if (taInp) {
             taInp.addEventListener('input', function () {
-                var text = window.app && window.app.currentText ? window.app.currentText : '';
+                var text = (window.app && window.app.typingEngine && window.app.typingEngine.currentText)
+                    ? window.app.typingEngine.currentText
+                    : (document.getElementById('textDisplay') ? document.getElementById('textDisplay').textContent.trim() : '');
                 if (!text) return;
                 updateProgressBar(taInp.value.length, text.length);
             });
@@ -243,8 +248,8 @@ window.TutorialManager = (function () {
         if (c1) c1.classList.add('hidden');
         if (c2) c2.classList.add('hidden');
 
-        // WPM表示元素ID（通常=liveWPM, タイムアタック=timeAttackWPM）
-        var wpmDisplayId = isTimeAttackMode ? 'timeAttackWPM' : 'liveWPM';
+        // liveWPMはtypingInterface内にあり通常/TAモード両方で更新される
+        var wpmDisplayId = 'liveWPM';
 
         pollInterval = setInterval(function () {
             var wpmEl = document.getElementById(wpmDisplayId);
@@ -266,31 +271,18 @@ window.TutorialManager = (function () {
     function renderChart() {
         if (wpmHistory.length < 2) return;
         if (!window.Chart) return;
-        if (isTimeAttackMode) {
-            var canvas = document.getElementById('taLiveWPMChart');
-            var container = document.getElementById('taWpmChartContainer');
-            if (!canvas || !container) return;
-            container.classList.remove('hidden');
-            if (taChartInstance) {
-                taChartInstance.data.labels = timeLabels;
-                taChartInstance.data.datasets[0].data = wpmHistory;
-                taChartInstance.update('none');
-                return;
-            }
-            taChartInstance = makeChartConfig(canvas);
-        } else {
-            var canvas = document.getElementById('liveWPMChart');
-            var container = document.getElementById('wpmChartContainer');
-            if (!canvas || !container) return;
-            container.classList.remove('hidden');
-            if (chartInstance) {
-                chartInstance.data.labels = timeLabels;
-                chartInstance.data.datasets[0].data = wpmHistory;
-                chartInstance.update('none');
-                return;
-            }
-            chartInstance = makeChartConfig(canvas);
+        // 通常/TAモード両方でliveWPMChart（typingInterface内）を使用
+        var canvas = document.getElementById('liveWPMChart');
+        var container = document.getElementById('wpmChartContainer');
+        if (!canvas || !container) return;
+        container.classList.remove('hidden');
+        if (chartInstance) {
+            chartInstance.data.labels = timeLabels;
+            chartInstance.data.datasets[0].data = wpmHistory;
+            chartInstance.update('none');
+            return;
         }
+        chartInstance = makeChartConfig(canvas);
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -786,4 +778,50 @@ window.TutorialManager = (function () {
             });
         }, true); // capture=trueでonclick属性より先に実行
     });
+})();
+
+// ==========================================
+// P2-2: WPM目標設定マネージャー
+// ==========================================
+(function WpmTargetManager() {
+    var KEY = 'cosmicTyping_wpmTarget';
+    var notified = false;
+
+    function getTarget() { return parseInt(localStorage.getItem(KEY) || 0); }
+
+    function checkTarget(currentWPM) {
+        var target = getTarget();
+        if (!target || currentWPM <= 0) return;
+        var wpmDisp = document.getElementById('liveWPM');
+        if (!wpmDisp) return;
+        if (currentWPM >= target) {
+            wpmDisp.style.color = '#f59e0b';
+            wpmDisp.style.textShadow = '0 0 8px #f59e0b';
+            if (!notified) {
+                notified = true;
+                if (typeof showToast === 'function') showToast('🎯 目標WPM ' + target + ' 達成！');
+            }
+        } else {
+            wpmDisp.style.color = '';
+            wpmDisp.style.textShadow = '';
+        }
+    }
+
+    // SidebarUpdaterのupdateに相乗りして定期チェック
+    document.addEventListener('DOMContentLoaded', function() {
+        setInterval(function() {
+            var el = document.getElementById('liveWPM');
+            if (!el) return;
+            var wpm = parseFloat(el.textContent) || 0;
+            checkTarget(wpm);
+        }, 500);
+
+        // セッション開始時にリセット
+        var startBtn = document.getElementById('startBtn');
+        if (startBtn) {
+            startBtn.addEventListener('click', function() { notified = false; });
+        }
+    });
+
+    window.WpmTargetManager = { getTarget: getTarget, setTarget: function(v) { localStorage.setItem(KEY, String(parseInt(v)||0)); } };
 })();

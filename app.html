@@ -654,47 +654,73 @@
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                             <button onclick="startMission('basic')"
-                                class="mission-btn bg-blue-900 hover:bg-blue-800 p-4 rounded-lg transition-colors border border-blue-500">
-                                <i class="fas fa-graduation-cap text-2xl text-cosmic-cyan mb-2"></i>
-                                <div class="font-bold">基礎訓練</div>
-                                <div class="text-sm text-gray-300">基本的なタイピング練習</div>
+                                class="mission-btn bg-blue-900 hover:bg-blue-800 p-4 rounded-lg transition-colors border border-blue-500 text-left">
+                                <div class="flex items-start justify-between mb-1">
+                                    <i class="fas fa-graduation-cap text-2xl text-cosmic-cyan"></i>
+                                    <span class="text-xs bg-blue-800 text-blue-200 px-2 py-0.5 rounded-full">★☆☆ 初級</span>
+                                </div>
+                                <div class="font-bold mt-1">基礎訓練</div>
+                                <div class="text-xs text-gray-400 mt-0.5">日常会話 / 50文字前後</div>
                             </button>
 
                             <button onclick="startMission('exploration')"
-                                class="mission-btn bg-purple-900 hover:bg-purple-800 p-4 rounded-lg transition-colors border border-purple-500">
-                                <i class="fas fa-rocket text-2xl text-planet-orange mb-2"></i>
-                                <div class="font-bold">惑星探索</div>
-                                <div class="text-sm text-gray-300">新しい惑星を発見</div>
+                                class="mission-btn bg-purple-900 hover:bg-purple-800 p-4 rounded-lg transition-colors border border-purple-500 text-left">
+                                <div class="flex items-start justify-between mb-1">
+                                    <i class="fas fa-rocket text-2xl text-planet-orange"></i>
+                                    <span class="text-xs bg-purple-800 text-purple-200 px-2 py-0.5 rounded-full">★★☆ 中級</span>
+                                </div>
+                                <div class="font-bold mt-1">惑星探索</div>
+                                <div class="text-xs text-gray-400 mt-0.5">文学・ことわざ / 長文</div>
                             </button>
 
                             <button onclick="startMission('speed')"
-                                class="mission-btn bg-green-900 hover:bg-green-800 p-4 rounded-lg transition-colors border border-green-500">
-                                <i class="fas fa-bolt text-2xl text-energy-green mb-2"></i>
-                                <div class="font-bold">高速航行</div>
-                                <div class="text-sm text-gray-300">スピード重視の訓練</div>
+                                class="mission-btn bg-green-900 hover:bg-green-800 p-4 rounded-lg transition-colors border border-green-500 text-left">
+                                <div class="flex items-start justify-between mb-1">
+                                    <i class="fas fa-bolt text-2xl text-energy-green"></i>
+                                    <span class="text-xs bg-green-800 text-green-200 px-2 py-0.5 rounded-full">★★☆ 中級</span>
+                                </div>
+                                <div class="font-bold mt-1">高速航行</div>
+                                <div class="text-xs text-gray-400 mt-0.5">プログラミング用語 / 英数混在</div>
                             </button>
 
                             <button onclick="startMission('accuracy')"
-                                class="mission-btn bg-red-900 hover:bg-red-800 p-4 rounded-lg transition-colors border border-red-500">
-                                <i class="fas fa-crosshairs text-2xl text-red-400 mb-2"></i>
-                                <div class="font-bold">精密制御</div>
-                                <div class="text-sm text-gray-300">正確性を重視した訓練</div>
+                                class="mission-btn bg-red-900 hover:bg-red-800 p-4 rounded-lg transition-colors border border-red-500 text-left">
+                                <div class="flex items-start justify-between mb-1">
+                                    <i class="fas fa-crosshairs text-2xl text-red-400"></i>
+                                    <span class="text-xs bg-red-800 text-red-200 px-2 py-0.5 rounded-full">★★☆ 中級</span>
+                                </div>
+                                <div class="font-bold mt-1">精密制御</div>
+                                <div class="text-xs text-gray-400 mt-0.5">ビジネス文書 / 正確性重視</div>
                             </button>
 
-                            <!-- Survival Mode Button -->
                             <button onclick="startMission('survival')"
-                                class="mission-btn bg-red-950 hover:bg-red-900 p-4 rounded-lg transition-colors border border-red-600">
-                                <i class="fas fa-heartbeat text-2xl text-red-500 mb-2"></i>
-                                <div class="font-bold">サバイバル</div>
-                                <div class="text-sm text-gray-300">ミス３回で終了</div>
+                                class="mission-btn bg-red-950 hover:bg-red-900 p-4 rounded-lg transition-colors border border-red-600 text-left">
+                                <div class="flex items-start justify-between mb-1">
+                                    <i class="fas fa-heartbeat text-2xl text-red-500"></i>
+                                    <span class="text-xs bg-red-900 text-red-300 px-2 py-0.5 rounded-full">★★★ 上級</span>
+                                </div>
+                                <div class="font-bold mt-1">サバイバル</div>
+                                <div class="text-xs text-gray-400 mt-0.5">ミス３回で終了 / 緊張感あり</div>
                             </button>
 
-                            <!-- Code Snippets Mode Button -->
                             <button onclick="startCodeMission()"
-                                class="mission-btn bg-gray-900 hover:bg-gray-800 p-4 rounded-lg transition-colors border border-cyan-600 col-span-full sm:col-span-2">
-                                <i class="fas fa-code text-2xl text-cosmic-cyan mb-2"></i>
-                                <div class="font-bold">💻 コードモード</div>
-                                <div class="text-sm text-gray-300">実際のコードをタイピング練習</div>
+                                class="mission-btn bg-gray-900 hover:bg-gray-800 p-4 rounded-lg transition-colors border border-cyan-600 text-left">
+                                <div class="flex items-start justify-between mb-1">
+                                    <i class="fas fa-code text-2xl text-cosmic-cyan"></i>
+                                    <span class="text-xs bg-gray-800 text-cyan-300 px-2 py-0.5 rounded-full">★★★ 上級</span>
+                                </div>
+                                <div class="font-bold mt-1">💻 コードモード</div>
+                                <div class="text-xs text-gray-400 mt-0.5">実際のコードスニペット</div>
+                            </button>
+
+                            <button onclick="startCustomMission()"
+                                class="mission-btn bg-indigo-900 hover:bg-indigo-800 p-4 rounded-lg transition-colors border border-indigo-400 text-left col-span-full sm:col-span-2">
+                                <div class="flex items-start justify-between mb-1">
+                                    <i class="fas fa-pen text-2xl text-indigo-300"></i>
+                                    <span class="text-xs bg-indigo-800 text-indigo-200 px-2 py-0.5 rounded-full">自由 カスタム</span>
+                                </div>
+                                <div class="font-bold mt-1">📝 カスタムテキスト</div>
+                                <div class="text-xs text-gray-400 mt-0.5">自分で入力したテキストを練習</div>
                             </button>
                         </div>
 
@@ -748,7 +774,7 @@
                                 <div class="text-sm text-gray-300">秒</div>
                             </div>
                             <div class="text-center">
-                                <div class="text-xl font-bold text-energy-green drop-shadow-md" id="liveWPM">0</div>
+                                <div class="text-xl font-bold text-energy-green drop-shadow-md" id="liveWPM" style="transition:color 0.4s ease,text-shadow 0.4s ease,transform 0.15s ease;">0</div>
                                 <div class="text-sm text-gray-300">WPM</div>
                             </div>
                             <div class="text-xl font-bold text-cosmic-cyan drop-shadow-md" id="liveAccuracy">100%</div>
@@ -765,9 +791,26 @@
                         </div>
                     </div>
 
+                    <!-- テキスト表示オプション（フォントサイズ・WPM目標） -->
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-1 text-xs text-gray-400">
+                            <span>文字サイズ:</span>
+                            <button onclick="setTextSize('sm')" class="px-1.5 py-0.5 bg-gray-700 hover:bg-gray-600 rounded text-xs" title="小">小</button>
+                            <button onclick="setTextSize('base')" class="px-1.5 py-0.5 bg-gray-700 hover:bg-gray-600 rounded text-xs" title="中">中</button>
+                            <button onclick="setTextSize('lg')" class="px-1.5 py-0.5 bg-gray-700 hover:bg-gray-600 rounded text-xs" title="大">大</button>
+                        </div>
+                        <div class="flex items-center gap-1 text-xs text-gray-400">
+                            <span>目標WPM:</span>
+                            <input id="wpmTargetInput" type="number" min="10" max="300" placeholder="−"
+                                class="w-14 bg-gray-700 text-white text-xs rounded px-1 py-0.5 border border-gray-600 focus:border-yellow-400 focus:outline-none"
+                                onchange="saveWpmTarget(this.value)"
+                                title="目標WPMを設定すると達成時にハイライト表示">
+                        </div>
+                    </div>
+
                     <!-- Text Display -->
                     <div id="textDisplay"
-                        class="typing-display bg-gray-900 p-6 rounded-lg mb-4 border-2 border-cosmic-cyan min-h-32 text-gray-300 shadow-lg"
+                        class="typing-display bg-gray-900 p-6 rounded-lg mb-4 border-2 border-cosmic-cyan min-h-32 text-gray-300 shadow-lg text-base"
                         role="article"
                         aria-label="タイピング練習テキスト">
                         <!-- Text will be dynamically inserted here -->
@@ -1688,11 +1731,55 @@
         }
 
         // P2-2: Xでシェア
+        // P2-1: カスタムテキスト練習
+        function startCustomMission() {
+            var text = prompt('練習テキストを入力してください（5文字〜200文字）\n※日本語・英語どちらでも可');
+            if (!text || text.trim().length < 5) { showToast('テキストが短すぎます（5文字以上）'); return; }
+            var clean = text.trim().substring(0, 200);
+            localStorage.setItem('cosmicTyping_customText', clean);
+            if (!window.app) { showToast('アプリが読み込まれていません'); return; }
+            window.app.selectPlanet('earth');
+            setTimeout(function() {
+                var td = document.getElementById('textDisplay');
+                if (td) {
+                    td.textContent = clean;
+                    if (window.app.typingEngine) window.app.typingEngine.reset();
+                }
+                showToast('📝 カスタムテキストを設定しました');
+            }, 200);
+        }
+
+        // P2-3: フォントサイズ切り替え
+        function setTextSize(size) {
+            var td = document.getElementById('textDisplay');
+            if (!td) return;
+            td.classList.remove('text-sm', 'text-base', 'text-lg', 'text-xl');
+            td.classList.add('text-' + size);
+            localStorage.setItem('cosmicTyping_fontSize', size);
+        }
+        // フォントサイズ初期化
+        (function() {
+            document.addEventListener('DOMContentLoaded', function() {
+                var saved = localStorage.getItem('cosmicTyping_fontSize');
+                if (saved) setTextSize(saved);
+                var target = localStorage.getItem('cosmicTyping_wpmTarget');
+                if (target) { var el = document.getElementById('wpmTargetInput'); if (el) el.value = target; }
+            });
+        })();
+
+        // P2-2: WPM目標保存
+        function saveWpmTarget(val) {
+            var v = parseInt(val) || 0;
+            if (window.WpmTargetManager) window.WpmTargetManager.setTarget(v);
+            showToast(v > 0 ? '🎯 目標WPM: ' + v + ' に設定しました' : '目標WPMをクリアしました');
+        }
+
         function shareToX() {
             var panel = document.getElementById('resultsPanel');
             var wpm = panel ? (panel.querySelector('[id="finalWPM"]') || {}).textContent || '?' : '?';
             var acc = panel ? (panel.querySelector('[id="finalAccuracy"]') || {}).textContent || '?' : '?';
-            var text = '🚀 Cosmic Typing Adventure で WPM ' + wpm + ' / 正確率 ' + acc + '% を達成！ #タイピング #CosmicTyping\nhttps://appadaycreator.com/cosmic-typing-adventure/';
+            var streak = (window.StreakManager ? window.StreakManager.getStreak() : 0);
+            var text = '⌨️ WPM ' + wpm + ' / 正確率 ' + acc + '% を達成！' + (streak > 1 ? ' 🔥' + streak + '日連続！' : '') + '\n#CosmicTyping #タイピング練習\nhttps://appadaycreator.com/cosmic-typing-adventure/';
             window.open('https://x.com/intent/tweet?text=' + encodeURIComponent(text), '_blank', 'noopener');
         }
         function shareTimeAttackToX() {
@@ -1846,7 +1933,35 @@
 
             if (type === 'daily') {
                 var todaySess = discoveries.filter(function(d) { return d.time; }).length;
-                return '<div class="space-y-2 text-sm"><p>📅 今日の記録</p><p>セッション（直近）: <b>' + todaySess + '件</b></p><p>累積セッション: <b>' + sessions + '回</b></p><p>平均WPM: <b>' + avgWPM + '</b></p></div>';
+                // 直近最大7件のWPM履歴をグラフで表示
+                var recentWPMs = discoveries.slice(0, 7).reverse().map(function(d) { return parseFloat(d.wpm) || 0; });
+                var recentLabels = discoveries.slice(0, 7).reverse().map(function(d, i) { return (i + 1) + '回目'; });
+                var chartHtml = '';
+                if (recentWPMs.length > 0) {
+                    var chartId = 'dailyAnalyticsChart_' + Date.now();
+                    chartHtml = '<canvas id="' + chartId + '" height="120" class="mt-2"></canvas>';
+                    setTimeout(function() {
+                        var ctx = document.getElementById(chartId);
+                        if (!ctx || !window.Chart) return;
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: recentLabels,
+                                datasets: [{ label: 'WPM', data: recentWPMs, backgroundColor: 'rgba(6,182,212,0.6)', borderColor: '#06b6d4', borderWidth: 1 }]
+                            },
+                            options: {
+                                responsive: true,
+                                animation: false,
+                                plugins: { legend: { display: false } },
+                                scales: {
+                                    x: { ticks: { color: '#9ca3af', font: { size: 9 } }, grid: { display: false } },
+                                    y: { ticks: { color: '#9ca3af', font: { size: 9 } }, beginAtZero: true, suggestedMax: Math.max(80, Math.max.apply(null, recentWPMs) + 10) }
+                                }
+                            }
+                        });
+                    }, 50);
+                }
+                return '<div class="space-y-2 text-sm"><p>📅 今日の記録</p><p>セッション（直近）: <b>' + todaySess + '件</b></p><p>累積セッション: <b>' + sessions + '回</b></p><p>平均WPM: <b>' + avgWPM + '</b></p>' + chartHtml + '</div>';
             }
             if (type === 'weekly') {
                 return '<div class="space-y-2 text-sm"><p>📊 週間サマリー</p><p>累積セッション: <b>' + sessions + '回</b></p><p>最高WPM: <b>' + bestWPM + '</b></p><p>平均WPM: <b>' + avgWPM + '</b></p></div>';

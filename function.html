@@ -964,8 +964,35 @@ class MobileOptimizer {
             <p>コミット: 未確定 | 変更ファイル: <code>js/features.js</code>, <code>app.html</code></p>
         </div>
 
+        <div class="feature-card">
+            <h2>Round 8 機能追加・バグ修正（2026-05-27）</h2>
+            <ul>
+                <li><strong>P0-1: WPMチャートTAモード修正</strong><br>
+                    <em>問題</em>: <code>initWPMChart</code>がTAモード時に<code>taLiveWPMChart</code>（非表示のtimeAttackInterface内）を参照していたためグラフが表示されなかった。<br>
+                    <em>修正</em>: <code>renderChart()</code>のTA分岐を削除し、常に<code>liveWPMChart</code>/<code>wpmChartContainer</code>を使用。wpmDisplayIdも<code>liveWPM</code>に統一。</li>
+                <li><strong>P1-1: 残り文字数カウンター修正</strong><br>
+                    <em>問題</em>: <code>window.app.currentText</code>が未定義のため残り文字数が常に0だった。<br>
+                    <em>修正</em>: <code>window.app.typingEngine.currentText → textDisplay.textContent</code>の順にフォールバック取得。</li>
+                <li><strong>P1-2: ミッション選択カードに難易度バッジ追加</strong><br>
+                    各ミッションカードに難易度（★☆☆初級 / ★★☆中級 / ★★★上級）とカテゴリ例（日常会話/文学/プログラミング等）を表示。</li>
+                <li><strong>P1-3: WPM数値にアニメーション追加</strong><br>
+                    <code>liveWPM</code>要素に<code>transition: color 0.4s ease</code>を付与。目標WPM達成時のゴールドカラー変化が滑らかに。</li>
+                <li><strong>P2-1: カスタムテキスト練習モード</strong><br>
+                    ミッション選択にカスタムテキストボタン追加。<code>startCustomMission()</code>: prompt()でテキスト入力→<code>selectPlanet('earth')</code>→200ms後に<code>textDisplay.textContent</code>差し替え→<code>typingEngine.reset()</code>でカスタムテキストを反映。localStorage(<code>cosmicTyping_customText</code>)に保存。</li>
+                <li><strong>P2-2: WPM目標設定</strong><br>
+                    textDisplay上部に目標WPM入力欄追加。<code>WpmTargetManager</code> IIFE（features.js）: 500ms間隔でliveWPMを監視し目標超過時にゴールド色＋一度だけトースト表示。<code>saveWpmTarget()</code>でlocalStorage(<code>cosmicTyping_wpmTarget</code>)保存。</li>
+                <li><strong>P2-3: フォントサイズ調整</strong><br>
+                    textDisplay上部に小/中/大ボタン追加。<code>setTextSize(size)</code>: textDisplayにtext-sm/base/lgクラス切り替え。localStorageに保存しページロード時復元。</li>
+                <li><strong>P3-1: Xシェア文にストリーク情報追加</strong><br>
+                    <code>shareToX()</code>にストリーク日数を追加（例: 🔥3日連続！）。</li>
+                <li><strong>P3-2: 統計タブ「日別」にChart.jsグラフ追加</strong><br>
+                    <code>buildAnalyticsHTML('daily')</code>内で直近7セッションのWPM棒グラフ（Chart.js）を動的生成。canvas要素を返しsetTimeout(50ms)後に描画。</li>
+            </ul>
+            <p>コミット: 未確定 | localStorage追加キー: <code>cosmicTyping_customText</code>, <code>cosmicTyping_wpmTarget</code>, <code>cosmicTyping_fontSize</code></p>
+        </div>
+
         <p style="text-align: center; margin-top: 40px; color: #9ca3af;">
-            最終更新: 2026年5月27日 Round7 | Cosmic Typing Adventure Development Team
+            最終更新: 2026年5月27日 Round8 | Cosmic Typing Adventure Development Team
         </p>
     </div>
 </body>
