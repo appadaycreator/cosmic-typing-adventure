@@ -52,15 +52,25 @@
 // P2: デイリーチャレンジ
 // ==========================================
 window.DailyChallengeManager = (function () {
-    function getToday() {
-        return new Date().toISOString().split('T')[0];
+    // P2-1: 日ごとに変わる具体的ゴール定義
+    var GOALS = [
+        { key: 'wpm60',     label: '60 WPM 達成',              check: function(w,a,c){ return w >= 60; } },
+        { key: 'acc95',     label: '正確率 95% 以上',           check: function(w,a,c){ return a >= 95; } },
+        { key: 'wpm50acc90',label: 'WPM 50 かつ 正確率 90%',   check: function(w,a,c){ return w >= 50 && a >= 90; } },
+        { key: 'combo30',   label: '最大コンボ 30x 以上',       check: function(w,a,c){ return c >= 30; } },
+        { key: 'wpm40',     label: '40 WPM 達成',               check: function(w,a,c){ return w >= 40; } }
+    ];
+
+    function getToday() { return new Date().toISOString().split('T')[0]; }
+    function getDoneKey() { return 'cosmicTyping_daily_' + getToday(); }
+    function isDone() { return !!localStorage.getItem(getDoneKey()); }
+
+    function getDailyGoal() {
+        var d = new Date();
+        var seed = d.getDate() + d.getMonth() * 31;
+        return GOALS[seed % GOALS.length];
     }
-    function getDoneKey() {
-        return 'cosmicTyping_daily_' + getToday();
-    }
-    function isDone() {
-        return !!localStorage.getItem(getDoneKey());
-    }
+
     function markDone() {
         localStorage.setItem(getDoneKey(), '1');
         updateBadge();
@@ -78,15 +88,18 @@ window.DailyChallengeManager = (function () {
             return;
         }
         var planet = getDailyPlanet();
+        var goal = getDailyGoal();
         localStorage.setItem('cosmicTyping_dailyActive', '1');
-        localStorage.setItem('cosmicTyping_lastTimeAttack', '60');
         if (window.app) window.app.selectPlanet(planet);
-        showToast('🌟 デイリーチャレンジ開始！今日の惑星: ' + planet);
+        showToast('🌟 デイリーチャレンジ開始！目標: ' + goal.label);
         updateBadge();
     }
     function updateBadge() {
         var badge = document.getElementById('dailyChallengeBadge');
         var btn = document.getElementById('dailyChallengeBtn');
+        var goalEl = document.getElementById('dailyChallengeGoal');
+        var goal = getDailyGoal();
+        if (goalEl) goalEl.textContent = '🎯 今日の目標: ' + goal.label;
         if (!badge) return;
         if (isDone()) {
             badge.textContent = '✅ クリア済み';
@@ -99,10 +112,25 @@ window.DailyChallengeManager = (function () {
         }
     }
     function onSessionComplete() {
-        if (localStorage.getItem('cosmicTyping_dailyActive')) {
-            localStorage.removeItem('cosmicTyping_dailyActive');
+        if (!localStorage.getItem('cosmicTyping_dailyActive')) return;
+        localStorage.removeItem('cosmicTyping_dailyActive');
+        // 結果パネルからWPM/精度/コンボを取得してゴール判定
+        var wpmEl = document.getElementById('finalWPM') || document.getElementById('ta-finalWPM');
+        var accEl = document.getElementById('finalAccuracy') || document.getElementById('ta-finalAccuracy');
+        var comboEl = document.getElementById('finalCombo');
+        var wpm = wpmEl ? parseFloat(wpmEl.textContent || 0) : 0;
+        var acc = accEl ? parseFloat(accEl.textContent || 0) : 0;
+        var combo = comboEl ? parseInt(comboEl.textContent || 0) : 0;
+        var goal = getDailyGoal();
+        if (goal.check(wpm, acc, combo)) {
             markDone();
-            showToast('🎉 デイリーチャレンジ完了！連続記録を更新しました');
+            showToast('🎉 デイリーチャレンジ完了！ +200 XP ボーナス！');
+            var xp = parseInt(localStorage.getItem('cosmicTyping_xp') || 0);
+            localStorage.setItem('cosmicTyping_xp', xp + 200);
+            var xpEl = document.getElementById('userXP');
+            if (xpEl) xpEl.textContent = (xp + 200) + ' XP';
+        } else {
+            showToast('📋 目標未達成…もう一度挑戦しよう！（目標: ' + goal.label + '）');
         }
     }
     document.addEventListener('DOMContentLoaded', function () {
@@ -426,7 +454,12 @@ window.TutorialManager = (function () {
     function calcXPGain(wpm, accuracy) {
         var base = Math.round(wpm * 2);
         var accBonus = accuracy >= 95 ? 1.5 : accuracy >= 85 ? 1.2 : 1.0;
-        return Math.round(base * accBonus);
+        // P0-1: 宇宙船エンジンLvによるXP倍率（Lv1=x1.0〜Lv5=x2.0）
+        var upgrades = {}; try { upgrades = JSON.parse(localStorage.getItem('cosmicTyping_shipUpgrades') || '{}'); } catch(e) {}
+        var engLv = Math.min(5, parseInt(upgrades.engine || 1));
+        var engMult = [1.0, 1.0, 1.2, 1.5, 1.8, 2.0][engLv];
+        window._lastXPMultiplier = engMult;
+        return Math.round(base * accBonus * engMult);
     }
 
     function addXP(gain) {
@@ -471,11 +504,17 @@ window.TutorialManager = (function () {
         if (wpm <= 0) return;
         var gain = calcXPGain(wpm, acc);
         addXP(gain);
-        // earnedXP / ta-earnedXP 表示更新
         var earnedEl = document.getElementById('earnedXP');
         if (earnedEl) earnedEl.textContent = gain;
         var taEarnedEl = document.getElementById('ta-earnedXP');
         if (taEarnedEl) taEarnedEl.textContent = gain;
+        // P0-1: エンジン倍率バッジ表示
+        var mult = window._lastXPMultiplier || 1.0;
+        var multEl = document.getElementById('xpMultiplierBadge');
+        if (multEl) {
+            if (mult > 1.0) { multEl.textContent = '⚡ エンジンLv' + Math.min(5, parseInt((JSON.parse(localStorage.getItem('cosmicTyping_shipUpgrades') || '{}')).engine || 1)) + ' × ' + mult.toFixed(1); multEl.classList.remove('hidden'); }
+            else { multEl.classList.add('hidden'); }
+        }
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -555,20 +594,36 @@ window.TutorialManager = (function () {
         }
     }
 
+    // P2-2: 実績解放モーダル演出
+    function showAchievementModal(def) {
+        var modal = document.getElementById('achievementModal');
+        if (!modal) { showToast('🏅 実績解放: ' + def.title); return; }
+        var iconEl = document.getElementById('achievementModalIcon');
+        var titleEl = document.getElementById('achievementModalTitle');
+        var descEl = document.getElementById('achievementModalDesc');
+        if (iconEl) iconEl.className = def.icon + ' text-5xl ' + def.iconColor;
+        if (titleEl) titleEl.textContent = def.title;
+        if (descEl) descEl.textContent = def.desc;
+        modal.classList.remove('hidden');
+        modal.style.animation = 'none';
+        setTimeout(function() { modal.style.animation = ''; }, 10);
+        setTimeout(function() { modal.classList.add('hidden'); }, 2800);
+    }
+
     function checkAndUnlock() {
         var stats = getCurrentStats();
         var unlocked = getUnlocked();
-        var newUnlocks = [];
+        var newDefs = [];
         DEFS.forEach(function (def) {
             if (unlocked.indexOf(def.id) === -1 && def.check(stats)) {
                 unlocked.push(def.id);
-                newUnlocks.push(def.title);
+                newDefs.push(def);
             }
         });
-        if (newUnlocks.length > 0) {
+        if (newDefs.length > 0) {
             localStorage.setItem(KEY, JSON.stringify(unlocked));
-            newUnlocks.forEach(function (title) {
-                setTimeout(function () { showToast('🏅 実績解放: ' + title); }, 300);
+            newDefs.forEach(function (def, i) {
+                setTimeout(function () { showAchievementModal(def); }, 300 + i * 3200);
             });
         }
         renderAchievements(unlocked);
@@ -718,6 +773,100 @@ window.TutorialManager = (function () {
                 });
             }).observe(el, { attributes: true, attributeFilter: ['style','class'] });
         });
+    });
+})();
+
+// ==========================================
+// P0-2: コンボトラッカー（通常モード対応）
+// ==========================================
+(function ComboTracker() {
+    var combo = 0;
+    var maxCombo = 0;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var inp = document.getElementById('typingInput');
+        if (!inp) return;
+
+        inp.addEventListener('input', function() {
+            var text = (window.app && window.app.typingEngine && window.app.typingEngine.currentText)
+                ? window.app.typingEngine.currentText
+                : (document.getElementById('textDisplay') ? document.getElementById('textDisplay').textContent.trim() : '');
+            if (!text) return;
+            var typed = inp.value;
+            var expected = text.substring(0, typed.length);
+            if (typed === expected && typed.length > 0) {
+                combo++;
+                if (combo > maxCombo) maxCombo = combo;
+            } else if (typed !== expected) {
+                combo = 0;
+            }
+            var comboDisp = document.getElementById('currentCombo');
+            if (comboDisp) comboDisp.textContent = combo > 0 ? combo + 'x' : '−';
+        });
+
+        // スタートボタンでリセット
+        var startBtn = document.getElementById('startBtn');
+        if (startBtn) {
+            startBtn.addEventListener('click', function() {
+                combo = 0; maxCombo = 0;
+                var comboDisp = document.getElementById('currentCombo');
+                if (comboDisp) comboDisp.textContent = '−';
+            });
+        }
+
+        // 結果表示時に最大コンボをfinalComboに反映
+        var panel = document.getElementById('resultsPanel');
+        if (panel) {
+            new MutationObserver(function(muts) {
+                muts.forEach(function(m) {
+                    if (m.target.style.display !== 'none' && !m.target.classList.contains('hidden')) {
+                        var finalComboEl = document.getElementById('finalCombo');
+                        if (finalComboEl) finalComboEl.textContent = maxCombo + 'x';
+                        // 次セッション用にリセット（表示後）
+                        setTimeout(function() { combo = 0; maxCombo = 0; }, 500);
+                    }
+                });
+            }).observe(panel, { attributes: true, attributeFilter: ['style', 'class'] });
+        }
+    });
+})();
+
+// ==========================================
+// P1-3: 前回セッション比較（WPM差分表示）
+// ==========================================
+(function LastSessionCompare() {
+    var KEY_LAST = 'cosmicTyping_lastSessionWPM';
+
+    function showDiff(currentWPM) {
+        var last = parseFloat(localStorage.getItem(KEY_LAST) || 0);
+        var diffEl = document.getElementById('wpmDiff');
+        if (diffEl) {
+            if (last > 0) {
+                var diff = (currentWPM - last).toFixed(1);
+                diffEl.textContent = (diff >= 0 ? '▲+' : '▼') + Math.abs(diff) + ' WPM（前回比）';
+                diffEl.style.color = diff >= 0 ? '#10b981' : '#ef4444';
+                diffEl.classList.remove('hidden');
+            } else {
+                diffEl.classList.add('hidden');
+            }
+        }
+        if (currentWPM > 0) localStorage.setItem(KEY_LAST, currentWPM.toFixed(1));
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var panel = document.getElementById('resultsPanel');
+        if (!panel) return;
+        new MutationObserver(function(muts) {
+            muts.forEach(function(m) {
+                if (m.target.style.display !== 'none' && !m.target.classList.contains('hidden')) {
+                    setTimeout(function() {
+                        var wpmEl = document.getElementById('finalWPM');
+                        var wpm = wpmEl ? parseFloat(wpmEl.textContent || 0) : 0;
+                        if (wpm > 0) showDiff(wpm);
+                    }, 250);
+                }
+            });
+        }).observe(panel, { attributes: true, attributeFilter: ['style', 'class'] });
     });
 })();
 

@@ -645,7 +645,7 @@
                                     <span class="text-xl">⭐</span>
                                     <div class="text-left">
                                         <div class="font-bold text-sm">デイリーチャレンジ</div>
-                                        <div class="text-xs text-gray-300">毎日変わるお題に挑戦</div>
+                                        <div id="dailyChallengeGoal" class="text-xs text-yellow-300">🎯 今日の目標を読み込み中…</div>
                                     </div>
                                 </div>
                                 <span id="dailyChallengeBadge" class="text-xs px-2 py-1 rounded font-bold" style="background:#92400e;">🌟 未挑戦</span>
@@ -890,9 +890,11 @@
                     </div>
                     <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-4 text-center">ミッション完了!</h3>
 
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
                         <div class="text-center">
                             <div class="text-2xl font-bold text-energy-green" id="finalWPM">0</div>
+                            <!-- P1-3: 前回比較 -->
+                            <div id="wpmDiff" class="hidden text-xs font-bold mt-0.5"></div>
                             <div class="text-sm text-gray-400">WPM</div>
                         </div>
                         <div class="text-center">
@@ -905,26 +907,29 @@
                         </div>
                         <div class="text-center">
                             <div class="text-2xl font-bold text-purple-400" id="earnedXP">0</div>
+                            <!-- P0-1: エンジンXP倍率バッジ -->
+                            <div id="xpMultiplierBadge" class="hidden text-xs text-yellow-400 mt-0.5 font-bold"></div>
                             <div class="text-sm text-gray-400">獲得XP</div>
                         </div>
                     </div>
 
                     <div class="flex flex-wrap justify-center gap-2">
-                        <button onclick="shareResults()"
-                            class="bg-cosmic-cyan hover:bg-blue-500 px-4 py-2 rounded-lg font-bold transition-colors text-sm">
-                            <i class="fas fa-share mr-1"></i>シェア
-                        </button>
-                        <button onclick="shareToX()"
-                            class="bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg font-bold transition-colors text-sm border border-gray-600">
-                            𝕏 Xでシェア
+                        <!-- P1-1: 次の文章へボタン -->
+                        <button onclick="nextText()"
+                            class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg font-bold transition-colors text-sm">
+                            <i class="fas fa-forward mr-1"></i>次の文章へ
                         </button>
                         <button onclick="playAgain()"
                             class="bg-energy-green hover:bg-green-600 px-4 py-2 rounded-lg font-bold transition-colors text-sm">
-                            <i class="fas fa-play mr-1"></i>もう一度
+                            <i class="fas fa-redo mr-1"></i>もう一度
                         </button>
                         <button onclick="selectNewMission()"
                             class="bg-planet-orange hover:bg-orange-600 px-4 py-2 rounded-lg font-bold transition-colors text-sm">
                             <i class="fas fa-globe mr-1"></i>別の惑星
+                        </button>
+                        <button onclick="shareToX()"
+                            class="bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg font-bold transition-colors text-sm border border-gray-600">
+                            𝕏 Xでシェア
                         </button>
                     </div>
                 </div>
@@ -1722,6 +1727,7 @@
         function pauseTyping()          { window.app?.pausePractice(); }
         function resetTyping()          { _clearCodeMode(); window.app?.resetPractice(); }
         function playAgain()            { _clearCodeMode(); window.app?.retryPractice(); }
+        function nextText()             { var p = (window.app && window.app.currentPlanet) || 'earth'; _clearCodeMode(); if (window.app) window.app.selectPlanet(p); }
         function selectNewMission()     { _clearCodeMode(); window.app?.showPlanetSelection(); }
         function backToMissionSelection() { _clearCodeMode(); window.app?.showPlanetSelection(); }
         function resetTimeAttack()      { window.app?.showPlanetSelection(); }
@@ -1964,19 +1970,63 @@
                 return '<div class="space-y-2 text-sm"><p>📅 今日の記録</p><p>セッション（直近）: <b>' + todaySess + '件</b></p><p>累積セッション: <b>' + sessions + '回</b></p><p>平均WPM: <b>' + avgWPM + '</b></p>' + chartHtml + '</div>';
             }
             if (type === 'weekly') {
-                return '<div class="space-y-2 text-sm"><p>📊 週間サマリー</p><p>累積セッション: <b>' + sessions + '回</b></p><p>最高WPM: <b>' + bestWPM + '</b></p><p>平均WPM: <b>' + avgWPM + '</b></p></div>';
+                // P3-1: 直近14セッションのWPM推移グラフ（週間ビュー）
+                var allSessions = discoveries.slice(0, 14).reverse();
+                var wkWPMs = allSessions.map(function(d) { return parseFloat(d.wpm) || 0; });
+                var wkLabels = allSessions.map(function(d, i) { return (i + 1) + ''; });
+                var wkChartHtml = '';
+                if (wkWPMs.length > 1) {
+                    var wkId = 'weeklyChart_' + Date.now();
+                    wkChartHtml = '<canvas id="' + wkId + '" height="110" class="mt-2"></canvas>';
+                    setTimeout(function() {
+                        var ctx = document.getElementById(wkId);
+                        if (!ctx || !window.Chart) return;
+                        new Chart(ctx, {
+                            type: 'line',
+                            data: { labels: wkLabels, datasets: [{ label: 'WPM', data: wkWPMs, borderColor:'#a78bfa', backgroundColor:'rgba(167,139,250,0.15)', tension:0.4, pointRadius:3, fill:true, borderWidth:2 }] },
+                            options: { responsive:true, animation:false, plugins:{legend:{display:false}}, scales: { x:{ticks:{color:'#9ca3af',font:{size:9}},grid:{display:false}}, y:{ticks:{color:'#9ca3af',font:{size:9}},beginAtZero:true} } }
+                        });
+                    }, 50);
+                }
+                return '<div class="space-y-2 text-sm"><p>📊 直近' + wkWPMs.length + 'セッションの推移</p><p>最高WPM: <b class="text-purple-400">' + bestWPM + '</b>　平均: <b>' + avgWPM + '</b></p>' + wkChartHtml + '</div>';
             }
             if (type === 'monthly') {
                 var mins = totalSec < 60 ? totalSec + '秒' : Math.floor(totalSec / 60) + '分';
                 return '<div class="space-y-2 text-sm"><p>📆 月間サマリー</p><p>累積練習時間: <b>' + mins + '</b></p><p>累積セッション: <b>' + sessions + '回</b></p></div>';
             }
             if (type === 'keys') {
-                var weak = Object.entries(keyMisses).filter(function(e) { return e[1].misses > 0; }).sort(function(a,b) { return b[1].misses - a[1].misses; }).slice(0, 5);
-                if (weak.length === 0) return '<div class="text-sm text-gray-400">データ不足。もっとタイピングしよう！</div>';
-                return '<div class="space-y-1 text-sm"><p>⌨️ 苦手キートップ5</p>' + weak.map(function(e) {
-                    var pct = Math.round(e[1].misses / (e[1].hits + e[1].misses) * 100);
-                    return '<p><b class="text-red-400">' + e[0] + '</b>: ミス率 ' + pct + '%</p>';
-                }).join('') + '</div>';
+                // P3-2: QWERTYキーボード形状ヒートマップ
+                var rows = [
+                    ['q','w','e','r','t','y','u','i','o','p'],
+                    ['a','s','d','f','g','h','j','k','l'],
+                    ['z','x','c','v','b','n','m']
+                ];
+                var hasData = Object.keys(keyMisses).some(function(k) { return keyMisses[k] && keyMisses[k].misses > 0; });
+                if (!hasData) return '<div class="text-sm text-gray-400 text-center py-4">⌨️ データ不足<br>タイピングを続けると苦手キーが表示されます</div>';
+                function keyColor(k) {
+                    var d = keyMisses[k]; if (!d || d.misses === 0) return '#1e293b';
+                    var pct = d.misses / (d.hits + d.misses);
+                    var g = Math.round(255 * (1 - pct * 1.5));
+                    return 'rgb(180,' + Math.max(0, g) + ',' + Math.max(0, g) + ')';
+                }
+                function keyTitle(k) {
+                    var d = keyMisses[k]; if (!d) return k;
+                    var pct = Math.round(d.misses / (d.hits + d.misses) * 100);
+                    return k + ': ミス' + pct + '%';
+                }
+                var html = '<div class="text-xs text-gray-400 mb-2">⌨️ キーヒートマップ（赤=苦手）</div>';
+                rows.forEach(function(row, ri) {
+                    var indent = ri === 1 ? '8px' : ri === 2 ? '16px' : '0px';
+                    html += '<div style="display:flex;gap:3px;margin-bottom:3px;padding-left:' + indent + '">';
+                    row.forEach(function(k) {
+                        html += '<div title="' + keyTitle(k) + '" style="width:24px;height:24px;line-height:24px;text-align:center;border-radius:4px;font-size:11px;font-weight:bold;cursor:default;background:' + keyColor(k) + ';color:#fff;">' + k.toUpperCase() + '</div>';
+                    });
+                    html += '</div>';
+                });
+                // 上位5件の苦手キー補足
+                var top5 = Object.entries(keyMisses).filter(function(e){return e[1].misses>0;}).sort(function(a,b){return b[1].misses-a[1].misses;}).slice(0,5);
+                html += '<div class="mt-2 text-xs text-gray-400">苦手キーTop5: ' + top5.map(function(e){return '<b class="text-red-400">' + e[0].toUpperCase() + '</b>';}).join(' > ') + '</div>';
+                return html;
             }
             if (type === 'progress') {
                 return '<div class="space-y-2 text-sm"><p>📈 進歩トレンド</p><p>最高WPM: <b class="text-energy-green">' + bestWPM + '</b></p><p>平均WPM: <b>' + avgWPM + '</b></p><p>総セッション: <b>' + sessions + '回</b></p><p class="text-xs text-gray-400">継続は力なり！毎日練習しよう</p></div>';
@@ -2073,6 +2123,24 @@
             </a>
         </div>
     </div>
+
+    <!-- P2-2: 実績解放モーダル -->
+    <div id="achievementModal" class="hidden fixed inset-0 z-[500] flex items-center justify-center pointer-events-none">
+        <div class="bg-cosmic-card border-2 border-yellow-400 rounded-2xl p-8 text-center shadow-2xl max-w-xs mx-4"
+             style="animation:achievePopIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;box-shadow:0 0 40px rgba(250,204,21,0.4);">
+            <div class="text-yellow-300 text-xs font-bold tracking-widest mb-2">🏅 ACHIEVEMENT UNLOCKED</div>
+            <i id="achievementModalIcon" class="fas fa-medal text-5xl text-yellow-400 mb-3 block"></i>
+            <div id="achievementModalTitle" class="font-orbitron font-bold text-xl text-white mb-2"></div>
+            <div id="achievementModalDesc" class="text-sm text-gray-300"></div>
+        </div>
+    </div>
+    <style>
+        @keyframes achievePopIn {
+            0%   { opacity:0; transform:scale(0.5) translateY(20px); }
+            70%  { opacity:1; transform:scale(1.08) translateY(-4px); }
+            100% { opacity:1; transform:scale(1) translateY(0); }
+        }
+    </style>
 </body>
 
 </html>

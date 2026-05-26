@@ -991,8 +991,31 @@ class MobileOptimizer {
             <p>コミット: 未確定 | localStorage追加キー: <code>cosmicTyping_customText</code>, <code>cosmicTyping_wpmTarget</code>, <code>cosmicTyping_fontSize</code></p>
         </div>
 
+        <div class="feature-card">
+            <h2>Round 9 機能追加（2026-05-27）</h2>
+            <ul>
+                <li><strong>P0-1: 宇宙船エンジン強化のXP倍率を実際に適用</strong><br>
+                    <code>XPManager.calcXPGain()</code>に<code>cosmicTyping_shipUpgrades.engine</code>レベルに応じたXP倍率を追加（Lv1=×1.0, Lv2=×1.2, Lv3=×1.5, Lv4=×1.8, Lv5=×2.0）。結果画面の獲得XP下に倍率バッジ（<code>id="xpMultiplierBadge"</code>）を表示。</li>
+                <li><strong>P0-2: コンボシステム修正（通常モード対応）</strong><br>
+                    新IIFE <code>ComboTracker</code>（features.js）: <code>typingInput</code>のinputイベントで入力文字列がprefixとして一致している限りコンボカウントアップ、不一致でリセット。サイドバー<code>currentCombo</code>をリアルタイム更新し、セッション終了時に<code>finalCombo</code>に最大コンボを反映。</li>
+                <li><strong>P1-1: 結果画面に「次の文章へ」ボタン追加</strong><br>
+                    <code>nextText()</code>関数: <code>window.app.currentPlanet</code>で同惑星を再選択し次テキストをロード。結果ボタン列の先頭に配置（青色ボタン）。</li>
+                <li><strong>P1-3: 結果画面に前回セッション比較（WPM差分）表示</strong><br>
+                    新IIFE <code>LastSessionCompare</code>（features.js）: セッション終了時にWPMを<code>cosmicTyping_lastSessionWPM</code>に保存し、次回結果表示時に<code>▲+5.2 WPM（前回比）</code>形式で差分表示（<code>id="wpmDiff"</code>）。上昇=緑、下降=赤。</li>
+                <li><strong>P2-1: デイリーチャレンジに具体的ゴール追加</strong><br>
+                    <code>DailyChallengeManager</code>に<code>GOALS</code>配列（5種: 60WPM達成/正確率95%以上/WPM50かつ正確率90%/コンボ30x以上/40WPM達成）を追加。日付ベースseedで毎日変わる目標を選択し<code>dailyChallengeGoal</code>要素に表示。ゴール達成時に+200XP、未達成時は「もう一度挑戦！」トースト。</li>
+                <li><strong>P2-2: 実績解放の演出強化（全画面モーダル）</strong><br>
+                    <code>AchievementUnlocker</code>に<code>showAchievementModal(def)</code>追加。実績解放時に<code>#achievementModal</code>（固定位置、z-[500]）でアイコン・タイトル・説明を大きく表示。CSSアニメーション<code>achievePopIn</code>（弾むスケール演出）付き。2.8秒後自動クローズ。</li>
+                <li><strong>P3-1: 週次タブにWPM推移グラフ追加</strong><br>
+                    <code>buildAnalyticsHTML('weekly')</code>改修: 直近14セッションのWPM推移をChart.js折れ線グラフ（紫系）で表示。daily同様の動的canvas生成パターン。</li>
+                <li><strong>P3-2: キーヒートマップをQWERTYキーボード形状で表示</strong><br>
+                    <code>buildAnalyticsHTML('keys')</code>改修: 3段のQWERTYキーボードをHTML divで描画。ミス率に応じて各キーを赤〜ダーク系グラデーションで着色（<code>rgb(180, g, g)</code>形式）。苦手キーTop5も補足表示。</li>
+            </ul>
+            <p>localStorage追加キー: <code>cosmicTyping_lastSessionWPM</code> | 変更ファイル: js/features.js, app.html</p>
+        </div>
+
         <p style="text-align: center; margin-top: 40px; color: #9ca3af;">
-            最終更新: 2026年5月27日 Round8 | Cosmic Typing Adventure Development Team
+            最終更新: 2026年5月27日 Round9 | Cosmic Typing Adventure Development Team
         </p>
     </div>
 </body>
