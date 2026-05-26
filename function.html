@@ -927,8 +927,23 @@ class MobileOptimizer {
             <p>コミット: 11265b8</p>
         </div>
 
+        <div class="feature-card">
+            <h2>Round 6 追加機能（2026-05-27）</h2>
+            <ul>
+                <li><strong>P0-1</strong>: 宇宙船ステータスバーをリアルタイム更新 — SidebarUpdater（250ms間隔でliveWPM/Accuracy/Comboを監視してspeedBar/fuelBar/shieldBarを更新）</li>
+                <li><strong>P0-2</strong>: コードモードフォントリセット — <code>_clearCodeMode()</code> を selectNewMission/playAgain/resetTyping に追加</li>
+                <li><strong>P1-1</strong>: 発見した惑星カウント — DiscoveryManager.addDiscovery内で <code>cosmicTyping_planetCount</code> をインクリメント、planetsDiscovered/explorationBar/totalPlanetsを更新</li>
+                <li><strong>P1-2</strong>: 詳細分析タブ実装 — data-analyticsボタンのイベントリスナー + <code>buildAnalyticsHTML(type)</code> 関数（日別/週別/月別/キー分析/進歩トレンド）</li>
+                <li><strong>P2-1</strong>: タイムアタック結果に獲得XP表示 — <code>#ta-earnedXP</code> HTML追加、XPManagerから更新</li>
+                <li><strong>P2-2</strong>: データリセット二段階確認 — confirm()後にprompt('DELETE入力')を追加</li>
+                <li><strong>P3-1</strong>: カウントダウン表示 — CountdownManager IIFE（3→2→1→GO! 0.7秒間隔、typingInterface上にオーバーレイ）</li>
+                <li><strong>P3-2</strong>: モバイル自動フォーカス — navigator.maxTouchPoints > 0 のとき startTyping()後にtypingInput.focus()呼出</li>
+            </ul>
+            <p>コミット: 5de9085 | localStorage追加キー: <code>cosmicTyping_planetCount</code></p>
+        </div>
+
         <p style="text-align: center; margin-top: 40px; color: #9ca3af;">
-            最終更新: 2026年5月27日 Round5 | Cosmic Typing Adventure Development Team
+            最終更新: 2026年5月27日 Round6 | Cosmic Typing Adventure Development Team
         </p>
     </div>
 </body>
