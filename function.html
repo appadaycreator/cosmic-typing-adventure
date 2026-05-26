@@ -907,11 +907,28 @@ class MobileOptimizer {
                 <tr><td><code>cosmicTyping_dailyActive</code></td><td>string</td><td>デイリーチャレンジ進行中フラグ</td></tr>
                 <tr><td><code>cosmicTyping_achievements</code></td><td>JSON</td><td>解放済み実績IDの配列（Round4追加）</td></tr>
                 <tr><td><code>cosmicTyping_shipUpgrades</code></td><td>JSON</td><td>宇宙船強化レベル {engine, fuel, shield}（Round4追加）</td></tr>
+                <tr><td><code>cosmicTyping_totalSeconds</code></td><td>number</td><td>累積練習時間（秒）（Round5追加）</td></tr>
+                <tr><td><code>cosmicTyping_discoveries</code></td><td>JSON</td><td>最近の発見リスト [{planet,wpm,time}×5件]（Round5追加）</td></tr>
+                <tr><td><code>cosmicTyping_codeDone</code></td><td>string</td><td>コードモード完了フラグ（Round5追加）</td></tr>
             </table>
         </div>
 
+        <div class="feature-card">
+            <h2>Round 5 追加機能（2026-05-27）</h2>
+            <ul>
+                <li><strong>P0-1</strong>: タイムアタック中の進行バー対応 — <code>timeAttackInput</code> inputイベントで <code>typingProgressBar</code> 更新</li>
+                <li><strong>P1-1</strong>: 統計「総練習時間」実装 — <code>cosmicTyping_totalSeconds</code> に累積、統計タブに分表示</li>
+                <li><strong>P1-2</strong>: 最近の発見リスト — <code>DiscoveryManager</code> IIFE、セッション完了時に惑星名・WPM・時刻を先頭追加（最大5件）</li>
+                <li><strong>P2-1</strong>: 実績を3→9種類に拡充 — 精密操縦士(100%)/ハイパードライブ(WPM80)/マラソンパイロット(10回)/3日連続/デイリーヒーロー/コードパイロット</li>
+                <li><strong>P2-2</strong>: Xでシェアボタン — 通常結果・タイムアタック結果両方に追加、<code>x.com/intent/tweet</code> 経由で投稿</li>
+                <li><strong>P3-1</strong>: 宇宙船アンロック — avgWPM≥40→スピードクルーザー解放 / sessions≥5→エクスプローラー解放</li>
+                <li><strong>P3-2</strong>: コードモードmonospaceフォント — <code>.code-mode-text</code> CSS + <code>startCodeMission()</code> 関数</li>
+            </ul>
+            <p>コミット: 11265b8</p>
+        </div>
+
         <p style="text-align: center; margin-top: 40px; color: #9ca3af;">
-            最終更新: 2026年5月26日 Round4 | Cosmic Typing Adventure Development Team
+            最終更新: 2026年5月27日 Round5 | Cosmic Typing Adventure Development Team
         </p>
     </div>
 </body>
