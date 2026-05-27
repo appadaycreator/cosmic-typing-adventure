@@ -3,7 +3,7 @@
  * オフライン対応とキャッシュ機能
  */
 
-const CACHE_NAME = 'cosmic-typing-v1.0.0';
+const CACHE_NAME = 'cosmic-typing-v1.0.1';
 const STATIC_CACHE = 'cosmic-typing-static-v1.0.0';
 const DYNAMIC_CACHE = 'cosmic-typing-dynamic-v1.0.0';
 
