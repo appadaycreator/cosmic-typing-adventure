@@ -467,9 +467,9 @@ export class TypingEngine {
             let hearts = '';
             for (let i = 0; i < this.maxLives; i++) {
                 if (i < this.lives) {
-                    hearts += '<i class="fas fa-heart text-red-500"></i> ';
+                    hearts += '<span>❤️</span> ';
                 } else {
-                    hearts += '<i class="far fa-heart text-gray-500"></i> ';
+                    hearts += '<span style="opacity:0.4">🤍</span> ';
                 }
             }
             this.elements.survivalLivesDisplay.innerHTML = hearts;

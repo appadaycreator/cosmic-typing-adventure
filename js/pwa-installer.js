@@ -66,7 +66,7 @@ class PWAInstaller {
             transition-all duration-300 flex items-center space-x-2
         `;
         this.installButton.innerHTML = `
-            <i class="fas fa-download text-lg"></i>
+            <span class="text-lg">⬇</span>
             <span class="install-text">アプリをインストール</span>
         `;
         
@@ -170,7 +170,7 @@ class PWAInstaller {
         if (loading) {
             this.installButton.disabled = true;
             this.installButton.innerHTML = `
-                <i class="fas fa-spinner fa-spin text-lg"></i>
+                <span class="text-lg">⏳</span>
                 <span>インストール中...</span>
             `;
         } else {

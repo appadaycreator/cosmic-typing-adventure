@@ -11,8 +11,8 @@ class CoreDebugger {
         this.setupErrorHandling();
         this.setupPerformanceMonitoring();
         this.setupDebugTools();
-        
-        console.log('🔧 Core Debugger initialized');
+
+        if (this.debugMode) console.log('🔧 Core Debugger initialized');
     }
 
     setupErrorHandling() {
@@ -160,13 +160,13 @@ class CoreDebugger {
                 message: 'Critical DOM elements missing',
                 missingElements: missingElements
             });
-        } else {
+        } else if (this.debugMode) {
             console.log('✅ DOM integrity check passed');
         }
     }
 
     testAllComponents() {
-        console.log('🧪 Testing all components...');
+        if (this.debugMode) console.log('🧪 Testing all components...');
         
         const tests = [
             this.testTypingEngine(),
@@ -180,7 +180,7 @@ class CoreDebugger {
             const passed = results.filter(r => r.status === 'fulfilled').length;
             const failed = results.filter(r => r.status === 'rejected').length;
             
-            console.log(`✅ Tests completed: ${passed} passed, ${failed} failed`);
+            if (this.debugMode) console.log(`✅ Tests completed: ${passed} passed, ${failed} failed`);
             
             if (failed > 0) {
                 this.logError('Component Test Failed', {
@@ -197,7 +197,7 @@ class CoreDebugger {
             // Test if typing engine is available
             if (typeof window.TypingEngine !== 'undefined') {
                 const engine = new window.TypingEngine();
-                console.log('✅ TypingEngine test passed');
+                if (this.debugMode) console.log('✅ TypingEngine test passed');
                 return true;
             } else {
                 throw new Error('TypingEngine not found');
@@ -212,7 +212,7 @@ class CoreDebugger {
         try {
             // Test if audio manager is available
             if (window.audioManager) {
-                console.log('✅ AudioManager test passed');
+                if (this.debugMode) console.log('✅ AudioManager test passed');
                 return true;
             } else {
                 throw new Error('AudioManager not found');
@@ -233,7 +233,7 @@ class CoreDebugger {
             localStorage.removeItem(testKey);
             
             if (retrieved === testValue) {
-                console.log('✅ LocalStorage test passed');
+                if (this.debugMode) console.log('✅ LocalStorage test passed');
                 return true;
             } else {
                 throw new Error('LocalStorage read/write failed');
@@ -251,13 +251,13 @@ class CoreDebugger {
                 const data = null, error = null; // Supabase removed
                 
                 if (error) {
-                    console.warn('⚠️ Supabase connection test failed (expected in offline mode):', error);
+                    if (this.debugMode) console.warn('⚠️ Supabase connection test failed (expected in offline mode):', error);
                 } else {
-                    console.log('✅ Supabase connection test passed');
+                    if (this.debugMode) console.log('✅ Supabase connection test passed');
                 }
                 return true;
             } else {
-                console.log('ℹ️ Supabase not available (offline mode)');
+                if (this.debugMode) console.log('ℹ️ Supabase not available (offline mode)');
                 return true;
             }
         } catch (error) {
@@ -278,7 +278,7 @@ class CoreDebugger {
             const duration = performance.now() - startTime;
             
             if (duration < 100) {
-                console.log('✅ Performance test passed');
+                if (this.debugMode) console.log('✅ Performance test passed');
                 return true;
             } else {
                 throw new Error(`Performance test took too long: ${duration.toFixed(2)}ms`);
@@ -301,19 +301,19 @@ class CoreDebugger {
         this.errorLog = [];
         this.performanceLog = [];
         localStorage.removeItem('cosmicTyping_errorLog');
-        console.log('🧹 Logs cleared');
+        if (this.debugMode) console.log('🧹 Logs cleared');
     }
 
     enableDebugMode() {
         this.debugMode = true;
         localStorage.setItem('debug', 'true');
-        console.log('🐛 Debug mode enabled');
+        console.log('🐛 Debug mode enabled'); // intentional: confirms enable succeeded
     }
 
     disableDebugMode() {
         this.debugMode = false;
         localStorage.removeItem('debug');
-        console.log('🐛 Debug mode disabled');
+        console.log('🐛 Debug mode disabled'); // intentional: confirms disable succeeded
     }
 
     // Safe function execution wrapper

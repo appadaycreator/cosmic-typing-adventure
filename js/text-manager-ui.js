@@ -51,7 +51,7 @@ export class TextManagerUI {
         <div class="text-manager-header">
           <h2>📚 練習テキスト管理</h2>
           <button id="add-custom-text-btn" class="btn btn-primary">
-            <i class="fas fa-plus"></i> カスタムテキスト追加
+            ➕ カスタムテキスト追加
           </button>
         </div>
 
@@ -81,7 +81,7 @@ export class TextManagerUI {
           </div>
 
           <button id="reset-filters-btn" class="btn btn-secondary">
-            <i class="fas fa-redo"></i> リセット
+            🔄 リセット
           </button>
         </div>
 
@@ -101,7 +101,7 @@ export class TextManagerUI {
             <div class="modal-header">
               <h3>カスタムテキスト追加</h3>
               <button class="modal-close" id="close-modal-btn">
-                <i class="fas fa-times"></i>
+                ✕
               </button>
             </div>
             <div class="modal-body">
@@ -162,7 +162,7 @@ export class TextManagerUI {
                   <p class="form-help">記事のURLを入力してください</p>
                 </div>
                 <button id="load-url-btn" class="btn btn-secondary" style="width: 100%;">
-                  <i class="fas fa-download"></i> URLから読み込む
+                  ⬇ URLから読み込む
                 </button>
               </div>
             </div>
@@ -261,7 +261,7 @@ export class TextManagerUI {
         <div class="text-item-header">
           <h4 class="text-item-title">${DOMUtils.escapeHtml(text.title)}</h4>
           <button class="btn-favorite ${text.is_favorite ? 'active' : ''}" data-text-id="${text.id || text.text_id}">
-            <i class="fas fa-star"></i>
+            ⭐
           </button>
         </div>
         <div class="text-item-content">
@@ -271,7 +271,7 @@ export class TextManagerUI {
           <span class="badge badge-category">${categoryName}</span>
           <span class="badge badge-difficulty difficulty-${text.difficulty}">${difficultyName}</span>
           <span class="text-meta-info">
-            <i class="fas fa-font"></i> ${text.char_count || text.content.length} 文字
+            🔤 ${text.char_count || text.content.length} 文字
           </span>
         </div>
       </div>

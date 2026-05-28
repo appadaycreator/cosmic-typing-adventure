@@ -100,4 +100,5 @@ MIT License
 
 ## 変更履歴
 
+- v1.1.4 (2026-05-29): Font Awesome完全廃止(絵文字置換)・ブランドカラー統一(app.html #7c3aed)・core-debugger console.log debugMode化・OGP自己ホスト化・モーダルARIA追加
 - v1.1.3 (2026-05-29): app.html OGP追加・aria-label拡充・app.js console.log削除

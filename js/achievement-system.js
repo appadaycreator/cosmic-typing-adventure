@@ -7,7 +7,7 @@ export class AchievementSystem {
         id: 'firstTyping',
         name: { ja: '初回航行', en: 'First Flight' },
         description: { ja: '最初のタイピングを完了', en: 'Complete your first typing session' },
-        icon: 'fas fa-rocket',
+        icon: '🚀',
         condition: (stats) => stats.totalSessions >= 1,
         unlocked: false
       },
@@ -15,7 +15,7 @@ export class AchievementSystem {
         id: 'speedPilot',
         name: { ja: 'スピードパイロット', en: 'Speed Pilot' },
         description: { ja: '50 WPMを達成', en: 'Achieve 50 WPM' },
-        icon: 'fas fa-bolt',
+        icon: '⚡',
         condition: (stats) => stats.bestWPM >= 50,
         unlocked: false
       },
@@ -23,7 +23,7 @@ export class AchievementSystem {
         id: 'accuracyMaster',
         name: { ja: '精密制御', en: 'Precision Master' },
         description: { ja: '95%以上の正確率を達成', en: 'Achieve 95% accuracy' },
-        icon: 'fas fa-crosshairs',
+        icon: '🎯',
         condition: (stats) => stats.bestAccuracy >= 95,
         unlocked: false
       },
@@ -31,7 +31,7 @@ export class AchievementSystem {
         id: 'planetExplorer',
         name: { ja: '惑星発見者', en: 'Planet Explorer' },
         description: { ja: '最初の惑星を発見', en: 'Discover your first planet' },
-        icon: 'fas fa-globe',
+        icon: '🌍',
         condition: (stats) => (stats.planetsDiscovered && stats.planetsDiscovered.length >= 1),
         unlocked: false
       },
@@ -39,7 +39,7 @@ export class AchievementSystem {
         id: 'marathonRunner',
         name: { ja: 'マラソンランナー', en: 'Marathon Runner' },
         description: { ja: '10分間の練習を完了', en: 'Complete 10 minutes of practice' },
-        icon: 'fas fa-stopwatch',
+        icon: '⏱️',
         condition: (stats) => stats.totalTime >= 600,
         unlocked: false
       },
@@ -47,7 +47,7 @@ export class AchievementSystem {
         id: 'comboMaster',
         name: { ja: 'コンボマスター', en: 'Combo Master' },
         description: { ja: '100コンボを達成', en: 'Achieve 100 combo' },
-        icon: 'fas fa-fire',
+        icon: '🔥',
         condition: (stats) => stats.bestCombo >= 100,
         unlocked: false
       },
@@ -55,7 +55,7 @@ export class AchievementSystem {
         id: 'levelUp',
         name: { ja: 'レベルアップ', en: 'Level Up' },
         description: { ja: 'レベル5に到達', en: 'Reach level 5' },
-        icon: 'fas fa-star',
+        icon: '⭐',
         condition: (stats) => stats.level >= 5,
         unlocked: false
       },
@@ -63,7 +63,7 @@ export class AchievementSystem {
         id: 'veteran',
         name: { ja: 'ベテラン', en: 'Veteran' },
         description: { ja: '100セッションを完了', en: 'Complete 100 sessions' },
-        icon: 'fas fa-medal',
+        icon: '🥇',
         condition: (stats) => stats.totalSessions >= 100,
         unlocked: false
       },
@@ -71,7 +71,7 @@ export class AchievementSystem {
         id: 'speedDemon',
         name: { ja: 'スピードデーモン', en: 'Speed Demon' },
         description: { ja: '100 WPMを達成', en: 'Achieve 100 WPM' },
-        icon: 'fas fa-tachometer-alt',
+        icon: '💨',
         condition: (stats) => stats.bestWPM >= 100,
         unlocked: false
       },
@@ -79,7 +79,7 @@ export class AchievementSystem {
         id: 'perfectionist',
         name: { ja: '完璧主義者', en: 'Perfectionist' },
         description: { ja: '100%の正確率を達成', en: 'Achieve 100% accuracy' },
-        icon: 'fas fa-gem',
+        icon: '💎',
         condition: (stats) => stats.bestAccuracy >= 100,
         unlocked: false
       }
@@ -139,7 +139,7 @@ export class AchievementSystem {
       notification.className = 'achievement-notification fixed top-4 right-4 bg-cosmic-card border border-planet-orange rounded-lg p-4 z-50 transform translate-x-full transition-transform duration-500';
       notification.innerHTML = `
         <div class="flex items-center space-x-3">
-          <i class="${achievement.icon} text-planet-orange text-2xl"></i>
+          <span class="text-2xl">${achievement.icon}</span>
           <div>
             <div class="font-bold text-planet-orange">${achievement.name.ja}</div>
             <div class="text-sm text-gray-400">${achievement.description.ja}</div>
@@ -177,7 +177,7 @@ export class AchievementSystem {
         const div = document.createElement('div');
         div.className = `achievement-item p-2 bg-gray-800 rounded flex items-center space-x-3 ${achievement.unlocked ? '' : 'opacity-50'}`;
         div.innerHTML = `
-          <i class="${achievement.icon} ${achievement.unlocked ? 'text-planet-orange' : 'text-gray-500'}"></i>
+          <span class="text-xl ${achievement.unlocked ? '' : 'opacity-40'}">${achievement.icon}</span>
           <div class="text-sm">
             <div class="font-bold ${achievement.unlocked ? 'text-planet-orange' : 'text-gray-500'}">${achievement.name.ja}</div>
             <div class="text-xs ${achievement.unlocked ? 'text-gray-400' : 'text-gray-600'}">${achievement.description.ja}</div>

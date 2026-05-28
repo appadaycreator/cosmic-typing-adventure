@@ -14,13 +14,13 @@
     <meta property="og:description" content="宇宙船操縦、惑星探索、タイピング練習、WPM計測、スキル向上を一体化した革新的なタイピング学習プラットフォーム">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://appadaycreator.com/cosmic-typing-adventure/app.html">
-    <meta property="og:image" content="https://cdn1.genspark.ai/user-upload-image/gpt_image_generated/8ec45681-975e-4f2e-884d-5d981aed580b">
+    <meta property="og:image" content="/ogp.png">
     <meta property="og:site_name" content="Cosmic Typing Adventure">
     <meta property="og:locale" content="ja_JP">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Cosmic Typing Adventure - メインゲーム">
     <meta name="twitter:description" content="宇宙船操縦、惑星探索、タイピング練習、WPM計測、スキル向上を一体化した革新的なタイピング学習プラットフォーム">
-    <meta name="twitter:image" content="https://cdn1.genspark.ai/user-upload-image/gpt_image_generated/8ec45681-975e-4f2e-884d-5d981aed580b">
+    <meta name="twitter:image" content="/ogp.png">
 
     <!-- CDN Libraries -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -47,7 +47,7 @@
     <style>
         :root {
             --cosmic-bg: #0a0a1a;
-            --nebula-purple: #4c1d95;
+            --nebula-purple: #7c3aed;
             --nebula-blue: #1e3a8a;
             --star-cyan: #06b6d4;
             --planet-orange: #f97316;
@@ -2373,10 +2373,10 @@
     </div>
 
     <!-- P0-2: データリセット確認モーダル -->
-    <div id="resetModal" class="hidden fixed inset-0 z-[600] flex items-center justify-center bg-black/70">
+    <div id="resetModal" class="hidden fixed inset-0 z-[600] flex items-center justify-center bg-black/70" role="dialog" aria-modal="true" aria-labelledby="resetModalTitle">
         <div class="bg-gray-900 border border-red-700 rounded-2xl p-6 max-w-sm mx-4 shadow-2xl text-center">
             <div class="text-3xl mb-2">⚠️</div>
-            <h3 class="font-orbitron font-bold text-lg text-red-400 mb-1">全データを削除</h3>
+            <h3 id="resetModalTitle" class="font-orbitron font-bold text-lg text-red-400 mb-1">全データを削除</h3>
             <p class="text-xs text-gray-400 mb-3">この操作は取り消せません。<br>確認するために下欄に「DELETE」と入力してください。</p>
             <input id="resetModalInput" type="text" placeholder="DELETE" class="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-white text-center text-sm mb-2 focus:outline-none focus:border-red-500" autocomplete="off">
             <p id="resetModalError" style="display:none;" class="text-xs text-red-400 mb-2">「DELETE」と正確に入力してください</p>
@@ -2433,7 +2433,7 @@
     </style>
 
     <!-- P4: レベルアップモーダル -->
-    <div id="levelUpModal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
+    <div id="levelUpModal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="レベルアップ">
         <div class="bg-cosmic-card border-2 border-yellow-400 rounded-xl p-8 text-center max-w-sm w-full" style="animation: achievePopIn 0.4s ease-out">
             <div class="text-6xl mb-4">🚀</div>
             <div class="font-orbitron font-bold text-3xl text-yellow-400 mb-2">LEVEL UP!</div>
@@ -2449,7 +2449,7 @@
     </div>
 
     <!-- P1: リーダーボードモーダル -->
-    <div id="leaderboardModal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
+    <div id="leaderboardModal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="leaderboardTitle">
         <div class="bg-cosmic-card border border-blue-500 rounded-xl p-6 w-full max-w-lg">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan" id="leaderboardTitle">🏆 ランキング</h3>
@@ -2461,7 +2461,7 @@
     </div>
 
     <!-- P3: デイリーカレンダーモーダル -->
-    <div id="dailyCalendarModal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4">
+    <div id="dailyCalendarModal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="デイリーカレンダー">
         <div class="bg-cosmic-card border border-yellow-500 rounded-xl p-6 w-full max-w-md">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="font-orbitron font-bold text-xl text-yellow-400">📅 練習カレンダー（過去30日）</h3>

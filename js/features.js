@@ -546,15 +546,15 @@ window.TutorialManager = (function () {
 (function AchievementUnlocker() {
     var KEY = 'cosmicTyping_achievements';
     var DEFS = [
-        { id: 'first_flight',    icon: 'fas fa-medal',      iconColor: 'text-yellow-400',  title: '初回航行',         desc: '最初のタイピングを完了',       check: function(s) { return s.sessions >= 1; } },
-        { id: 'speed_pilot',     icon: 'fas fa-rocket',     iconColor: 'text-cosmic-cyan', title: 'スピードパイロット', desc: '50 WPMを達成',                check: function(s) { return s.bestWPM >= 50; } },
-        { id: 'planet_finder',   icon: 'fas fa-globe',      iconColor: 'text-energy-green', title: '惑星発見者',       desc: '3回のセッションを完了',        check: function(s) { return s.sessions >= 3; } },
-        { id: 'accuracy_master', icon: 'fas fa-crosshairs', iconColor: 'text-red-400',     title: '精密操縦士',       desc: '正確率100%を達成',             check: function(s) { return s.bestAccuracy >= 100; } },
-        { id: 'speed_demon',     icon: 'fas fa-bolt',       iconColor: 'text-planet-orange', title: 'ハイパードライブ', desc: '80 WPMを達成',                check: function(s) { return s.bestWPM >= 80; } },
-        { id: 'marathon_pilot',  icon: 'fas fa-flag',       iconColor: 'text-purple-400',  title: 'マラソンパイロット', desc: '10セッション完了',             check: function(s) { return s.sessions >= 10; } },
-        { id: 'streak_3',        icon: 'fas fa-fire',       iconColor: 'text-orange-400',  title: '3日連続',          desc: '3日連続で練習',                check: function(s) { return s.streak >= 3; } },
-        { id: 'daily_hero',      icon: 'fas fa-star',       iconColor: 'text-yellow-300',  title: 'デイリーヒーロー', desc: 'デイリーチャレンジを完了',      check: function(s) { return s.dailyDone; } },
-        { id: 'code_master',     icon: 'fas fa-code',       iconColor: 'text-cosmic-cyan', title: 'コードパイロット',  desc: 'コードモードで1回完了',         check: function(s) { return s.codeDone; } }
+        { id: 'first_flight',    icon: '🥇', iconColor: 'text-yellow-400',  title: '初回航行',         desc: '最初のタイピングを完了',       check: function(s) { return s.sessions >= 1; } },
+        { id: 'speed_pilot',     icon: '🚀', iconColor: 'text-cosmic-cyan', title: 'スピードパイロット', desc: '50 WPMを達成',                check: function(s) { return s.bestWPM >= 50; } },
+        { id: 'planet_finder',   icon: '🌍', iconColor: 'text-energy-green', title: '惑星発見者',       desc: '3回のセッションを完了',        check: function(s) { return s.sessions >= 3; } },
+        { id: 'accuracy_master', icon: '🎯', iconColor: 'text-red-400',     title: '精密操縦士',       desc: '正確率100%を達成',             check: function(s) { return s.bestAccuracy >= 100; } },
+        { id: 'speed_demon',     icon: '⚡', iconColor: 'text-planet-orange', title: 'ハイパードライブ', desc: '80 WPMを達成',                check: function(s) { return s.bestWPM >= 80; } },
+        { id: 'marathon_pilot',  icon: '🚩', iconColor: 'text-purple-400',  title: 'マラソンパイロット', desc: '10セッション完了',             check: function(s) { return s.sessions >= 10; } },
+        { id: 'streak_3',        icon: '🔥', iconColor: 'text-orange-400',  title: '3日連続',          desc: '3日連続で練習',                check: function(s) { return s.streak >= 3; } },
+        { id: 'daily_hero',      icon: '⭐', iconColor: 'text-yellow-300',  title: 'デイリーヒーロー', desc: 'デイリーチャレンジを完了',      check: function(s) { return s.dailyDone; } },
+        { id: 'code_master',     icon: '💻', iconColor: 'text-cosmic-cyan', title: 'コードパイロット',  desc: 'コードモードで1回完了',         check: function(s) { return s.codeDone; } }
     ];
 
     function getUnlocked() {
@@ -584,7 +584,7 @@ window.TutorialManager = (function () {
                 var isUnlocked = unlocked.indexOf(def.id) !== -1;
                 var item = document.createElement('div');
                 item.className = 'achievement-item p-2 bg-gray-800 rounded flex items-center space-x-3' + (isUnlocked ? '' : ' opacity-50');
-                item.innerHTML = '<i class="' + def.icon + ' ' + (isUnlocked ? def.iconColor : 'text-gray-500') + '"></i>' +
+                item.innerHTML = '<span class="text-xl ' + (isUnlocked ? '' : 'opacity-40') + '">' + def.icon + '</span>' +
                     '<div class="text-sm"><div class="font-bold ' + (isUnlocked ? 'text-white' : 'text-gray-500') + '">' + def.title + '</div>' +
                     '<div class="text-xs ' + (isUnlocked ? 'text-gray-300' : 'text-gray-600') + '">' + def.desc + '</div></div>' +
                     (isUnlocked ? '<span class="ml-auto text-xs text-yellow-400">✓</span>' : '');
@@ -607,7 +607,7 @@ window.TutorialManager = (function () {
         var iconEl = document.getElementById('achievementModalIcon');
         var titleEl = document.getElementById('achievementModalTitle');
         var descEl = document.getElementById('achievementModalDesc');
-        if (iconEl) iconEl.className = def.icon + ' text-5xl ' + def.iconColor;
+        if (iconEl) { iconEl.textContent = def.icon; iconEl.className = 'text-5xl'; }
         if (titleEl) titleEl.textContent = def.title;
         if (descEl) descEl.textContent = def.desc;
         modal.classList.remove('hidden');
