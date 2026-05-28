@@ -23,7 +23,7 @@
     <meta name="twitter:image" content="https://cdn1.genspark.ai/user-upload-image/gpt_image_generated/8ec45681-975e-4f2e-884d-5d981aed580b">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     
     <!-- External Libraries -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -125,6 +125,25 @@
         .text-lg-font { font-size: 1.15rem; }
         .text-xl-font { font-size: 1.3rem; }
         
+        /* スキップリンク（アクセシビリティ） */
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--cosmic-accent, #00d4ff);
+            color: black;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            z-index: 9999;
+            transition: top 0.3s ease;
+            text-decoration: none;
+        }
+        .skip-link:focus {
+            top: 16px;
+        }
+
         /* レスポンシブ対応 */
         @media (max-width: 768px) {
             :root { font-size: 14px; }
@@ -158,6 +177,7 @@
     </style>
 </head>
 <body class="font-japanese stars-bg">
+    <a href="#main-content" class="skip-link">メインコンテンツへスキップ</a>
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQGZRF9"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -239,7 +259,7 @@
     </header>
 
     <!-- メインコンテンツ -->
-    <main class="pt-20 pb-16">
+    <main id="main-content" class="pt-20 pb-16">
         <div class="container mx-auto px-4">
             <!-- ヒーローセクション -->
             <section class="text-center py-12 fade-in">
@@ -1197,7 +1217,7 @@
             </div>
             
             <div class="border-t border-gray-600 mt-8 pt-6 text-center text-sm text-gray-400">
-                <p>&copy; 2025 Cosmic Typing Adventure. All rights reserved.</p>
+                <p>&copy; 2026 Cosmic Typing Adventure. All rights reserved.</p>
             </div>
         </div>
     </footer>
