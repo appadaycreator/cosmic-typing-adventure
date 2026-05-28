@@ -799,3 +799,4 @@ MIT License
 
 ## 変更履歴
 - 2026-05-28: PWA theme-color メタタグ追加 (#6366F1) [improve_auto]
+- 2026-05-29: PWA theme-color 全ファイル統一 (#6366F1→#7c3aed)・contact.html og:url修正・privacy.html CSS変数統一 [improve_auto]
