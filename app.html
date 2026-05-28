@@ -583,7 +583,7 @@
                             <div>
                                 <div class="flex justify-between text-sm mb-1">
                                     <span>スピード</span>
-                                    <span id="currentWPM" class="text-energy-green font-bold">0 WPM</span>
+                                    <span id="currentWPM" class="text-energy-green font-bold" aria-live="polite" aria-atomic="true">0 WPM</span>
                                 </div>
                                 <div class="w-full bg-gray-700 rounded-full h-3">
                                     <div id="speedBar" class="progress-bar h-3 rounded-full transition-all duration-300"
@@ -595,7 +595,7 @@
                             <div>
                                 <div class="flex justify-between text-sm mb-1">
                                     <span>燃料効率</span>
-                                    <span id="currentAccuracy" class="text-cosmic-cyan font-bold">100%</span>
+                                    <span id="currentAccuracy" class="text-cosmic-cyan font-bold" aria-live="polite" aria-atomic="true">100%</span>
                                 </div>
                                 <div class="w-full bg-gray-700 rounded-full h-3">
                                     <div id="fuelBar"
@@ -608,7 +608,7 @@
                             <div>
                                 <div class="flex justify-between text-sm mb-1">
                                     <span>シールド</span>
-                                    <span id="currentCombo" class="text-planet-orange font-bold">0x</span>
+                                    <span id="currentCombo" class="text-planet-orange font-bold" aria-live="polite" aria-atomic="true">0x</span>
                                 </div>
                                 <div class="w-full bg-gray-700 rounded-full h-3">
                                     <div id="shieldBar"
@@ -821,10 +821,10 @@
                                 <div class="text-sm text-gray-300">秒</div>
                             </div>
                             <div class="text-center">
-                                <div class="text-xl font-bold text-energy-green drop-shadow-md" id="liveWPM" style="transition:color 0.4s ease,text-shadow 0.4s ease,transform 0.15s ease;">0</div>
+                                <div class="text-xl font-bold text-energy-green drop-shadow-md" id="liveWPM" style="transition:color 0.4s ease,text-shadow 0.4s ease,transform 0.15s ease;" aria-live="polite" aria-atomic="true">0</div>
                                 <div class="text-sm text-gray-300">WPM</div>
                             </div>
-                            <div class="text-xl font-bold text-cosmic-cyan drop-shadow-md" id="liveAccuracy">100%</div>
+                            <div class="text-xl font-bold text-cosmic-cyan drop-shadow-md" id="liveAccuracy" aria-live="polite" aria-atomic="true">100%</div>
                             <div class="text-sm text-gray-300">正確率</div>
                         </div>
                             <!-- Survival Lives Display (Hidden by default) -->
@@ -1038,15 +1038,15 @@
                     <!-- Real-time Stats -->
                     <div class="grid grid-cols-3 gap-4 mb-6">
                         <div class="text-center">
-                            <div class="text-xl font-bold text-energy-green" id="timeAttackWPM">0</div>
+                            <div class="text-xl font-bold text-energy-green" id="timeAttackWPM" aria-live="polite" aria-atomic="true">0</div>
                             <div class="text-sm text-gray-400">WPM</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-xl font-bold text-cosmic-cyan" id="timeAttackAccuracy">100%</div>
+                            <div class="text-xl font-bold text-cosmic-cyan" id="timeAttackAccuracy" aria-live="polite" aria-atomic="true">100%</div>
                             <div class="text-sm text-gray-400">正確率</div>
                         </div>
                         <div class="text-center">
-                            <div class="text-xl font-bold text-planet-orange" id="timeAttackCombo">0</div>
+                            <div class="text-xl font-bold text-planet-orange" id="timeAttackCombo" aria-live="polite" aria-atomic="true">0</div>
                             <div class="text-sm text-gray-400">コンボ</div>
                         </div>
                     </div>

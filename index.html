@@ -1277,9 +1277,6 @@ select,input[type=text],input[type=number],input[type=email],textarea{min-height
             setupServiceWorker();
             loadUserPreferences();
 
-            console.log('🚀 Cosmic Typing Adventure initialized');
-            console.log('Language:', currentLanguage);
-            console.log('Font Size:', currentFontSize);
         });
 
         // Language toggle
@@ -1295,7 +1292,6 @@ select,input[type=text],input[type=number],input[type=email],textarea{min-height
             document.getElementById(`lang-${lang}`).classList.add('text-cyan-400');
 
             // Here you would implement actual language switching
-            console.log(`Language switched to: ${lang}`);
 
             // Show notification
             showNotification(`言語を${lang === 'ja' ? '日本語' : 'English'}に変更しました`, 'success');
@@ -1312,7 +1308,6 @@ select,input[type=text],input[type=number],input[type=email],textarea{min-height
             // Add new font size class
             document.body.classList.add(`font-size-${size}`);
 
-            console.log(`Font size changed to: ${size}`);
             showNotification(`文字サイズを変更しました`, 'success');
         }
 
@@ -1476,11 +1471,8 @@ select,input[type=text],input[type=number],input[type=email],textarea{min-height
         function setupServiceWorker() {
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('./service-worker.js')
-                    .then(registration => {
-                        console.log('Service Worker registered:', registration);
-                    })
                     .catch(error => {
-                        console.log('Service Worker registration failed:', error);
+                        console.error('Service Worker registration failed:', error);
                     });
             }
         }
@@ -1514,24 +1506,8 @@ select,input[type=text],input[type=number],input[type=email],textarea{min-height
         window.addEventListener('beforeunload', function () {
             const timeSpent = Date.now() - startTime;
             localStorage.setItem('last_visit_duration', timeSpent);
-            console.log(`Time spent on page: ${timeSpent}ms`);
         });
 
-        // Performance logging
-        window.addEventListener('load', function () {
-            const loadTime = performance.now();
-            console.log(`Page loaded in: ${loadTime}ms`);
-
-            // Track performance
-            if ('PerformanceObserver' in window) {
-                const observer = new PerformanceObserver((list) => {
-                    for (const entry of list.getEntries()) {
-                        console.log(`${entry.name}: ${entry.startTime}ms`);
-                    }
-                });
-                observer.observe({ entryTypes: ['navigation', 'resource'] });
-            }
-        });
     </script>
 
 <script>

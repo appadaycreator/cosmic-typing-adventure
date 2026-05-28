@@ -31,6 +31,13 @@
 
 ## 変更履歴
 
+### v1.1.5 (2026-05-29) - アクセシビリティ・パフォーマンス改善
+- **P1**: app.html の currentWPM/currentAccuracy/currentCombo/liveWPM/liveAccuracy/timeAttackWPM/timeAttackAccuracy/timeAttackCombo に aria-live="polite" aria-atomic="true" 追加（スクリーンリーダー対応）
+- **P2**: index.html の console.log (初期化・言語切替・フォントサイズ・SW登録・ページ時間計測・パフォーマンス計測) を削除
+- **P3**: css/app.css progress-fill の transition を width→transform(scaleX) に変更しレイアウトリフロー排除
+- **P3**: css/mobile-optimization.css の progress-fill transition も同様に更新
+- **P3**: js/ux-utils.js の progress bar 更新ロジックを style.width→style.transform(scaleX) に変更
+
 ### v1.1.2 (2026-05-28) - 全ページFont Awesome完全廃止・PWA統一
 - **P1**: how-to-use.html の Font Awesome CDN削除 + 91アイコンを絵文字に置換
 - **P1**: contact.html / privacy.html / terms.html の Font Awesome CDN削除・絵文字統一

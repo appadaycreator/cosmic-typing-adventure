@@ -357,7 +357,7 @@
     
     /* Progress animations */
     .progress-fill {
-        transition: width 0.3s ease;
+        transition: transform 0.3s ease;
     }
     
     /* Notification animations */

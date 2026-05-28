@@ -371,7 +371,7 @@ const LoadingUtils = {
         progressBar.className = 'progress-container';
         progressBar.innerHTML = `
             <div class="progress-bar">
-                <div class="progress-fill" style="width: ${initialValue}%"></div>
+                <div class="progress-fill" style="transform: scaleX(${initialValue / 100})"></div>
             </div>
             <div class="progress-text">${initialValue}%</div>
         `;
@@ -383,7 +383,7 @@ const LoadingUtils = {
                 const fill = progressBar.querySelector('.progress-fill');
                 const text = progressBar.querySelector('.progress-text');
                 
-                fill.style.width = `${value}%`;
+                fill.style.transform = `scaleX(${value / 100})`;
                 text.textContent = `${value}%`;
             },
             remove: () => {
