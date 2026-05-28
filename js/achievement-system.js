@@ -170,24 +170,28 @@ export class AchievementSystem {
   }
 
   updateAchievementDisplay() {
-    const achievementList = document.getElementById('achievementList');
-    if (!achievementList) return;
+    const renderList = (el) => {
+      if (!el) return;
+      el.innerHTML = '';
+      Object.values(this.achievements).forEach(achievement => {
+        const div = document.createElement('div');
+        div.className = `achievement-item p-2 bg-gray-800 rounded flex items-center space-x-3 ${achievement.unlocked ? '' : 'opacity-50'}`;
+        div.innerHTML = `
+          <i class="${achievement.icon} ${achievement.unlocked ? 'text-planet-orange' : 'text-gray-500'}"></i>
+          <div class="text-sm">
+            <div class="font-bold ${achievement.unlocked ? 'text-planet-orange' : 'text-gray-500'}">${achievement.name.ja}</div>
+            <div class="text-xs ${achievement.unlocked ? 'text-gray-400' : 'text-gray-600'}">${achievement.description.ja}</div>
+          </div>
+        `;
+        el.appendChild(div);
+      });
+    };
+    renderList(document.getElementById('achievementList'));
+    renderList(document.getElementById('achievementListStats'));
 
-    achievementList.innerHTML = '';
-
-    Object.values(this.achievements).forEach(achievement => {
-      const achievementElement = document.createElement('div');
-      achievementElement.className = `achievement-item p-2 bg-gray-800 rounded flex items-center space-x-3 ${achievement.unlocked ? '' : 'opacity-50'}`;
-      achievementElement.innerHTML = `
-        <i class="${achievement.icon} ${achievement.unlocked ? 'text-planet-orange' : 'text-gray-500'}"></i>
-        <div class="text-sm">
-          <div class="font-bold ${achievement.unlocked ? 'text-planet-orange' : 'text-gray-500'}">${achievement.name.ja}</div>
-          <div class="text-xs ${achievement.unlocked ? 'text-gray-400' : 'text-gray-600'}">${achievement.description.ja}</div>
-        </div>
-      `;
-
-      achievementList.appendChild(achievementElement);
-    });
+    // 進捗カウンター更新
+    const prog = document.getElementById('achievementProgress');
+    if (prog) prog.textContent = `${this.getUnlockedCount()}/${this.getTotalCount()}`;
   }
 
   getUnlockedCount() {

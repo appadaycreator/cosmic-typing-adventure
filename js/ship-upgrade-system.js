@@ -1,5 +1,6 @@
 // Ship Upgrade System for Cosmic Typing Adventure
 
+import { logger } from './logger.js';
 export class ShipUpgradeSystem {
     constructor(soundManager, userStats) {
         this.soundManager = soundManager;
@@ -34,7 +35,7 @@ export class ShipUpgradeSystem {
         this.loadUpgrades();
         this.setupEventListeners();
         this.applyUpgradeEffects();
-        console.log('🚀 Ship Upgrade System initialized');
+        logger.debug('🚀 Ship Upgrade System initialized');
     }
 
     loadUpgrades() {
@@ -48,7 +49,7 @@ export class ShipUpgradeSystem {
                     }
                 });
             } catch (error) {
-                console.error('Failed to load upgrades:', error);
+                logger.error('Failed to load upgrades:', error);
             }
         }
     }
@@ -61,7 +62,7 @@ export class ShipUpgradeSystem {
             });
             localStorage.setItem('cosmicTyping_upgrades', JSON.stringify(upgradeData));
         } catch (error) {
-            console.error('Failed to save upgrades:', error);
+            logger.error('Failed to save upgrades:', error);
         }
     }
 
@@ -89,7 +90,7 @@ export class ShipUpgradeSystem {
         const upgrade = this.upgrades[upgradeType];
 
         if (!upgrade) {
-            console.error('Invalid upgrade type:', upgradeType);
+            logger.error('Invalid upgrade type:', upgradeType);
             return;
         }
 
@@ -146,7 +147,7 @@ export class ShipUpgradeSystem {
                 window.app.achievementSystem.checkAchievements(this.userStats);
             }
 
-            console.log(`${upgradeType} upgraded to level ${upgrade.level}`);
+            logger.debug(`${upgradeType} upgraded to level ${upgrade.level}`);
         } else {
             this.showNotification('Not enough XP!', 'error');
         }
@@ -179,7 +180,7 @@ export class ShipUpgradeSystem {
             window.typingEngine.setAccuracyBonus(window.gameState.accuracyBonus);
         }
 
-        console.log('Upgrade effects applied:', {
+        logger.debug('Upgrade effects applied:', {
             speedMultiplier: window.gameState.speedMultiplier,
             accuracyBonus: window.gameState.accuracyBonus,
             comboPenaltyReduction: window.gameState.comboPenaltyReduction
@@ -374,7 +375,7 @@ export class ShipUpgradeSystem {
         this.updateUpgradeDisplay();
         this.applyUpgradeEffects();
 
-        console.log('All upgrades reset to level 1');
+        logger.debug('All upgrades reset to level 1');
     }
 
     // Get upgrade statistics

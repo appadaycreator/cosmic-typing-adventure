@@ -1,5 +1,6 @@
 // Audio Manager for Cosmic Typing Adventure
 
+const _logger = window.logger || { debug: () => {}, info: () => {}, warn: console.warn, error: console.error };
 class AudioManager {
     constructor() {
         this.sounds = {};
@@ -13,7 +14,7 @@ class AudioManager {
         this.loadMusic();
         this.setupEventListeners();
         
-        console.log('🎵 Audio Manager initialized');
+        _logger.debug('🎵 Audio Manager initialized');
     }
 
     async loadSounds() {
@@ -90,7 +91,7 @@ class AudioManager {
                 oscillator.start(audioContext.currentTime);
                 oscillator.stop(audioContext.currentTime + duration);
             } catch (error) {
-                console.warn('Audio playback failed:', error);
+                _logger.warn('Audio playback failed:', error);
             }
         };
     }
@@ -134,7 +135,7 @@ class AudioManager {
                 
                 return { oscillator, gainNode, audioContext };
             } catch (error) {
-                console.warn('Music playback failed:', error);
+                _logger.warn('Music playback failed:', error);
             }
         };
     }
@@ -167,7 +168,7 @@ class AudioManager {
                 
                 return { oscillators, audioContext };
             } catch (error) {
-                console.warn('Space music playback failed:', error);
+                _logger.warn('Space music playback failed:', error);
             }
         };
     }
@@ -203,7 +204,7 @@ class AudioManager {
                 
                 return { audioContext };
             } catch (error) {
-                console.warn('Victory music playback failed:', error);
+                _logger.warn('Victory music playback failed:', error);
             }
         };
     }
@@ -230,7 +231,7 @@ class AudioManager {
                 
                 return { oscillator, gainNode, audioContext };
             } catch (error) {
-                console.warn('Exploration music playback failed:', error);
+                _logger.warn('Exploration music playback failed:', error);
             }
         };
     }
@@ -485,7 +486,7 @@ class AudioManager {
                 this.soundVolume = settings.soundVolume || 0.7;
                 this.musicVolume = settings.musicVolume || 0.5;
             } catch (error) {
-                console.error('Failed to load audio settings:', error);
+                _logger.error('Failed to load audio settings:', error);
             }
         }
     }

@@ -123,13 +123,24 @@ class ErrorHandler {
 
     // 共通エラーメッセージのマッピング
     const errorMap = {
-      'Failed to fetch': 'ネットワーク接続を確認してください',
-      'Network request failed': 'ネットワーク接続を確認してください',
-      'NetworkError': 'ネットワーク接続を確認してください',
+      'Failed to fetch': '接続エラー: インターネット接続を確認してください',
+      'Network request failed': '接続エラー: インターネット接続を確認してください',
+      'NetworkError': '接続エラー: インターネット接続を確認してください',
+      'net::ERR_INTERNET_DISCONNECTED': 'インターネット接続がオフラインです',
+      'net::ERR_CONNECTION_REFUSED': 'サーバーへの接続が拒否されました',
+      'QuotaExceededError': '保存データが上限に達しました。設定から古いデータを削除してください',
+      'quota exceeded': '保存データが上限に達しました。設定から古いデータを削除してください',
       'Not found': 'リソースが見つかりませんでした',
-      'Unauthorized': '認証が必要です',
+      '404': 'ページが見つかりませんでした',
+      'Unauthorized': '認証が必要です。再ログインしてください',
+      '401': '認証エラーが発生しました。再ログインしてください',
       'Forbidden': 'アクセスが拒否されました',
-      'Internal Server Error': 'サーバーエラーが発生しました',
+      '403': 'このリソースへのアクセス権がありません',
+      'Internal Server Error': 'サーバーエラーが発生しました。しばらくしてから再試行してください',
+      '500': 'サーバーエラーが発生しました。しばらくしてから再試行してください',
+      'timeout': 'タイムアウト: 接続が遅すぎます。再試行してください',
+      'AbortError': '処理がキャンセルされました',
+      'SyntaxError': 'データの読み込みに失敗しました',
     };
 
     // エラーマップから該当するメッセージを検索

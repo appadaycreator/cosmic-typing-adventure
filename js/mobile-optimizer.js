@@ -1,5 +1,6 @@
 // Mobile Optimizer for Cosmic Typing Adventure
 
+const _logger = window.logger || { debug: () => {}, info: () => {}, warn: console.warn, error: console.error };
 class MobileOptimizer {
     constructor() {
         this.isMobile = this.detectMobile();
@@ -14,9 +15,9 @@ class MobileOptimizer {
         if (this.isMobile) {
             this.setupMobileFeatures();
             this.optimizeForMobile();
-            console.log('📱 Mobile optimization enabled');
+            _logger.debug('📱 Mobile optimization enabled');
         } else {
-            console.log('🖥️ Desktop mode detected');
+            _logger.debug('🖥️ Desktop mode detected');
         }
     }
 
@@ -294,7 +295,7 @@ class MobileOptimizer {
 
     handleOrientationChange() {
         // Adjust layout for orientation change
-        console.log('Orientation changed');
+        _logger.debug('Orientation changed');
         
         // Recalculate chart sizes
         if (window.updateCharts) {

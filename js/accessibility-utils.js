@@ -1,6 +1,7 @@
 // Accessibility utilities for Cosmic Typing Adventure
 
 // Screen reader utilities
+const _logger = window.logger || { debug: () => {}, info: () => {}, warn: console.warn, error: console.error };
 const ScreenReaderUtils = {
     // Announce message to screen readers
     announce(message, priority = 'polite') {
@@ -519,7 +520,7 @@ const initAccessibility = () => {
         }
     });
     
-    console.log('Accessibility features initialized');
+    _logger.debug('Accessibility features initialized');
 };
 
 // Export accessibility utilities for global access

@@ -1,6 +1,7 @@
 // User Experience utilities for Cosmic Typing Adventure
 
 // Progressive enhancement utilities
+const _logger = window.logger || { debug: () => {}, info: () => {}, warn: console.warn, error: console.error };
 const ProgressiveEnhancement = {
     // Check browser capabilities
     checkCapabilities() {
@@ -57,7 +58,7 @@ const ProgressiveEnhancement = {
                 const preferences = JSON.parse(savedPreferences);
                 this.applyUserPreferences(preferences);
             } catch (error) {
-                console.warn('Failed to load user preferences:', error);
+                _logger.warn('Failed to load user preferences:', error);
             }
         }
         
@@ -68,7 +69,7 @@ const ProgressiveEnhancement = {
                 const history = JSON.parse(savedHistory);
                 this.loadTypingHistory(history);
             } catch (error) {
-                console.warn('Failed to load typing history:', error);
+                _logger.warn('Failed to load typing history:', error);
             }
         }
     },
@@ -111,7 +112,7 @@ const ProgressiveEnhancement = {
         const observer = new PerformanceObserver((list) => {
             list.getEntries().forEach((entry) => {
                 if (entry.entryType === 'navigation') {
-                    console.log('Page load time:', entry.loadEventEnd - entry.loadEventStart);
+                    _logger.debug('Page load time:', entry.loadEventEnd - entry.loadEventStart);
                 }
             });
         });
@@ -140,7 +141,7 @@ const UserPreferences = {
             localStorage.setItem('userPreferences', JSON.stringify(preferences));
             return true;
         } catch (error) {
-            console.error('Failed to save preferences:', error);
+            _logger.error('Failed to save preferences:', error);
             return false;
         }
     },
@@ -151,7 +152,7 @@ const UserPreferences = {
             const saved = localStorage.getItem('userPreferences');
             return saved ? JSON.parse(saved) : this.getDefaultPreferences();
         } catch (error) {
-            console.error('Failed to load preferences:', error);
+            _logger.error('Failed to load preferences:', error);
             return this.getDefaultPreferences();
         }
     },
@@ -501,7 +502,7 @@ const KeyboardShortcuts = {
             
             localStorage.setItem('typingProgress', JSON.stringify(progressHistory));
         } catch (error) {
-            console.error('Failed to save progress:', error);
+            _logger.error('Failed to save progress:', error);
         }
     }
 };
@@ -521,7 +522,7 @@ const ErrorHandling = {
 
     // Handle error
     handleError(error) {
-        console.error('Application error:', error);
+        _logger.error('Application error:', error);
         
         const errorMessage = this.getErrorMessage(error);
         FeedbackUtils.showError(errorMessage);
@@ -566,7 +567,7 @@ const ErrorHandling = {
             
             localStorage.setItem('errorLogs', JSON.stringify(logs));
         } catch (e) {
-            console.error('Failed to log error:', e);
+            _logger.error('Failed to log error:', e);
         }
     }
 };
@@ -586,7 +587,7 @@ const initUX = () => {
     const preferences = UserPreferences.loadPreferences();
     UserPreferences.applyUserPreferences(preferences);
     
-    console.log('UX features initialized');
+    _logger.debug('UX features initialized');
 };
 
 // Export UX utilities for global access

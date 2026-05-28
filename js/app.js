@@ -456,6 +456,9 @@ export class CosmicTypingApp {
 
   showResults(results) {
     this.hideAllSections();
+    // P4: 前回のアドバイスをリセット
+    const advEl = document.getElementById('sessionAdvice');
+    if (advEl) advEl.classList.add('hidden');
 
     // P2: タイムアタックは専用結果パネルを使用
     if (results.mode === 'timeAttack') {
@@ -712,6 +715,27 @@ export class CosmicTypingApp {
 
     // Auto-save results
     await this.saveResult();
+
+    // P2: 実績チェック（セッション保存後に全統計で判定）
+    try {
+      const sessions = JSON.parse(localStorage.getItem('typing_sessions') || '[]');
+      const statsForAchievement = {
+        totalSessions: sessions.length,
+        bestWPM: sessions.reduce((m, s) => Math.max(m, s.wpm || 0), 0),
+        bestAccuracy: sessions.reduce((m, s) => Math.max(m, s.accuracy || 0), 0),
+        totalTime: sessions.reduce((sum, s) => sum + (s.duration || 0), 0),
+        bestCombo: sessions.reduce((m, s) => Math.max(m, s.maxCombo || 0), 0),
+        level: parseInt(localStorage.getItem('cosmicTyping_xp_lv') || '1'),
+      };
+      if (this.achievementSystem) {
+        this.achievementSystem.checkAchievements(statsForAchievement);
+      }
+    } catch (e) { /* 実績チェック失敗は無視 */ }
+
+    // P4: セッション後ワンポイントアドバイス
+    if (typeof window.showSessionAdvice === 'function') {
+      window.showSessionAdvice(results.wpm, results.accuracy);
+    }
   }
 
   onTypingError(error) {
@@ -1009,19 +1033,10 @@ export class CosmicTypingApp {
 
   // リーダーボードをUIに表示
   displayLeaderboard(leaderboard, mode, timeLimit) {
-    // TODO: Implement leaderboard display in UI
-    // This would create a modal or panel showing the leaderboard
     logger.info('Leaderboard:', leaderboard);
-    
-    // For now, just log to console
-    console.table(leaderboard.map((entry, index) => ({
-      順位: index + 1,
-      プレイヤー: entry.player_name,
-      スコア: entry.score,
-      ランク: entry.rank,
-      WPM: entry.wpm,
-      正確率: `${entry.accuracy}%`
-    })));
+    if (typeof showLeaderboardModal === 'function') {
+      showLeaderboardModal(mode, timeLimit);
+    }
   }
 }
 

@@ -1,5 +1,6 @@
 // Animation Manager for Cosmic Typing Adventure
 
+const _logger = window.logger || { debug: () => {}, info: () => {}, warn: console.warn, error: console.error };
 class AnimationManager {
     constructor() {
         this.particles = [];
@@ -10,7 +11,7 @@ class AnimationManager {
         
         this.setupEventListeners();
         this.startParticleCleanup();
-        console.log('✨ Animation Manager initialized');
+        _logger.debug('✨ Animation Manager initialized');
     }
 
     setupEventListeners() {
@@ -19,7 +20,7 @@ class AnimationManager {
         if (animationToggle) {
             animationToggle.addEventListener('change', (e) => {
                 this.isEnabled = e.target.checked;
-                console.log(`Animations ${this.isEnabled ? 'enabled' : 'disabled'}`);
+                _logger.debug(`Animations ${this.isEnabled ? 'enabled' : 'disabled'}`);
             });
         }
     }
@@ -513,7 +514,7 @@ class AnimationManager {
     // Toggle animations
     toggleAnimations() {
         this.isEnabled = !this.isEnabled;
-        console.log(`Animations ${this.isEnabled ? 'enabled' : 'disabled'}`);
+        _logger.debug(`Animations ${this.isEnabled ? 'enabled' : 'disabled'}`);
         
         // Update UI if available
         const toggle = document.getElementById('animationToggle');
@@ -534,6 +535,6 @@ class AnimationManager {
         this.animations = [];
         this.particleCount = 0;
         
-        console.log('All animations cleared');
+        _logger.debug('All animations cleared');
     }
 } 

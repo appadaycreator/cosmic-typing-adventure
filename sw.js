@@ -3,9 +3,9 @@
  * オフライン対応とキャッシュ機能
  */
 
-const CACHE_NAME = 'cosmic-typing-v1.0.1';
-const STATIC_CACHE = 'cosmic-typing-static-v1.0.0';
-const DYNAMIC_CACHE = 'cosmic-typing-dynamic-v1.0.0';
+const CACHE_NAME = 'cosmic-typing-v20260528';
+const STATIC_CACHE = 'cosmic-typing-static-v20260528';
+const DYNAMIC_CACHE = 'cosmic-typing-dynamic-v20260528';
 
 // キャッシュするリソース
 const STATIC_RESOURCES = [
@@ -36,18 +36,10 @@ const DYNAMIC_RESOURCES = [
 
 // インストール時の処理
 self.addEventListener('install', event => {
-  console.log('🌌 Service Worker installing...');
-  
   event.waitUntil(
     caches.open(STATIC_CACHE)
-      .then(cache => {
-        console.log('📦 Caching static resources');
-        return cache.addAll(STATIC_RESOURCES);
-      })
-      .then(() => {
-        console.log('✅ Static resources cached successfully');
-        return self.skipWaiting();
-      })
+      .then(cache => cache.addAll(STATIC_RESOURCES))
+      .then(() => self.skipWaiting())
       .catch(error => {
         console.error('❌ Failed to cache static resources:', error);
       })
@@ -56,24 +48,18 @@ self.addEventListener('install', event => {
 
 // アクティベート時の処理
 self.addEventListener('activate', event => {
-  console.log('🌌 Service Worker activating...');
-  
   event.waitUntil(
     caches.keys()
       .then(cacheNames => {
         return Promise.all(
           cacheNames.map(cacheName => {
             if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
-              console.log('🗑️ Deleting old cache:', cacheName);
               return caches.delete(cacheName);
             }
           })
         );
       })
-      .then(() => {
-        console.log('✅ Service Worker activated');
-        return self.clients.claim();
-      })
+      .then(() => self.clients.claim())
   );
 });
 
@@ -252,7 +238,7 @@ self.addEventListener('message', event => {
       break;
       
     default:
-      console.log('Unknown message type:', type);
+      break;
   }
 });
 
@@ -288,4 +274,3 @@ self.addEventListener('unhandledrejection', event => {
   console.error('Service Worker unhandled rejection:', event.reason);
 });
 
-console.log('🌌 Cosmic Typing Adventure Service Worker loaded'); 

@@ -1,13 +1,14 @@
 // Common utilities for Cosmic Typing Adventure - Optimized Version
 
 // Performance monitoring utilities
+const _logger = window.logger || { debug: () => {}, info: () => {}, warn: console.warn, error: console.error };
 export const PerformanceUtils = {
     // Measure execution time
     measureTime(fn, label = 'Function') {
         const start = performance.now();
         const result = fn();
         const end = performance.now();
-        console.log(`${label} took ${(end - start).toFixed(2)}ms`);
+        _logger.debug(`${label} took ${(end - start).toFixed(2)}ms`);
         return result;
     },
 
@@ -150,7 +151,7 @@ export const StorageUtils = {
             localStorage.setItem(key, serialized);
             return true;
         } catch (error) {
-            console.error('Failed to save to localStorage:', error);
+            _logger.error('Failed to save to localStorage:', error);
             return false;
         }
     },
@@ -160,7 +161,7 @@ export const StorageUtils = {
             const item = localStorage.getItem(key);
             return item ? JSON.parse(item) : defaultValue;
         } catch (error) {
-            console.error('Failed to read from localStorage:', error);
+            _logger.error('Failed to read from localStorage:', error);
             return defaultValue;
         }
     },
@@ -170,7 +171,7 @@ export const StorageUtils = {
             localStorage.removeItem(key);
             return true;
         } catch (error) {
-            console.error('Failed to remove from localStorage:', error);
+            _logger.error('Failed to remove from localStorage:', error);
             return false;
         }
     },
@@ -292,12 +293,12 @@ export const ErrorUtils = {
     // Global error handler
     setupGlobalErrorHandler() {
         window.addEventListener('error', (event) => {
-            console.error('Global error:', event.error);
+            _logger.error('Global error:', event.error);
             // Send to analytics if needed
         });
 
         window.addEventListener('unhandledrejection', (event) => {
-            console.error('Unhandled promise rejection:', event.reason);
+            _logger.error('Unhandled promise rejection:', event.reason);
             // Send to analytics if needed
         });
     },
@@ -307,7 +308,7 @@ export const ErrorUtils = {
         try {
             return fn();
         } catch (error) {
-            console.error('Function execution failed:', error);
+            _logger.error('Function execution failed:', error);
             return fallback;
         }
     },
@@ -317,7 +318,7 @@ export const ErrorUtils = {
         try {
             return await fn();
         } catch (error) {
-            console.error('Async function execution failed:', error);
+            _logger.error('Async function execution failed:', error);
             return fallback;
         }
     }
@@ -382,5 +383,5 @@ export const initUtils = () => {
     // Cleanup old data
     StorageUtils.cleanupOldData();
 
-    console.log('Common utilities initialized');
+    _logger.debug('Common utilities initialized');
 };

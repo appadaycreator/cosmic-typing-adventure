@@ -1,5 +1,6 @@
 // Advanced Analytics for Cosmic Typing Adventure
 
+import { logger } from './logger.js';
 export class AdvancedAnalytics {
     constructor() {
         this.dailyStats = {};
@@ -19,7 +20,7 @@ export class AdvancedAnalytics {
         this.loadAnalytics();
         this.setupEventListeners();
         this.initializeCharts();
-        console.log('📊 Advanced Analytics initialized');
+        logger.debug('📊 Advanced Analytics initialized');
     }
 
     loadAnalytics() {
@@ -34,7 +35,7 @@ export class AdvancedAnalytics {
                 this.progressTrends = analytics.progressTrends || [];
             }
         } catch (error) {
-            console.error('Failed to load analytics:', error);
+            logger.error('Failed to load analytics:', error);
         }
     }
 
@@ -50,7 +51,7 @@ export class AdvancedAnalytics {
             };
             localStorage.setItem('cosmicTyping_analytics', JSON.stringify(analytics));
         } catch (error) {
-            console.error('Failed to save analytics:', error);
+            logger.error('Failed to save analytics:', error);
         }
     }
 
@@ -173,7 +174,7 @@ export class AdvancedAnalytics {
         // Save analytics
         this.saveAnalytics();
         
-        console.log('Session recorded in analytics');
+        logger.debug('Session recorded in analytics');
     }
 
     getWeekKey(date) {
@@ -225,7 +226,7 @@ export class AdvancedAnalytics {
                 this.showProgressTrends();
                 break;
             default:
-                console.error('Unknown analytics type:', type);
+                logger.error('Unknown analytics type:', type);
         }
     }
 
@@ -551,7 +552,7 @@ export class AdvancedAnalytics {
         
         URL.revokeObjectURL(url);
         
-        console.log('Analytics exported successfully');
+        logger.debug('Analytics exported successfully');
     }
 
     clearAnalytics() {
@@ -565,7 +566,7 @@ export class AdvancedAnalytics {
             this.saveAnalytics();
             this.updateAllCharts();
             
-            console.log('All analytics data cleared');
+            logger.debug('All analytics data cleared');
         }
     }
 
@@ -574,10 +575,10 @@ export class AdvancedAnalytics {
         // DOMが完全に読み込まれるまで待機
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
-                console.log('Advanced Analytics: DOM loaded, ready to create charts');
+                logger.debug('Advanced Analytics: DOM loaded, ready to create charts');
             });
         } else {
-            console.log('Advanced Analytics: DOM already loaded, ready to create charts');
+            logger.debug('Advanced Analytics: DOM already loaded, ready to create charts');
         }
     }
 
@@ -585,7 +586,7 @@ export class AdvancedAnalytics {
     createPerformanceChart() {
         const canvas = document.getElementById('performanceChart');
         if (!canvas) {
-            console.warn('Performance chart canvas not found');
+            logger.warn('Performance chart canvas not found');
             return;
         }
 
@@ -722,7 +723,7 @@ export class AdvancedAnalytics {
     createKeyStatsChart() {
         const canvas = document.getElementById('keyStatsChart');
         if (!canvas) {
-            console.warn('Key stats chart canvas not found');
+            logger.warn('Key stats chart canvas not found');
             return;
         }
 
@@ -918,7 +919,7 @@ export class AdvancedAnalytics {
         
         URL.revokeObjectURL(url);
         
-        console.log('CSV exported successfully');
+        logger.debug('CSV exported successfully');
     }
 
     // 練習時間の円グラフ（日別/週別/月別）

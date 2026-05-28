@@ -174,5 +174,17 @@ window.HeatmapManager = (function () {
         renderWeakKeysList();
     });
 
-    return { renderHeatmap: renderHeatmap, renderWeakKeysList: renderWeakKeysList };
+    // P1: 弱点キー取得（ミス率上位5件）
+    function getWeakKeys() {
+        const data = load();
+        return Object.entries(data).map(function ([k, v]) {
+            const total = v.hits + v.misses;
+            return { key: k, total: total, rate: total >= 3 ? v.misses / total : 0 };
+        }).filter(function (k) { return k.total >= 3 && k.rate > 0; })
+          .sort(function (a, b) { return b.rate - a.rate; })
+          .slice(0, 5)
+          .map(function (k) { return k.key; });
+    }
+
+    return { renderHeatmap: renderHeatmap, renderWeakKeysList: renderWeakKeysList, getWeakKeys: getWeakKeys };
 })();

@@ -2,6 +2,7 @@
 // バージョン: 3.0.0
 // 最終更新: 2026-01-30
 
+import { logger } from './logger.js';
 import { KANA_MAPPING, handleSokuon, handleN } from './kana-mapping.js';
 
 export class TypingEngine {
@@ -99,7 +100,7 @@ export class TypingEngine {
     // Start typing session with security validation
     start() {
         if (!this.elements.textDisplay || !this.elements.textDisplay.textContent) {
-            console.warn('No text to type');
+            logger.warn('No text to type');
             return;
         }
 
@@ -107,7 +108,7 @@ export class TypingEngine {
         try {
             this.currentText = this.validateAndSanitizeText(this.elements.textDisplay.textContent);
         } catch (error) {
-            console.error('Text validation failed:', error.message);
+            logger.error('Text validation failed:', error.message);
             this.handleSecurityError('Invalid text content', error);
             return;
         }
@@ -222,7 +223,7 @@ export class TypingEngine {
             i += matchLen;
         }
         
-        console.debug('Tokenized text:', this.tokens);
+        logger.debug('Tokenized text:', this.tokens);
     }
 
     /**

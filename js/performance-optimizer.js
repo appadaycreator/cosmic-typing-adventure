@@ -1,5 +1,6 @@
 // Performance Optimizer for Cosmic Typing Adventure
 
+const _logger = window.logger || { debug: () => {}, info: () => {}, warn: console.warn, error: console.error };
 class PerformanceOptimizer {
     constructor() {
         this.updateQueue = [];
@@ -14,7 +15,7 @@ class PerformanceOptimizer {
     init() {
         this.setupOptimizations();
         this.startPerformanceMonitoring();
-        console.log('⚡ Performance Optimizer initialized');
+        _logger.debug('⚡ Performance Optimizer initialized');
     }
 
     setupOptimizations() {
@@ -75,7 +76,7 @@ class PerformanceOptimizer {
                     try {
                         update();
                     } catch (error) {
-                        console.error('Batch update error:', error);
+                        _logger.error('Batch update error:', error);
                     }
                 }
                 
@@ -206,7 +207,7 @@ class PerformanceOptimizer {
                 const totalMB = Math.round(memory.totalJSHeapSize / 1024 / 1024);
                 
                 if (usedMB > 100) { // Warning threshold
-                    console.warn(`High memory usage: ${usedMB}MB / ${totalMB}MB`);
+                    _logger.warn(`High memory usage: ${usedMB}MB / ${totalMB}MB`);
                     this.cleanupMemory();
                 }
             }, 5000);
@@ -271,7 +272,7 @@ class PerformanceOptimizer {
                 
                 // Log low FPS
                 if (this.fps < 30) {
-                    console.warn(`Low FPS detected: ${this.fps}`);
+                    _logger.warn(`Low FPS detected: ${this.fps}`);
                     this.optimizeForLowFPS();
                 }
             }
@@ -290,7 +291,7 @@ class PerformanceOptimizer {
             const frameTime = currentTime - lastFrameTime;
             
             if (frameTime > 16.67) { // More than 60fps threshold
-                console.warn(`Long frame detected: ${frameTime.toFixed(2)}ms`);
+                _logger.warn(`Long frame detected: ${frameTime.toFixed(2)}ms`);
             }
             
             lastFrameTime = currentTime;
@@ -305,7 +306,7 @@ class PerformanceOptimizer {
             const observer = new PerformanceObserver((list) => {
                 list.getEntries().forEach((entry) => {
                     if (entry.duration > 50) { // Long task threshold
-                        console.warn(`Long task detected: ${entry.duration}ms`, entry);
+                        _logger.warn(`Long task detected: ${entry.duration}ms`, entry);
                     }
                 });
             });

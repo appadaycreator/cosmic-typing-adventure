@@ -14,9 +14,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400;500;700;900&family=Exo+2:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <!-- Styles -->
     <link rel="stylesheet" href="css/common.css">
     <link rel="stylesheet" href="css/text-manager.css">
@@ -109,11 +106,11 @@
     <header class="page-header">
         <div class="page-header-content">
             <div class="page-title">
-                <i class="fas fa-book fa-2x" style="color: #06b6d4;"></i>
+                <span style="font-size: 2rem; color: #06b6d4;" aria-hidden="true">📚</span>
                 <h1>練習テキスト管理</h1>
             </div>
             <a href="app.html" class="back-link">
-                <i class="fas fa-arrow-left"></i>
+                <span aria-hidden="true">←</span>
                 アプリに戻る
             </a>
         </div>
@@ -148,14 +145,14 @@
                 if (container) {
                     container.innerHTML = `
                         <div style="text-align: center; padding: 3rem;">
-                            <i class="fas fa-exclamation-triangle fa-3x" style="color: #ef4444; margin-bottom: 1rem;"></i>
+                            <span style="font-size: 3rem; color: #ef4444; margin-bottom: 1rem; display: block;" aria-hidden="true">⚠️</span>
                             <h2 style="margin-bottom: 1rem;">エラーが発生しました</h2>
                             <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 2rem;">
                                 テキスト管理システムの初期化に失敗しました。<br>
                                 ページを再読み込みしてください。
                             </p>
                             <button onclick="location.reload()" class="btn btn-primary">
-                                <i class="fas fa-redo"></i> 再読み込み
+                                <span aria-hidden="true">🔄</span> 再読み込み
                             </button>
                         </div>
                     `;

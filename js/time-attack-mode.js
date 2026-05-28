@@ -1,5 +1,6 @@
 // Time Attack Mode for Cosmic Typing Adventure
 
+const _logger = window.logger || { debug: () => {}, info: () => {}, warn: console.warn, error: console.error };
 class TimeAttackMode {
     constructor() {
         this.duration = 60; // Default 60 seconds
@@ -25,7 +26,7 @@ class TimeAttackMode {
         ];
         
         this.setupEventListeners();
-        console.log('⏱️ Time Attack Mode initialized');
+        _logger.debug('⏱️ Time Attack Mode initialized');
     }
 
     setupEventListeners() {
@@ -81,7 +82,7 @@ class TimeAttackMode {
         // Start typing session
         this.startTypingSession();
         
-        console.log(`Time attack started: ${duration} seconds`);
+        _logger.debug(`Time attack started: ${duration} seconds`);
     }
 
     endTimeAttack() {
@@ -102,7 +103,7 @@ class TimeAttackMode {
         // Save results
         this.saveTimeAttackResults();
         
-        console.log('Time attack ended');
+        _logger.debug('Time attack ended');
     }
 
     calculateFinalResults() {
@@ -307,7 +308,7 @@ class TimeAttackMode {
                 window.achievementSystem.checkAchievements(window.userStats);
             }
             
-            console.log(`Time attack results saved. XP gained: ${xpGained}`);
+            _logger.debug(`Time attack results saved. XP gained: ${xpGained}`);
         }
     }
 
@@ -514,7 +515,7 @@ class TimeAttackMode {
             resultsPanel.classList.add('hidden');
         }
 
-        console.log('Time attack reset');
+        _logger.debug('Time attack reset');
     }
 
     getTimeOptions() {

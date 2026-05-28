@@ -1,6 +1,7 @@
 // Game Mode Manager for Cosmic Typing Adventure
 // サバイバルモード、タイムアタックモード、リーダーボード管理
 
+import { logger } from './logger.js';
 export class GameModeManager {
     constructor() {
         this.currentMode = 'normal';
@@ -142,17 +143,17 @@ export class LeaderboardManager {
                     .insert([entry]);
                 
                 if (error) {
-                    console.error('Supabase leaderboard save error:', error);
+                    logger.error('Supabase leaderboard save error:', error);
                     return this.saveToLocalStorage(entry);
                 }
                 
-                console.log('Score saved to leaderboard:', data);
+                logger.debug('Score saved to leaderboard:', data);
                 
                 // Also save to localStorage as backup
                 this.saveToLocalStorage(entry);
                 return true;
             } catch (error) {
-                console.error('Error saving to leaderboard:', error);
+                logger.error('Error saving to leaderboard:', error);
                 return this.saveToLocalStorage(entry);
             }
         }
@@ -177,10 +178,10 @@ export class LeaderboardManager {
             }
             
             localStorage.setItem(this.localStorageKey, JSON.stringify(existing));
-            console.log('Score saved to localStorage');
+            logger.debug('Score saved to localStorage');
             return true;
         } catch (error) {
-            console.error('Error saving to localStorage:', error);
+            logger.error('Error saving to localStorage:', error);
             return false;
         }
     }
@@ -209,13 +210,13 @@ export class LeaderboardManager {
                 const { data, error } = await query;
                 
                 if (error) {
-                    console.error('Supabase leaderboard fetch error:', error);
+                    logger.error('Supabase leaderboard fetch error:', error);
                     return this.getLocalLeaderboard(mode, timeLimit, limit);
                 }
                 
                 return data || [];
             } catch (error) {
-                console.error('Error fetching leaderboard:', error);
+                logger.error('Error fetching leaderboard:', error);
                 return this.getLocalLeaderboard(mode, timeLimit, limit);
             }
         }
@@ -245,7 +246,7 @@ export class LeaderboardManager {
             
             return filtered.slice(0, limit);
         } catch (error) {
-            console.error('Error reading local leaderboard:', error);
+            logger.error('Error reading local leaderboard:', error);
             return [];
         }
     }

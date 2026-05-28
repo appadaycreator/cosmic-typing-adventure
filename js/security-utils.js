@@ -1,6 +1,7 @@
 // Security utilities for Cosmic Typing Adventure
 
 // Input validation and sanitization utilities
+const _logger = window.logger || { debug: () => {}, info: () => {}, warn: console.warn, error: console.error };
 export const SecurityUtils = {
     // Sanitize HTML content
     sanitizeHtml(input) {
@@ -434,7 +435,7 @@ export const SecurityMonitoring = {
             this.securityEvents = this.securityEvents.slice(-100);
         }
 
-        console.warn('Security event logged:', securityEvent);
+        _logger.warn('Security event logged:', securityEvent);
     },
 
     // Detect suspicious activity
@@ -489,7 +490,7 @@ export const initSecurity = () => {
                     if (node.nodeType === Node.ELEMENT_NODE) {
                         const html = node.outerHTML || node.innerHTML;
                         if (html && SecurityMonitoring.detectSuspiciousActivity(html)) {
-                            console.warn('Suspicious DOM modification detected');
+                            _logger.warn('Suspicious DOM modification detected');
                         }
                     }
                 });
@@ -502,7 +503,7 @@ export const initSecurity = () => {
         subtree: true
     });
 
-    console.log('Security features initialized');
+    _logger.debug('Security features initialized');
 };
 
 // Initialize when DOM is ready

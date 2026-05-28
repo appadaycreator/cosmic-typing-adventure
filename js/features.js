@@ -273,7 +273,9 @@ window.TutorialManager = (function () {
         if (taChartInstance) { taChartInstance.destroy(); taChartInstance = null; }
         var c1 = document.getElementById('wpmChartContainer');
         var c2 = document.getElementById('taWpmChartContainer');
-        if (c1) c1.classList.add('hidden');
+        // P3: WPMグラフ設定に従い表示制御（デフォルト表示）
+        var showGraph = localStorage.getItem('cosmicTyping_showWpmGraph') !== 'false';
+        if (c1) { if (showGraph) c1.classList.remove('hidden'); else c1.classList.add('hidden'); }
         if (c2) c2.classList.add('hidden');
 
         // liveWPMはtypingInterface内にあり通常/TAモード両方で更新される
@@ -473,7 +475,11 @@ window.TutorialManager = (function () {
         showToast('✨ +' + gain + ' XP 獲得！');
         if (newLevel > prevLevel) {
             setTimeout(function () {
-                showToast('🎉 レベルアップ！ Lv.' + prevLevel + ' → Lv.' + newLevel);
+                if (typeof window.showLevelUpModal === 'function') {
+                    window.showLevelUpModal(prevLevel, newLevel);
+                } else {
+                    showToast('🎉 レベルアップ！ Lv.' + prevLevel + ' → Lv.' + newLevel);
+                }
             }, 800);
         }
     }

@@ -45,106 +45,406 @@
           "wordCount": 25,
           "charCount": 50
         },
-        { "id": 1, "text": "The universe is full of endless possibilities." },
-        { "id": 2, "text": "Stars shine brightly in the night sky." },
-        { "id": 3, "text": "A new adventure begins with every discovery." },
-        { "id": 4, "text": "Practice typing every day to improve your skills." },
-        { "id": 5, "text": "Never be afraid to make mistakes." },
-        { "id": 6, "text": "Accuracy is more important than speed." },
-        { "id": 7, "text": "The spaceship travels across the galaxy." },
-        { "id": 8, "text": "Setting goals helps you grow." },
-        { "id": 9, "text": "You have the power to overcome any challenge." },
-        { "id": 10, "text": "Shape your own future with determination." },
-        { "id": 11, "text": "Practice a little every day for steady progress." },
-        { "id": 12, "text": "Focus your mind and type with care." },
-        { "id": 13, "text": "Marvel at the mysteries of the universe." },
-        { "id": 14, "text": "Sit up straight and face the keyboard." },
-        { "id": 15, "text": "Every step forward counts." },
-        { "id": 16, "text": "Absorb new knowledge with curiosity." },
-        { "id": 17, "text": "Gaze at the constellations and dream big." },
-        { "id": 18, "text": "Achieve your goals by working with friends." },
-        { "id": 19, "text": "Typing is all about rhythm." },
-        { "id": 20, "text": "Venture to the edge of the universe." },
-        { "id": 21, "text": "Grow at your own pace." },
-        { "id": 22, "text": "Never lose your spirit of challenge." },
-        { "id": 23, "text": "New discoveries await beyond the galaxy." },
-        { "id": 24, "text": "Aim for a high score with accurate typing." },
-        { "id": 25, "text": "Daily effort changes your future." },
-        { "id": 26, "text": "Unravel the mysteries of space." },
-        { "id": 27, "text": "Type each letter carefully and with focus." },
-        { "id": 28, "text": "Adventure begins with courage." },
-        { "id": 29, "text": "Expand your world through typing." },
-        { "id": 30, "text": "There are as many possibilities as stars." },
-        { "id": 31, "text": "Believe in yourself and move forward." },
-        { "id": 32, "text": "Listen to the silence of space." },
-        { "id": 33, "text": "New challenges help you grow." },
-        { "id": 34, "text": "Use the correct finger positions." },
-        { "id": 35, "text": "Compete and improve with your friends." },
-        { "id": 36, "text": "Consistency is the key to typing skill." },
-        { "id": 37, "text": "Feel the vastness of the universe." },
-        { "id": 38, "text": "Type each letter with care." },
-        { "id": 39, "text": "A new you awaits at the end of the adventure." },
-        { "id": 40, "text": "Typing helps you build concentration." },
-        { "id": 41, "text": "Share your dreams under the starry sky." },
-        { "id": 42, "text": "Failure is the mother of success." },
-        { "id": 43, "text": "Let your thoughts wander to the edge of space." },
-        { "id": 44, "text": "Discover something new every day." },
-        { "id": 45, "text": "Accurate typing is the key to improvement." },
-        { "id": 46, "text": "The adventure never ends." },
-        { "id": 47, "text": "Push beyond your limits." },
-        { "id": 48, "text": "Set your sights on new stars with your spaceship." },
-        { "id": 49, "text": "Typing boosts your focus." },
-        { "id": 50, "text": "Draw courage from the brilliance of the stars." },
-        { "id": 51, "text": "Taking the first step is important." },
-        { "id": 52, "text": "Feel the wonders of the universe." },
-        { "id": 53, "text": "Practice steadily every day." },
-        { "id": 54, "text": "Meet new friends on your journey." },
-        { "id": 55, "text": "Gain confidence through typing." },
-        { "id": 56, "text": "Imagine the stories behind the constellations." },
-        { "id": 57, "text": "Be amazed by the vastness of space." },
-        { "id": 58, "text": "Sit up straight and focus." },
-        { "id": 59, "text": "The adventure continues." },
-        { "id": 60, "text": "Discover a new you through typing." },
-        { "id": 61, "text": "Travel the sea of stars." },
-        { "id": 62, "text": "Take on the mysteries of the universe." },
-        { "id": 63, "text": "Grow a little every day." },
-        { "id": 64, "text": "Every adventure begins with a single step." },
-        { "id": 65, "text": "Change the world through typing." },
-        { "id": 66, "text": "Make a wish upon the stars." },
-        { "id": 67, "text": "Chase your dreams to the edge of the universe." },
-        { "id": 68, "text": "Break your records with accurate typing." },
-        { "id": 69, "text": "Remember to take breaks during your adventure." },
-        { "id": 70, "text": "Typing helps you focus." },
-        { "id": 71, "text": "Be captivated by the twinkle of the stars." },
-        { "id": 72, "text": "Find peace in the silence of space." },
-        { "id": 73, "text": "Challenge yourself with something new every day." },
-        { "id": 74, "text": "The end of one adventure is the start of another." },
-        { "id": 75, "text": "Express yourself through typing." },
-        { "id": 76, "text": "Learn the names of the constellations and enjoy the night sky." },
-        { "id": 77, "text": "Embark on a journey to touch the mysteries of the universe." },
-        { "id": 78, "text": "Type quickly with the correct finger positions." },
-        { "id": 79, "text": "Work together with your adventure companions." },
-        { "id": 80, "text": "Typing helps you develop focus." },
-        { "id": 81, "text": "Let your thoughts drift beyond the stars." },
-        { "id": 82, "text": "Be moved by the vastness of the universe." },
-        { "id": 83, "text": "Consistency is important every day." },
-        { "id": 84, "text": "Find new discoveries along your adventure." },
-        { "id": 85, "text": "Be confident in your typing." },
-        { "id": 86, "text": "Find comfort in the beauty of the night sky." },
-        { "id": 87, "text": "Take on the edge of the universe." },
-        { "id": 88, "text": "Score high with accurate typing." },
-        { "id": 89, "text": "Every adventure begins with courage." },
-        { "id": 90, "text": "Typing boosts your focus." },
-        { "id": 91, "text": "Draw energy from the brilliance of the stars." },
-        { "id": 92, "text": "Explore the mysteries of the universe." },
-        { "id": 93, "text": "Meet a new you every day." },
-        { "id": 94, "text": "Grow along your adventure." },
-        { "id": 95, "text": "Expand your world through typing." },
-        { "id": 96, "text": "Learn the names of the constellations." },
-        { "id": 97, "text": "Travel to the edge of the universe." },
-        { "id": 98, "text": "Break your records with accurate typing." },
-        { "id": 99, "text": "Move forward with your adventure companions." },
-        { "id": 100, "text": "Shape your future through typing." }
+        {
+          "id": 1,
+          "text": "The universe is full of endless possibilities."
+        },
+        {
+          "id": 2,
+          "text": "Stars shine brightly in the night sky."
+        },
+        {
+          "id": 3,
+          "text": "A new adventure begins with every discovery."
+        },
+        {
+          "id": 4,
+          "text": "Practice typing every day to improve your skills."
+        },
+        {
+          "id": 5,
+          "text": "Never be afraid to make mistakes."
+        },
+        {
+          "id": 6,
+          "text": "Accuracy is more important than speed."
+        },
+        {
+          "id": 7,
+          "text": "The spaceship travels across the galaxy."
+        },
+        {
+          "id": 8,
+          "text": "Setting goals helps you grow."
+        },
+        {
+          "id": 9,
+          "text": "You have the power to overcome any challenge."
+        },
+        {
+          "id": 10,
+          "text": "Shape your own future with determination."
+        },
+        {
+          "id": 11,
+          "text": "Practice a little every day for steady progress."
+        },
+        {
+          "id": 12,
+          "text": "Focus your mind and type with care."
+        },
+        {
+          "id": 13,
+          "text": "Marvel at the mysteries of the universe."
+        },
+        {
+          "id": 14,
+          "text": "Sit up straight and face the keyboard."
+        },
+        {
+          "id": 15,
+          "text": "Every step forward counts."
+        },
+        {
+          "id": 16,
+          "text": "Absorb new knowledge with curiosity."
+        },
+        {
+          "id": 17,
+          "text": "Gaze at the constellations and dream big."
+        },
+        {
+          "id": 18,
+          "text": "Achieve your goals by working with friends."
+        },
+        {
+          "id": 19,
+          "text": "Typing is all about rhythm."
+        },
+        {
+          "id": 20,
+          "text": "Venture to the edge of the universe."
+        },
+        {
+          "id": 21,
+          "text": "Grow at your own pace."
+        },
+        {
+          "id": 22,
+          "text": "Never lose your spirit of challenge."
+        },
+        {
+          "id": 23,
+          "text": "New discoveries await beyond the galaxy."
+        },
+        {
+          "id": 24,
+          "text": "Aim for a high score with accurate typing."
+        },
+        {
+          "id": 25,
+          "text": "Daily effort changes your future."
+        },
+        {
+          "id": 26,
+          "text": "Unravel the mysteries of space."
+        },
+        {
+          "id": 27,
+          "text": "Type each letter carefully and with focus."
+        },
+        {
+          "id": 28,
+          "text": "Adventure begins with courage."
+        },
+        {
+          "id": 29,
+          "text": "Expand your world through typing."
+        },
+        {
+          "id": 30,
+          "text": "There are as many possibilities as stars."
+        },
+        {
+          "id": 31,
+          "text": "Believe in yourself and move forward."
+        },
+        {
+          "id": 32,
+          "text": "Listen to the silence of space."
+        },
+        {
+          "id": 33,
+          "text": "New challenges help you grow."
+        },
+        {
+          "id": 34,
+          "text": "Use the correct finger positions."
+        },
+        {
+          "id": 35,
+          "text": "Compete and improve with your friends."
+        },
+        {
+          "id": 36,
+          "text": "Consistency is the key to typing skill."
+        },
+        {
+          "id": 37,
+          "text": "Feel the vastness of the universe."
+        },
+        {
+          "id": 38,
+          "text": "Type each letter with care."
+        },
+        {
+          "id": 39,
+          "text": "A new you awaits at the end of the adventure."
+        },
+        {
+          "id": 40,
+          "text": "Typing helps you build concentration."
+        },
+        {
+          "id": 41,
+          "text": "Share your dreams under the starry sky."
+        },
+        {
+          "id": 42,
+          "text": "Failure is the mother of success."
+        },
+        {
+          "id": 43,
+          "text": "Let your thoughts wander to the edge of space."
+        },
+        {
+          "id": 44,
+          "text": "Discover something new every day."
+        },
+        {
+          "id": 45,
+          "text": "Accurate typing is the key to improvement."
+        },
+        {
+          "id": 46,
+          "text": "The adventure never ends."
+        },
+        {
+          "id": 47,
+          "text": "Push beyond your limits."
+        },
+        {
+          "id": 48,
+          "text": "Set your sights on new stars with your spaceship."
+        },
+        {
+          "id": 49,
+          "text": "Typing boosts your focus."
+        },
+        {
+          "id": 50,
+          "text": "Draw courage from the brilliance of the stars."
+        },
+        {
+          "id": 51,
+          "text": "Taking the first step is important."
+        },
+        {
+          "id": 52,
+          "text": "Feel the wonders of the universe."
+        },
+        {
+          "id": 53,
+          "text": "Practice steadily every day."
+        },
+        {
+          "id": 54,
+          "text": "Meet new friends on your journey."
+        },
+        {
+          "id": 55,
+          "text": "Gain confidence through typing."
+        },
+        {
+          "id": 56,
+          "text": "Imagine the stories behind the constellations."
+        },
+        {
+          "id": 57,
+          "text": "Be amazed by the vastness of space."
+        },
+        {
+          "id": 58,
+          "text": "Sit up straight and focus."
+        },
+        {
+          "id": 59,
+          "text": "The adventure continues."
+        },
+        {
+          "id": 60,
+          "text": "Discover a new you through typing."
+        },
+        {
+          "id": 61,
+          "text": "Travel the sea of stars."
+        },
+        {
+          "id": 62,
+          "text": "Take on the mysteries of the universe."
+        },
+        {
+          "id": 63,
+          "text": "Grow a little every day."
+        },
+        {
+          "id": 64,
+          "text": "Every adventure begins with a single step."
+        },
+        {
+          "id": 65,
+          "text": "Change the world through typing."
+        },
+        {
+          "id": 66,
+          "text": "Make a wish upon the stars."
+        },
+        {
+          "id": 67,
+          "text": "Chase your dreams to the edge of the universe."
+        },
+        {
+          "id": 68,
+          "text": "Break your records with accurate typing."
+        },
+        {
+          "id": 69,
+          "text": "Remember to take breaks during your adventure."
+        },
+        {
+          "id": 70,
+          "text": "Typing helps you focus."
+        },
+        {
+          "id": 71,
+          "text": "Be captivated by the twinkle of the stars."
+        },
+        {
+          "id": 72,
+          "text": "Find peace in the silence of space."
+        },
+        {
+          "id": 73,
+          "text": "Challenge yourself with something new every day."
+        },
+        {
+          "id": 74,
+          "text": "The end of one adventure is the start of another."
+        },
+        {
+          "id": 75,
+          "text": "Express yourself through typing."
+        },
+        {
+          "id": 76,
+          "text": "Learn the names of the constellations and enjoy the night sky."
+        },
+        {
+          "id": 77,
+          "text": "Embark on a journey to touch the mysteries of the universe."
+        },
+        {
+          "id": 78,
+          "text": "Type quickly with the correct finger positions."
+        },
+        {
+          "id": 79,
+          "text": "Work together with your adventure companions."
+        },
+        {
+          "id": 80,
+          "text": "Typing helps you develop focus."
+        },
+        {
+          "id": 81,
+          "text": "Let your thoughts drift beyond the stars."
+        },
+        {
+          "id": 82,
+          "text": "Be moved by the vastness of the universe."
+        },
+        {
+          "id": 83,
+          "text": "Consistency is important every day."
+        },
+        {
+          "id": 84,
+          "text": "Find new discoveries along your adventure."
+        },
+        {
+          "id": 85,
+          "text": "Be confident in your typing."
+        },
+        {
+          "id": 86,
+          "text": "Find comfort in the beauty of the night sky."
+        },
+        {
+          "id": 87,
+          "text": "Take on the edge of the universe."
+        },
+        {
+          "id": 88,
+          "text": "Score high with accurate typing."
+        },
+        {
+          "id": 89,
+          "text": "Every adventure begins with courage."
+        },
+        {
+          "id": 90,
+          "text": "Typing boosts your focus."
+        },
+        {
+          "id": 91,
+          "text": "Draw energy from the brilliance of the stars."
+        },
+        {
+          "id": 92,
+          "text": "Explore the mysteries of the universe."
+        },
+        {
+          "id": 93,
+          "text": "Meet a new you every day."
+        },
+        {
+          "id": 94,
+          "text": "Grow along your adventure."
+        },
+        {
+          "id": 95,
+          "text": "Expand your world through typing."
+        },
+        {
+          "id": 96,
+          "text": "Learn the names of the constellations."
+        },
+        {
+          "id": 97,
+          "text": "Travel to the edge of the universe."
+        },
+        {
+          "id": 98,
+          "text": "Break your records with accurate typing."
+        },
+        {
+          "id": 99,
+          "text": "Move forward with your adventure companions."
+        },
+        {
+          "id": 100,
+          "text": "Shape your future through typing."
+        }
       ]
     },
     "mars": {
@@ -287,28 +587,163 @@
           "charCount": 70
         }
       ]
+    },
+    "code": {
+      "name": "Code Planet",
+      "difficulty": 3,
+      "description": "Programming vocabulary — camelCase, commands, functions",
+      "texts": [
+        {
+          "id": "code_001",
+          "title": "変数と関数",
+          "content": "const getUserName = (userId) => { return users.find(u => u.id === userId).name; };",
+          "difficulty": 3,
+          "wordCount": 10,
+          "charCount": 80
+        },
+        {
+          "id": "code_002",
+          "title": "配列操作",
+          "content": "const filteredItems = items.filter(item => item.isActive).map(item => item.name);",
+          "difficulty": 3,
+          "wordCount": 8,
+          "charCount": 80
+        },
+        {
+          "id": "code_003",
+          "title": "非同期処理",
+          "content": "async function fetchData(url) { const response = await fetch(url); return response.json(); }",
+          "difficulty": 4,
+          "wordCount": 10,
+          "charCount": 90
+        },
+        {
+          "id": "code_004",
+          "title": "クラス定義",
+          "content": "class EventEmitter { constructor() { this.listeners = {}; } on(event, fn) { this.listeners[event] = fn; } }",
+          "difficulty": 4,
+          "wordCount": 12,
+          "charCount": 105
+        },
+        {
+          "id": "code_005",
+          "title": "Gitコマンド",
+          "content": "git commit -m 'fix: resolve null pointer exception in user authentication module'",
+          "difficulty": 2,
+          "wordCount": 9,
+          "charCount": 78
+        },
+        {
+          "id": "code_006",
+          "title": "CSS変数",
+          "content": ":root { --primary-color: #3b82f6; --font-size-base: 16px; --spacing-md: 1rem; }",
+          "difficulty": 2,
+          "wordCount": 8,
+          "charCount": 76
+        },
+        {
+          "id": "code_007",
+          "title": "TypeScript型定義",
+          "content": "interface UserProfile { id: number; name: string; email: string; createdAt: Date; }",
+          "difficulty": 4,
+          "wordCount": 10,
+          "charCount": 82
+        },
+        {
+          "id": "code_008",
+          "title": "Pythonリスト内包",
+          "content": "squared = [x ** 2 for x in range(10) if x % 2 == 0]",
+          "difficulty": 3,
+          "wordCount": 11,
+          "charCount": 53
+        },
+        {
+          "id": "code_009",
+          "title": "SQLクエリ",
+          "content": "SELECT user_id, COUNT(*) as total FROM orders WHERE status = 'active' GROUP BY user_id;",
+          "difficulty": 3,
+          "wordCount": 12,
+          "charCount": 88
+        },
+        {
+          "id": "code_010",
+          "title": "Dockerコマンド",
+          "content": "docker run -d -p 3000:3000 --name my-app --env-file .env my-image:latest",
+          "difficulty": 2,
+          "wordCount": 9,
+          "charCount": 72
+        },
+        {
+          "id": "code_011",
+          "title": "正規表現",
+          "content": "const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/;",
+          "difficulty": 4,
+          "wordCount": 5,
+          "charCount": 70
+        },
+        {
+          "id": "code_012",
+          "title": "Promise chain",
+          "content": "fetch('/api/users').then(res => res.json()).then(data => setState(data)).catch(err => console.error(err));",
+          "difficulty": 4,
+          "wordCount": 10,
+          "charCount": 103
+        },
+        {
+          "id": "code_013",
+          "title": "オブジェクト分割代入",
+          "content": "const { name, age, email = 'unknown' } = userProfile;",
+          "difficulty": 2,
+          "wordCount": 7,
+          "charCount": 54
+        },
+        {
+          "id": "code_014",
+          "title": "スプレッド演算子",
+          "content": "const mergedConfig = { ...defaultConfig, ...userConfig, timestamp: Date.now() };",
+          "difficulty": 3,
+          "wordCount": 8,
+          "charCount": 79
+        },
+        {
+          "id": "code_015",
+          "title": "エラーハンドリング",
+          "content": "try { const result = await processPayment(order); } catch (PaymentError e) { logger.error('Payment failed:', e.message); }",
+          "difficulty": 4,
+          "wordCount": 13,
+          "charCount": 120
+        }
+      ]
     }
   },
   "categories": {
     "basic": {
       "name": "Basic Practice",
       "description": "Basic typing practice texts",
-      "planets": ["earth"]
+      "planets": [
+        "earth"
+      ]
     },
     "intermediate": {
       "name": "Intermediate Practice",
       "description": "Slightly challenging text practice",
-      "planets": ["mars"]
+      "planets": [
+        "mars"
+      ]
     },
     "advanced": {
       "name": "Advanced Practice",
       "description": "Long text typing practice",
-      "planets": ["jupiter"]
+      "planets": [
+        "jupiter"
+      ]
     },
     "expert": {
       "name": "Expert Practice",
       "description": "Technical terminology practice",
-      "planets": ["saturn"]
+      "planets": [
+        "saturn"
+      ]
     }
   },
   "missions": {
@@ -337,4 +772,4 @@
       "xpReward": 200
     }
   }
-} 
+}

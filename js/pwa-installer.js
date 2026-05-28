@@ -1,5 +1,6 @@
 // PWA Installer for Cosmic Typing Adventure
 
+const _logger = window.logger || { debug: () => {}, info: () => {}, warn: console.warn, error: console.error };
 class PWAInstaller {
     constructor() {
         this.deferredPrompt = null;
@@ -8,7 +9,7 @@ class PWAInstaller {
         this.installContainer = null;
         
         this.init();
-        console.log('📱 PWA Installer initialized');
+        _logger.debug('📱 PWA Installer initialized');
     }
 
     init() {
@@ -23,7 +24,7 @@ class PWAInstaller {
             e.preventDefault();
             this.deferredPrompt = e;
             this.showInstallButton();
-            console.log('PWA install prompt available');
+            _logger.debug('PWA install prompt available');
         });
 
         // Listen for appinstalled event
@@ -31,7 +32,7 @@ class PWAInstaller {
             this.isInstalled = true;
             this.hideInstallButton();
             this.showInstallationSuccess();
-            console.log('PWA installed successfully');
+            _logger.debug('PWA installed successfully');
         });
 
         // Listen for visibility change to detect if app is running in standalone mode
@@ -148,17 +149,17 @@ class PWAInstaller {
             
             if (outcome === 'accepted') {
                 this.showInstallationSuccess();
-                console.log('User accepted PWA installation');
+                _logger.debug('User accepted PWA installation');
             } else {
                 this.showInstallationCancelled();
-                console.log('User declined PWA installation');
+                _logger.debug('User declined PWA installation');
             }
             
             // Clear the deferred prompt
             this.deferredPrompt = null;
             
         } catch (error) {
-            console.error('PWA installation failed:', error);
+            _logger.error('PWA installation failed:', error);
             this.showInstallationError(error.message);
         } finally {
             this.setInstallButtonLoading(false);
@@ -280,7 +281,7 @@ class PWAInstaller {
         if (isInstalled && !this.isInstalled) {
             this.isInstalled = true;
             this.hideInstallButton();
-            console.log('PWA detected as installed');
+            _logger.debug('PWA detected as installed');
         }
     }
 
@@ -300,11 +301,11 @@ class PWAInstaller {
             analytics.push(event);
             localStorage.setItem('cosmicTyping_analytics', JSON.stringify(analytics));
         } catch (error) {
-            console.error('Failed to track installation:', error);
+            _logger.error('Failed to track installation:', error);
         }
         
         // Log to console
-        console.log('PWA installation tracked:', event);
+        _logger.debug('PWA installation tracked:', event);
     }
 
     // Get installation statistics
@@ -327,7 +328,7 @@ class PWAInstaller {
             
             return stats;
         } catch (error) {
-            console.error('Failed to get installation stats:', error);
+            _logger.error('Failed to get installation stats:', error);
             return {
                 totalAttempts: 0,
                 successful: 0,
@@ -362,7 +363,7 @@ class PWAInstaller {
         if (this.deferredPrompt) {
             this.showInstallButton();
         } else {
-            console.warn('No install prompt available');
+            _logger.warn('No install prompt available');
         }
     }
 
