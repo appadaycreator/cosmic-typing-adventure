@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#6366f1">
     <title>ゲームガイド - Cosmic Typing Adventure</title>
     <meta name="description" content="Cosmic Typing Adventureの詳しいゲームガイド - 宇宙船操縦方法、探索システム、スキルアップのコツ、効果的な練習方法を分かりやすく解説">
     <meta name="keywords" content="タイピング練習,宇宙ゲーム,スキルアップ,WPM向上,ゲームガイド,操縦方法">
@@ -11,7 +14,7 @@
     <meta property="og:title" content="ゲームガイド - Cosmic Typing Adventure">
     <meta property="og:description" content="宇宙船操縦方法、探索システム、効果的な練習方法を詳しく解説">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://appadaycreator.com/cosmic-typing-adventure/guide.html">
+    <meta property="og:url" content="https://appadaycreator.com/cosmic-typing-adventure/how-to-use.html">
     <meta property="og:image" content="https://cdn1.genspark.ai/user-upload-image/gpt_image_generated/8ec45681-975e-4f2e-884d-5d981aed580b">
     <meta property="og:site_name" content="Cosmic Typing Adventure">
     <meta name="twitter:card" content="summary_large_image">
@@ -20,12 +23,11 @@
     <meta name="twitter:image" content="https://cdn1.genspark.ai/user-upload-image/gpt_image_generated/8ec45681-975e-4f2e-884d-5d981aed580b">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="https://cdn1.genspark.ai/user-upload-image/gpt_image_generated/a530bbce-a7b7-4e12-98a6-684774ea66e1">
+    <link rel="icon" type="image/png" href="images/favicon.png">
     
     <!-- External Libraries -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -167,7 +169,7 @@
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
                     <div class="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center spaceship-animation">
-                        <i class="fas fa-rocket text-white"></i>
+                        🚀
                     </div>
                     <div>
                         <h1 class="font-cosmic text-xl font-bold text-white">Cosmic Typing Adventure</h1>
@@ -178,28 +180,28 @@
                 <!-- デスクトップナビゲーション -->
                 <nav class="hidden md:flex items-center space-x-6">
                     <a href="index.html" class="text-gray-300 hover:text-white transition-colors">
-                        <i class="fas fa-home mr-2"></i>ホーム
+                        🏠ホーム
                     </a>
                     <a href="app.html" class="text-gray-300 hover:text-white transition-colors">
-                        <i class="fas fa-gamepad mr-2"></i>ゲーム開始
+                        🎮ゲーム開始
                     </a>
                     <a href="guide.html" class="text-cyan-400 font-semibold">
-                        <i class="fas fa-book mr-2"></i>ガイド
+                        📖ガイド
                     </a>
                     <div class="flex items-center space-x-2">
                         <button id="langToggle" class="text-gray-300 hover:text-white transition-colors">
-                            <i class="fas fa-globe mr-1"></i>
+                            🌐
                             <span id="currentLang">JP</span>
                         </button>
                         <button id="fontSizeToggle" class="text-gray-300 hover:text-white transition-colors">
-                            <i class="fas fa-text-height"></i>
+                            Aa
                         </button>
                     </div>
                 </nav>
                 
                 <!-- モバイルメニューボタン -->
                 <button id="mobileMenuBtn" class="md:hidden text-white">
-                    <i class="fas fa-bars text-xl"></i>
+                    ☰
                 </button>
             </div>
         </div>
@@ -210,25 +212,25 @@
                 <div class="flex items-center justify-between mb-8">
                     <h2 class="font-cosmic text-lg font-bold text-white">メニュー</h2>
                     <button id="closeMobileMenu" class="text-white">
-                        <i class="fas fa-times"></i>
+                        ✕
                     </button>
                 </div>
                 <nav class="space-y-4">
                     <a href="index.html" class="block text-gray-300 hover:text-white transition-colors py-2">
-                        <i class="fas fa-home mr-3"></i>ホーム
+                        🏠ホーム
                     </a>
                     <a href="app.html" class="block text-gray-300 hover:text-white transition-colors py-2">
-                        <i class="fas fa-gamepad mr-3"></i>ゲーム開始
+                        🎮ゲーム開始
                     </a>
                     <a href="guide.html" class="block text-cyan-400 font-semibold py-2">
-                        <i class="fas fa-book mr-3"></i>ガイド
+                        📖ガイド
                     </a>
                     <div class="pt-4 border-t border-gray-600">
                         <button id="mobileLangToggle" class="block text-gray-300 hover:text-white transition-colors py-2 w-full text-left">
-                            <i class="fas fa-globe mr-3"></i>言語切替
+                            🌐言語切替
                         </button>
                         <button id="mobileFontSizeToggle" class="block text-gray-300 hover:text-white transition-colors py-2 w-full text-left">
-                            <i class="fas fa-text-height mr-3"></i>文字サイズ
+                            Aa文字サイズ
                         </button>
                     </div>
                 </nav>
@@ -248,17 +250,17 @@
                     <p class="text-xl text-gray-300 mb-6">タイピングで銀河を征服せよ！</p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
                         <div class="cosmic-card rounded-xl p-6">
-                            <i class="fas fa-rocket text-3xl text-cyan-400 mb-4"></i>
+                            🚀
                             <h3 class="font-semibold mb-2">宇宙船操縦</h3>
                             <p class="text-sm text-gray-400">タイピング速度で推進力を制御</p>
                         </div>
                         <div class="cosmic-card rounded-xl p-6">
-                            <i class="fas fa-globe text-3xl text-purple-400 mb-4"></i>
+                            🌐
                             <h3 class="font-semibold mb-2">惑星探索</h3>
                             <p class="text-sm text-gray-400">新世界の発見と資源収集</p>
                         </div>
                         <div class="cosmic-card rounded-xl p-6">
-                            <i class="fas fa-chart-line text-3xl text-orange-400 mb-4"></i>
+                            📈
                             <h3 class="font-semibold mb-2">スキル向上</h3>
                             <p class="text-sm text-gray-400">WPM記録と成長の可視化</p>
                         </div>
@@ -270,31 +272,31 @@
             <section class="mb-12 slide-in-left">
                 <div class="cosmic-card rounded-xl p-6">
                     <h2 class="font-cosmic text-2xl font-bold mb-6 text-cyan-400">
-                        <i class="fas fa-list-ul mr-3"></i>ガイド目次
+                        📋ガイド目次
                     </h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <a href="#spacecraft-control" class="guide-section p-4 rounded-lg hover:bg-gray-800 transition-all">
-                            <i class="fas fa-space-shuttle mr-3 text-cyan-400"></i>
+                            🚀
                             1. 宇宙船操縦システム
                         </a>
                         <a href="#exploration" class="guide-section p-4 rounded-lg hover:bg-gray-800 transition-all">
-                            <i class="fas fa-binoculars mr-3 text-purple-400"></i>
+                            🔭
                             2. 探索システム
                         </a>
                         <a href="#skill-development" class="guide-section p-4 rounded-lg hover:bg-gray-800 transition-all">
-                            <i class="fas fa-trophy mr-3 text-orange-400"></i>
+                            🏆
                             3. スキル開発
                         </a>
                         <a href="#practice-tips" class="guide-section p-4 rounded-lg hover:bg-gray-800 transition-all">
-                            <i class="fas fa-lightbulb mr-3 text-yellow-400"></i>
+                            💡
                             4. 効果的な練習方法
                         </a>
                         <a href="#advanced-features" class="guide-section p-4 rounded-lg hover:bg-gray-800 transition-all">
-                            <i class="fas fa-cogs mr-3 text-green-400"></i>
+                            ⚙️
                             5. 上級者向け機能
                         </a>
                         <a href="#troubleshooting" class="guide-section p-4 rounded-lg hover:bg-gray-800 transition-all">
-                            <i class="fas fa-tools mr-3 text-red-400"></i>
+                            🔧
                             6. トラブルシューティング
                         </a>
                     </div>
@@ -305,7 +307,7 @@
             <section id="spacecraft-control" class="mb-12 fade-in">
                 <div class="cosmic-card rounded-xl p-8">
                     <h2 class="font-cosmic text-3xl font-bold mb-8 text-cyan-400">
-                        <i class="fas fa-space-shuttle mr-4"></i>宇宙船操縦システム
+                        🚀宇宙船操縦システム
                     </h2>
                     
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -314,7 +316,7 @@
                             <div class="space-y-4">
                                 <div class="cosmic-card rounded-lg p-4">
                                     <div class="flex items-center mb-2">
-                                        <i class="fas fa-tachometer-alt text-cyan-400 mr-3"></i>
+                                        ⚡
                                         <h4 class="font-semibold">推進力制御</h4>
                                     </div>
                                     <p class="text-gray-300 text-sm mb-2">タイピング速度（WPM）が宇宙船の推進力に直結</p>
@@ -339,7 +341,7 @@
                                 
                                 <div class="cosmic-card rounded-lg p-4">
                                     <div class="flex items-center mb-2">
-                                        <i class="fas fa-battery-three-quarters text-green-400 mr-3"></i>
+                                        🔋
                                         <h4 class="font-semibold">燃料効率</h4>
                                     </div>
                                     <p class="text-gray-300 text-sm mb-2">タイピング正確性が燃料消費効率を決定</p>
@@ -358,7 +360,7 @@
                             <div class="space-y-4">
                                 <div class="cosmic-card rounded-lg p-4">
                                     <h4 class="font-semibold mb-2 text-cyan-400">
-                                        <i class="fas fa-keyboard mr-2"></i>基本姿勢
+                                        ⌨️基本姿勢
                                     </h4>
                                     <ul class="text-sm text-gray-300 space-y-2">
                                         <li>• ホームポジション（ASDF - JKL;）を常に意識</li>
@@ -370,7 +372,7 @@
                                 
                                 <div class="cosmic-card rounded-lg p-4">
                                     <h4 class="font-semibold mb-2 text-purple-400">
-                                        <i class="fas fa-target mr-2"></i>精度向上テクニック
+                                        🎯精度向上テクニック
                                     </h4>
                                     <ul class="text-sm text-gray-300 space-y-2">
                                         <li>• 急がず正確性を最優先</li>
@@ -382,7 +384,7 @@
                                 
                                 <div class="cosmic-card rounded-lg p-4">
                                     <h4 class="font-semibold mb-2 text-orange-400">
-                                        <i class="fas fa-bolt mr-2"></i>スピードアップ法</h4>
+                                        ⚡スピードアップ法</h4>
                                     <ul class="text-sm text-gray-300 space-y-2">
                                         <li>• 文字を見るのではなく単語で認識</li>
                                         <li>• 短縮キー（Ctrl+C, Ctrl+V等）を活用</li>
@@ -400,13 +402,13 @@
             <section id="exploration" class="mb-12 fade-in">
                 <div class="cosmic-card rounded-xl p-8">
                     <h2 class="font-cosmic text-3xl font-bold mb-8 text-purple-400">
-                        <i class="fas fa-binoculars mr-4"></i>惑星探索システム
+                        🔭惑星探索システム
                     </h2>
                     
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <div class="cosmic-card rounded-lg p-6">
                             <div class="text-center mb-4">
-                                <i class="fas fa-globe-americas text-4xl text-blue-400 mb-2"></i>
+                                🌍
                                 <h3 class="text-lg font-semibold">地球型惑星</h3>
                             </div>
                             <div class="space-y-3">
@@ -428,7 +430,7 @@
                         
                         <div class="cosmic-card rounded-lg p-6">
                             <div class="text-center mb-4">
-                                <i class="fas fa-mountain text-4xl text-orange-400 mb-2"></i>
+                                🏔️
                                 <h3 class="text-lg font-semibold">砂漠惑星</h3>
                             </div>
                             <div class="space-y-3">
@@ -450,7 +452,7 @@
                         
                         <div class="cosmic-card rounded-lg p-6">
                             <div class="text-center mb-4">
-                                <i class="fas fa-snowflake text-4xl text-cyan-400 mb-2"></i>
+                                ❄️
                                 <h3 class="text-lg font-semibold">氷結惑星</h3>
                             </div>
                             <div class="space-y-3">
@@ -477,14 +479,14 @@
                             <div class="space-y-4">
                                 <div class="cosmic-card rounded-lg p-4">
                                     <h4 class="font-semibold mb-2 text-green-400">
-                                        <i class="fas fa-search mr-2"></i>Step 1: 星系スキャン
+                                        🔍Step 1: 星系スキャン
                                     </h4>
                                     <p class="text-sm text-gray-300">タイピング練習を行いながら未知の星系をスキャン。WPMと正確性が探索範囲を決定します。</p>
                                 </div>
                                 
                                 <div class="cosmic-card rounded-lg p-4">
                                     <h4 class="font-semibold mb-2 text-blue-400">
-                                        <i class="fas fa-rocket mr-2"></i>Step 2: 惑星接近
+                                        🚀Step 2: 惑星接近
                                     </h4>
                                     <p class="text-sm text-gray-300">目標WPMを達成すると惑星に接近可能。各惑星には固有の解放条件があります。</p>
                                 </div>
@@ -493,14 +495,14 @@
                             <div class="space-y-4">
                                 <div class="cosmic-card rounded-lg p-4">
                                     <h4 class="font-semibold mb-2 text-purple-400">
-                                        <i class="fas fa-flag mr-2"></i>Step 3: 上陸・探索
+                                        🚩Step 3: 上陸・探索
                                     </h4>
                                     <p class="text-sm text-gray-300">惑星上陸後、新しい練習文章データと特殊ボーナスを獲得できます。</p>
                                 </div>
                                 
                                 <div class="cosmic-card rounded-lg p-4">
                                     <h4 class="font-semibold mb-2 text-orange-400">
-                                        <i class="fas fa-building mr-2"></i>Step 4: 基地建設
+                                        🏗️Step 4: 基地建設
                                     </h4>
                                     <p class="text-sm text-gray-300">十分な資源を集めると宇宙ステーションを建設可能。継続的なボーナスを獲得。</p>
                                 </div>
@@ -514,7 +516,7 @@
             <section id="skill-development" class="mb-12 fade-in">
                 <div class="cosmic-card rounded-xl p-8">
                     <h2 class="font-cosmic text-3xl font-bold mb-8 text-orange-400">
-                        <i class="fas fa-trophy mr-4"></i>スキル開発システム
+                        🏆スキル開発システム
                     </h2>
                     
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -524,7 +526,7 @@
                                 <div class="cosmic-card rounded-lg p-4">
                                     <div class="flex items-center mb-3">
                                         <div class="w-10 h-10 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center mr-3">
-                                            <i class="fas fa-keyboard text-white"></i>
+                                            ⌨️
                                         </div>
                                         <div>
                                             <h4 class="font-semibold text-green-400">基礎タイピング</h4>
@@ -542,7 +544,7 @@
                                 <div class="cosmic-card rounded-lg p-4">
                                     <div class="flex items-center mb-3">
                                         <div class="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center mr-3">
-                                            <i class="fas fa-bolt text-white"></i>
+                                            ⚡
                                         </div>
                                         <div>
                                             <h4 class="font-semibold text-blue-400">高速タイピング</h4>
@@ -560,7 +562,7 @@
                                 <div class="cosmic-card rounded-lg p-4">
                                     <div class="flex items-center mb-3">
                                         <div class="w-10 h-10 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full flex items-center justify-center mr-3">
-                                            <i class="fas fa-star text-white"></i>
+                                            ⭐
                                         </div>
                                         <div>
                                             <h4 class="font-semibold text-purple-400">マスタークラス</h4>
@@ -582,7 +584,7 @@
                             <div class="space-y-6">
                                 <div class="cosmic-card rounded-lg p-4">
                                     <h4 class="font-semibold mb-3 text-cyan-400">
-                                        <i class="fas fa-chart-line mr-2"></i>パフォーマンス指標
+                                        📈パフォーマンス指標
                                     </h4>
                                     <div class="space-y-3">
                                         <div>
@@ -617,24 +619,24 @@
                                 
                                 <div class="cosmic-card rounded-lg p-4">
                                     <h4 class="font-semibold mb-3 text-yellow-400">
-                                        <i class="fas fa-trophy mr-2"></i>実績システム
+                                        🏆実績システム
                                     </h4>
                                     <div class="grid grid-cols-3 gap-3">
                                         <div class="text-center">
                                             <div class="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-2">
-                                                <i class="fas fa-medal text-white"></i>
+                                                🥇
                                             </div>
                                             <p class="text-xs text-gray-300">スピードマスター</p>
                                         </div>
                                         <div class="text-center">
                                             <div class="w-12 h-12 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-2">
-                                                <i class="fas fa-crosshairs text-white"></i>
+                                                🎯
                                             </div>
                                             <p class="text-xs text-gray-300">精密射撃手</p>
                                         </div>
                                         <div class="text-center">
                                             <div class="w-12 h-12 bg-gray-600 rounded-full flex items-center justify-center mx-auto mb-2">
-                                                <i class="fas fa-question text-gray-400"></i>
+                                                ❓
                                             </div>
                                             <p class="text-xs text-gray-400">???</p>
                                         </div>
@@ -643,19 +645,19 @@
                                 
                                 <div class="cosmic-card rounded-lg p-4">
                                     <h4 class="font-semibold mb-3 text-green-400">
-                                        <i class="fas fa-bullseye mr-2"></i>今週の目標
+                                        🎯今週の目標
                                     </h4>
                                     <ul class="text-sm text-gray-300 space-y-2">
                                         <li class="flex items-center">
-                                            <i class="fas fa-check text-green-400 mr-2"></i>
+                                            ✅
                                             WPM 70達成
                                         </li>
                                         <li class="flex items-center">
-                                            <i class="far fa-square mr-2 text-gray-400"></i>
+                                            ☐
                                             正確性 95%達成
                                         </li>
                                         <li class="flex items-center">
-                                            <i class="far fa-square mr-2 text-gray-400"></i>
+                                            ☐
                                             7日連続練習
                                         </li>
                                     </ul>
@@ -670,7 +672,7 @@
             <section id="practice-tips" class="mb-12 fade-in">
                 <div class="cosmic-card rounded-xl p-8">
                     <h2 class="font-cosmic text-3xl font-bold mb-8 text-yellow-400">
-                        <i class="fas fa-lightbulb mr-4"></i>効果的な練習方法
+                        💡効果的な練習方法
                     </h2>
                     
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -679,7 +681,7 @@
                             <div class="space-y-6">
                                 <div class="cosmic-card rounded-lg p-6">
                                     <h4 class="font-semibold mb-4 text-green-400">
-                                        <i class="fas fa-seedling mr-2"></i>初心者プログラム（1-4週間）
+                                        🌱初心者プログラム（1-4週間）
                                     </h4>
                                     <div class="space-y-3">
                                         <div class="border-l-3 border-green-400 pl-4">
@@ -711,7 +713,7 @@
                                 
                                 <div class="cosmic-card rounded-lg p-6">
                                     <h4 class="font-semibold mb-4 text-blue-400">
-                                        <i class="fas fa-running mr-2"></i>中級者プログラム（1-3ヶ月）
+                                        🏃中級者プログラム（1-3ヶ月）
                                     </h4>
                                     <div class="space-y-3">
                                         <div class="border-l-3 border-blue-400 pl-4">
@@ -740,7 +742,7 @@
                             <div class="space-y-6">
                                 <div class="cosmic-card rounded-lg p-6">
                                     <h4 class="font-semibold mb-4 text-purple-400">
-                                        <i class="fas fa-clock mr-2"></i>効率的な時間管理
+                                        🕐効率的な時間管理
                                     </h4>
                                     <div class="space-y-3">
                                         <div class="flex items-start">
@@ -775,23 +777,23 @@
                                 
                                 <div class="cosmic-card rounded-lg p-6">
                                     <h4 class="font-semibold mb-4 text-orange-400">
-                                        <i class="fas fa-brain mr-2"></i>メンタル面のコツ
+                                        🧠メンタル面のコツ
                                     </h4>
                                     <ul class="text-sm text-gray-300 space-y-2">
                                         <li class="flex items-center">
-                                            <i class="fas fa-heart text-red-400 mr-2"></i>
+                                            ❤️
                                             完璧を求めすぎず、継続を重視
                                         </li>
                                         <li class="flex items-center">
-                                            <i class="fas fa-chart-line text-green-400 mr-2"></i>
+                                            📈
                                             小さな成長も記録して達成感を得る
                                         </li>
                                         <li class="flex items-center">
-                                            <i class="fas fa-users text-blue-400 mr-2"></i>
+                                            👥
                                             他のプレイヤーと成果を共有
                                         </li>
                                         <li class="flex items-center">
-                                            <i class="fas fa-smile text-yellow-400 mr-2"></i>
+                                            😊
                                             ゲーム要素を楽しんでストレス軽減
                                         </li>
                                     </ul>
@@ -799,23 +801,23 @@
                                 
                                 <div class="cosmic-card rounded-lg p-6">
                                     <h4 class="font-semibold mb-4 text-cyan-400">
-                                        <i class="fas fa-exclamation-triangle mr-2"></i>よくある間違い
+                                        ⚠️よくある間違い
                                     </h4>
                                     <div class="space-y-2">
                                         <div class="flex items-start">
-                                            <i class="fas fa-times text-red-400 mr-2 mt-1"></i>
+                                            ✕
                                             <span class="text-sm text-gray-300">最初から速度を重視してしまう</span>
                                         </div>
                                         <div class="flex items-start">
-                                            <i class="fas fa-times text-red-400 mr-2 mt-1"></i>
+                                            ✕
                                             <span class="text-sm text-gray-300">苦手な文字を避けて練習する</span>
                                         </div>
                                         <div class="flex items-start">
-                                            <i class="fas fa-times text-red-400 mr-2 mt-1"></i>
+                                            ✕
                                             <span class="text-sm text-gray-300">不規則な練習スケジュール</span>
                                         </div>
                                         <div class="flex items-start">
-                                            <i class="fas fa-times text-red-400 mr-2 mt-1"></i>
+                                            ✕
                                             <span class="text-sm text-gray-300">画面を見ながらタイピング</span>
                                         </div>
                                     </div>
@@ -830,14 +832,14 @@
             <section id="advanced-features" class="mb-12 fade-in">
                 <div class="cosmic-card rounded-xl p-8">
                     <h2 class="font-cosmic text-3xl font-bold mb-8 text-green-400">
-                        <i class="fas fa-cogs mr-4"></i>上級者向け機能
+                        ⚙️上級者向け機能
                     </h2>
                     
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <div class="space-y-6">
                             <div class="cosmic-card rounded-lg p-6">
                                 <h3 class="text-lg font-semibold mb-4 text-cyan-400">
-                                    <i class="fas fa-users mr-2"></i>協力ミッション
+                                    👥協力ミッション
                                 </h3>
                                 <p class="text-sm text-gray-300 mb-4">他のプレイヤーと協力して大規模な宇宙プロジェクトに挑戦</p>
                                 <div class="space-y-3">
@@ -858,7 +860,7 @@
                             
                             <div class="cosmic-card rounded-lg p-6">
                                 <h3 class="text-lg font-semibold mb-4 text-purple-400">
-                                    <i class="fas fa-tools mr-2"></i>カスタマイズ機能
+                                    🔧カスタマイズ機能
                                 </h3>
                                 <div class="space-y-3">
                                     <div>
@@ -886,12 +888,12 @@
                         <div class="space-y-6">
                             <div class="cosmic-card rounded-lg p-6">
                                 <h3 class="text-lg font-semibold mb-4 text-yellow-400">
-                                    <i class="fas fa-trophy mr-2"></i>競技モード
+                                    🏆競技モード
                                 </h3>
                                 <div class="space-y-4">
                                     <div>
                                         <h4 class="font-medium text-sm mb-2 text-orange-400">
-                                            <i class="fas fa-stopwatch mr-1"></i>タイムアタック
+                                            ⏱️タイムアタック
                                         </h4>
                                         <p class="text-xs text-gray-300 mb-2">制限時間内での最高WPM記録に挑戦</p>
                                         <div class="bg-gray-800 rounded p-2">
@@ -904,7 +906,7 @@
                                     
                                     <div>
                                         <h4 class="font-medium text-sm mb-2 text-red-400">
-                                            <i class="fas fa-sword mr-1"></i>バトルモード
+                                            ⚔️バトルモード
                                         </h4>
                                         <p class="text-xs text-gray-300 mb-2">他プレイヤーとリアルタイム対戦</p>
                                         <div class="bg-gray-800 rounded p-2">
@@ -917,7 +919,7 @@
                                     
                                     <div>
                                         <h4 class="font-medium text-sm mb-2 text-blue-400">
-                                            <i class="fas fa-crown mr-1"></i>ランキング戦
+                                            👑ランキング戦
                                         </h4>
                                         <p class="text-xs text-gray-300 mb-2">月間・週間ランキングでの順位争い</p>
                                         <div class="bg-gray-800 rounded p-2">
@@ -932,7 +934,7 @@
                             
                             <div class="cosmic-card rounded-lg p-6">
                                 <h3 class="text-lg font-semibold mb-4 text-pink-400">
-                                    <i class="fas fa-graduation-cap mr-2"></i>指導者システム
+                                    🎓指導者システム
                                 </h3>
                                 <p class="text-sm text-gray-300 mb-4">上級者が初心者を指導するメンター制度</p>
                                 <div class="space-y-3">
@@ -965,7 +967,7 @@
             <section id="troubleshooting" class="mb-12 fade-in">
                 <div class="cosmic-card rounded-xl p-8">
                     <h2 class="font-cosmic text-3xl font-bold mb-8 text-red-400">
-                        <i class="fas fa-tools mr-4"></i>トラブルシューティング
+                        🔧トラブルシューティング
                     </h2>
                     
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -974,7 +976,7 @@
                             <div class="space-y-4">
                                 <div class="cosmic-card rounded-lg p-4">
                                     <h4 class="font-semibold mb-2 text-yellow-400">
-                                        <i class="fas fa-question-circle mr-2"></i>キーボード入力が認識されない
+                                        ❓キーボード入力が認識されない
                                     </h4>
                                     <div class="text-sm text-gray-300 space-y-1">
                                         <p><strong>原因:</strong> ブラウザの入力フォーカスが外れている</p>
@@ -989,7 +991,7 @@
                                 
                                 <div class="cosmic-card rounded-lg p-4">
                                     <h4 class="font-semibold mb-2 text-orange-400">
-                                        <i class="fas fa-exclamation-triangle mr-2"></i>データが保存されない
+                                        ⚠️データが保存されない
                                     </h4>
                                     <div class="text-sm text-gray-300 space-y-1">
                                         <p><strong>原因:</strong> ログインしていない、またはネットワーク接続問題</p>
@@ -1005,7 +1007,7 @@
                                 
                                 <div class="cosmic-card rounded-lg p-4">
                                     <h4 class="font-semibold mb-2 text-red-400">
-                                        <i class="fas fa-bug mr-2"></i>アニメーションが重い・カクつく
+                                        🐛アニメーションが重い・カクつく
                                     </h4>
                                     <div class="text-sm text-gray-300 space-y-1">
                                         <p><strong>原因:</strong> デバイスの性能不足、他アプリの負荷</p>
@@ -1021,7 +1023,7 @@
                                 
                                 <div class="cosmic-card rounded-lg p-4">
                                     <h4 class="font-semibold mb-2 text-purple-400">
-                                        <i class="fas fa-keyboard mr-2"></i>特定のキーが反応しない
+                                        ⌨️特定のキーが反応しない
                                     </h4>
                                     <div class="text-sm text-gray-300 space-y-1">
                                         <p><strong>原因:</strong> キーボード設定、IME設定の問題</p>
@@ -1042,7 +1044,7 @@
                             <div class="space-y-6">
                                 <div class="cosmic-card rounded-lg p-6">
                                     <h4 class="font-semibold mb-4 text-cyan-400">
-                                        <i class="fas fa-laptop mr-2"></i>推奨動作環境
+                                        💻推奨動作環境
                                     </h4>
                                     <div class="space-y-3">
                                         <div>
@@ -1067,24 +1069,24 @@
                                 
                                 <div class="cosmic-card rounded-lg p-6">
                                     <h4 class="font-semibold mb-4 text-green-400">
-                                        <i class="fas fa-life-ring mr-2"></i>サポート窓口
+                                        🆘サポート窓口
                                     </h4>
                                     <div class="space-y-3">
                                         <a href="contact.html" class="block cosmic-button rounded-lg p-3 text-center text-white font-medium hover:shadow-lg transition-all">
-                                            <i class="fas fa-envelope mr-2"></i>
+                                            📧
                                             お問い合わせフォーム
                                         </a>
                                         <div class="text-center">
                                             <p class="text-sm text-gray-300 mb-2">コミュニティサポート</p>
                                             <div class="flex justify-center space-x-4">
                                                 <a href="#" class="text-blue-400 hover:text-blue-300">
-                                                    <i class="fab fa-twitter text-xl"></i>
+                                                    𝕏
                                                 </a>
                                                 <a href="#" class="text-purple-400 hover:text-purple-300">
-                                                    <i class="fab fa-discord text-xl"></i>
+                                                    💬
                                                 </a>
                                                 <a href="#" class="text-red-400 hover:text-red-300">
-                                                    <i class="fab fa-youtube text-xl"></i>
+                                                    📺
                                                 </a>
                                             </div>
                                         </div>
@@ -1093,7 +1095,7 @@
                                 
                                 <div class="cosmic-card rounded-lg p-6">
                                     <h4 class="font-semibold mb-4 text-yellow-400">
-                                        <i class="fas fa-info-circle mr-2"></i>アップデート情報
+                                        ℹ️アップデート情報
                                     </h4>
                                     <div class="space-y-2">
                                         <div class="border-l-3 border-yellow-400 pl-3">
@@ -1126,17 +1128,17 @@
                     <p class="text-gray-300 mb-8">ガイドを読み終えたら、実際に宇宙船を操縦してみましょう！</p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <a href="app.html" class="cosmic-button rounded-lg p-6 text-white block hover:shadow-lg transition-all">
-                            <i class="fas fa-rocket text-2xl mb-3"></i>
+                            🚀
                             <h3 class="font-semibold mb-2">ゲーム開始</h3>
                             <p class="text-sm opacity-90">今すぐタイピング練習を始める</p>
                         </a>
                         <a href="index.html" class="cosmic-card rounded-lg p-6 text-white block hover:bg-gray-700 transition-all">
-                            <i class="fas fa-home text-2xl mb-3 text-cyan-400"></i>
+                            🏠
                             <h3 class="font-semibold mb-2">ホームページ</h3>
                             <p class="text-sm opacity-90">サービス詳細を確認</p>
                         </a>
                         <a href="contact.html" class="cosmic-card rounded-lg p-6 text-white block hover:bg-gray-700 transition-all">
-                            <i class="fas fa-question-circle text-2xl mb-3 text-yellow-400"></i>
+                            ❓
                             <h3 class="font-semibold mb-2">サポート</h3>
                             <p class="text-sm opacity-90">質問・要望を送信</p>
                         </a>
@@ -1153,7 +1155,7 @@
                 <div>
                     <div class="flex items-center space-x-3 mb-4">
                         <div class="w-8 h-8 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center">
-                            <i class="fas fa-rocket text-white text-sm"></i>
+                            🚀
                         </div>
                         <h3 class="font-cosmic text-lg font-bold text-white">Cosmic Typing</h3>
                     </div>
@@ -1182,13 +1184,13 @@
                     <h4 class="font-semibold text-white mb-3">SNS</h4>
                     <div class="flex space-x-4">
                         <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                            <i class="fab fa-twitter text-xl"></i>
+                            𝕏
                         </a>
                         <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                            <i class="fab fa-discord text-xl"></i>
+                            💬
                         </a>
                         <a href="#" class="text-gray-400 hover:text-white transition-colors">
-                            <i class="fab fa-youtube text-xl"></i>
+                            📺
                         </a>
                     </div>
                 </div>
@@ -1222,7 +1224,7 @@
             currentLang = currentLang === 'ja' ? 'en' : 'ja';
             document.getElementById('currentLang').textContent = currentLang.toUpperCase();
             // 言語切替の実装はここに追加
-            console.log('Language switched to:', currentLang);
+
         }
 
         // 文字サイズ変更
@@ -1240,7 +1242,7 @@
                 'xl': '20px'
             }[currentFontSize];
             
-            console.log('Font size changed to:', currentFontSize);
+
         }
 
         // モバイルメニュー制御
@@ -1298,7 +1300,7 @@
                 observer.observe(el);
             });
 
-            console.log('🚀 Cosmic Typing Adventure Guide loaded successfully!');
+
         });
 
         // ローカルストレージでの設定保存

@@ -35,7 +35,6 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -195,19 +194,19 @@
     
     <div class="floating-elements">
         <div class="floating-spaceship" style="top: 10%; left: 80%;">
-            <i class="fas fa-rocket text-4xl text-cyan-400"></i>
+            🚀
         </div>
         <div class="floating-planet" style="top: 70%; left: 10%;">
-            <i class="fas fa-globe text-6xl text-purple-400"></i>
+            🌐
         </div>
         <div class="floating-spaceship" style="top: 30%; left: 20%;">
-            <i class="fas fa-satellite text-3xl text-orange-400"></i>
+            🛰️
         </div>
     </div>
     
     <!-- Success Message -->
     <div id="successMessage" class="success-message fixed top-4 right-4 z-50 p-4 rounded-lg text-white font-semibold shadow-lg">
-        <i class="fas fa-check-circle mr-2"></i>
+        ✅
         <span data-ja="お問い合わせを送信しました！" data-en="Message sent successfully!">お問い合わせを送信しました！</span>
     </div>
     
@@ -232,7 +231,7 @@
                 <!-- Font Size -->
                 <div class="relative">
                     <button id="fontSizeBtn" class="text-cyan-300 hover:text-orange-400 transition-colors">
-                        <i class="fas fa-text-height"></i>
+                        Aa
                     </button>
                     <div id="fontSizeMenu" class="absolute right-0 top-8 bg-gray-800 rounded-lg p-2 space-y-1 hidden">
                         <button onclick="setFontSize('xs')" class="block text-xs text-white hover:text-cyan-400 w-full text-left px-2 py-1">極小</button>
@@ -245,12 +244,12 @@
                 
                 <!-- Language -->
                 <button id="langToggle" class="text-cyan-300 hover:text-orange-400 transition-colors">
-                    <i class="fas fa-globe"></i> <span id="currentLang">JP</span>
+                    🌐 <span id="currentLang">JP</span>
                 </button>
                 
                 <!-- Mobile Menu Button -->
                 <button id="mobileMenuBtn" class="md:hidden text-cyan-300 hover:text-orange-400 transition-colors">
-                    <i class="fas fa-bars"></i>
+                    ☰
                 </button>
             </div>
         </div>
@@ -261,7 +260,7 @@
         <div class="flex justify-between items-center mb-8">
             <h2 class="cosmic-title text-xl font-bold" data-ja="メニュー" data-en="Menu">メニュー</h2>
             <button id="closeMobileMenu" class="text-cyan-300 hover:text-orange-400 transition-colors">
-                <i class="fas fa-times text-xl"></i>
+                ✕
             </button>
         </div>
         
@@ -374,7 +373,7 @@
                         <div class="cosmic-input border-dashed border-2 p-6 rounded-lg text-center">
                             <input type="file" id="fileUpload" class="hidden" multiple accept="image/*,.pdf,.txt,.log">
                             <div onclick="document.getElementById('fileUpload').click()" class="cursor-pointer">
-                                <i class="fas fa-cloud-upload-alt text-4xl text-cyan-400 mb-2"></i>
+                                ☁️
                                 <p class="text-gray-300" data-ja="スクリーンショットやログファイルをアップロード" data-en="Upload screenshots or log files">スクリーンショットやログファイルをアップロード</p>
                                 <p class="text-sm text-gray-500 mt-1" data-ja="対応形式: PNG, JPG, PDF, TXT (最大5MB)" data-en="Supported: PNG, JPG, PDF, TXT (Max 5MB)">対応形式: PNG, JPG, PDF, TXT (最大5MB)</p>
                             </div>
@@ -394,7 +393,7 @@
                     <!-- Submit Button -->
                     <div class="text-center">
                         <button type="submit" class="cosmic-btn-primary px-8 py-4 rounded-lg text-white font-semibold text-lg">
-                            <i class="fas fa-paper-plane mr-2"></i>
+                            ✉️
                             <span data-ja="送信する" data-en="Send Message">送信する</span>
                         </button>
                     </div>
@@ -421,19 +420,19 @@
                     <h3 class="cosmic-title text-xl font-bold mb-4" data-ja="お問い合わせについて" data-en="About Contact">お問い合わせについて</h3>
                     <div class="space-y-4 text-gray-300">
                         <div class="flex items-center space-x-3">
-                            <i class="fas fa-clock text-cyan-400"></i>
+                            🕐
                             <span data-ja="通常24時間以内に返信いたします" data-en="We typically respond within 24 hours">通常24時間以内に返信いたします</span>
                         </div>
                         <div class="flex items-center space-x-3">
-                            <i class="fas fa-bug text-orange-400"></i>
+                            🐛
                             <span data-ja="不具合報告は優先的に対応いたします" data-en="Bug reports are handled with priority">不具合報告は優先的に対応いたします</span>
                         </div>
                         <div class="flex items-center space-x-3">
-                            <i class="fas fa-lightbulb text-yellow-400"></i>
+                            💡
                             <span data-ja="機能提案は開発チームで検討いたします" data-en="Feature suggestions are reviewed by our development team">機能提案は開発チームで検討いたします</span>
                         </div>
                         <div class="flex items-center space-x-3">
-                            <i class="fas fa-shield-alt text-green-400"></i>
+                            🛡️
                             <span data-ja="お客様の個人情報は厳重に保護いたします" data-en="Your personal information is strictly protected">お客様の個人情報は厳重に保護いたします</span>
                         </div>
                     </div>
@@ -557,7 +556,7 @@
                 fileItem.innerHTML = `
                     <span class="text-sm text-gray-300 truncate">${file.name} (${(file.size / 1024 / 1024).toFixed(2)}MB)</span>
                     <button type="button" onclick="removeFile(${index})" class="text-red-400 hover:text-red-300 ml-2">
-                        <i class="fas fa-times"></i>
+                        ✕
                     </button>
                 `;
                 fileList.appendChild(fileItem);

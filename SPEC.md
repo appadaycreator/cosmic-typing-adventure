@@ -3,7 +3,7 @@
 ## 概要
 
 **サービス名**: Cosmic Typing Adventure
-**バージョン**: 1.1.0
+**バージョン**: 1.1.2
 **更新日**: 2026-05-28
 **URL**: https://appadaycreator.com/cosmic-typing-adventure/
 
@@ -30,6 +30,14 @@
 5. 一時停止・リセットボタンで時間を管理する
 
 ## 変更履歴
+
+### v1.1.2 (2026-05-28) - 全ページFont Awesome完全廃止・PWA統一
+- **P1**: how-to-use.html の Font Awesome CDN削除 + 91アイコンを絵文字に置換
+- **P1**: contact.html / privacy.html / terms.html の Font Awesome CDN削除・絵文字統一
+- **P2**: how-to-use.html に theme-color/manifest/apple-touch-icon 追加・favicon/og:url修正
+- **P2**: text-manager.html に theme-color/manifest/apple-touch-icon/OGPタグ追加
+- **P2**: app.html に manifest/apple-touch-icon 追加
+- **P3**: how-to-use.html の console.log 削除
 
 ### v1.1.1 (2026-05-28) - アクセシビリティ・PWA品質改善
 - **P1**: index.html の未ロード Font Awesome アイコン（ソーシャルシェアボタン・フッター）を絵文字に置換
