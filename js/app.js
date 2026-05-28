@@ -810,7 +810,6 @@ export class CosmicTypingApp {
       }
 
       localStorage.setItem("typing_sessions", JSON.stringify(existingData));
-      console.log("Results saved to localStorage");
     } catch (error) {
       console.error("Error saving to localStorage:", error);
     }
@@ -887,7 +886,6 @@ export class CosmicTypingApp {
             // ローカルpracticeTextsの定義は削除
           }
         }
-        console.log("Practice texts loaded from API");
       }
     } catch (error) {
       console.warn("Failed to load practice texts from API:", error);

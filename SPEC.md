@@ -97,3 +97,7 @@ GitHub Pages（mainブランチ push → 自動デプロイ）
 ## ライセンス
 
 MIT License
+
+## 変更履歴
+
+- v1.1.3 (2026-05-29): app.html OGP追加・aria-label拡充・app.js console.log削除

@@ -10,6 +10,17 @@
         <link rel="canonical" href="https://appadaycreator.com/cosmic-typing-adventure/app.html">
     <title>Cosmic Typing Adventure - メインゲーム</title>
     <meta name="description" content="宇宙船操縦、惑星探索、タイピング練習、WPM計測、スキル向上を一体化した革新的なタイピング学習プラットフォーム">
+    <meta property="og:title" content="Cosmic Typing Adventure - メインゲーム">
+    <meta property="og:description" content="宇宙船操縦、惑星探索、タイピング練習、WPM計測、スキル向上を一体化した革新的なタイピング学習プラットフォーム">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://appadaycreator.com/cosmic-typing-adventure/app.html">
+    <meta property="og:image" content="https://cdn1.genspark.ai/user-upload-image/gpt_image_generated/8ec45681-975e-4f2e-884d-5d981aed580b">
+    <meta property="og:site_name" content="Cosmic Typing Adventure">
+    <meta property="og:locale" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Cosmic Typing Adventure - メインゲーム">
+    <meta name="twitter:description" content="宇宙船操縦、惑星探索、タイピング練習、WPM計測、スキル向上を一体化した革新的なタイピング学習プラットフォーム">
+    <meta name="twitter:image" content="https://cdn1.genspark.ai/user-upload-image/gpt_image_generated/8ec45681-975e-4f2e-884d-5d981aed580b">
 
     <!-- CDN Libraries -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -486,19 +497,19 @@
 
                 <!-- Desktop Navigation -->
                 <nav class="hidden md:flex space-x-8">
-                    <button onclick="showSection('game')"
+                    <button onclick="showSection('game')" aria-label="ゲームセクションを表示"
                         class="nav-btn text-white hover:text-cosmic-cyan transition-colors">
                         <span class="mr-2">🎮</span>ゲーム
                     </button>
-                    <button onclick="showSection('stats')"
+                    <button onclick="showSection('stats')" aria-label="統計セクションを表示"
                         class="nav-btn text-white hover:text-cosmic-cyan transition-colors">
                         <span class="mr-2">📈</span>統計
                     </button>
-                    <button onclick="showSection('fleet')"
+                    <button onclick="showSection('fleet')" aria-label="艦隊セクションを表示"
                         class="nav-btn text-white hover:text-cosmic-cyan transition-colors">
                         <span class="mr-2">🛸</span>艦隊
                     </button>
-                    <button onclick="showSection('settings')"
+                    <button onclick="showSection('settings')" aria-label="設定セクションを表示"
                         class="nav-btn text-white hover:text-cosmic-cyan transition-colors">
                         <span class="mr-2">⚙️</span>設定
                     </button>
@@ -517,10 +528,10 @@
                         <span class="text-sm font-orbitron" id="userLevel">Lv.1</span>
                         <span class="text-xs text-gray-400" id="userXP">0 XP</span>
                     </div>
-                    <button onclick="toggleMobileMenu()" class="md:hidden text-white">
+                    <button onclick="toggleMobileMenu()" aria-label="モバイルメニューを開く" class="md:hidden text-white">
                         <span class="text-xl">☰</span>
                     </button>
-                    <button onclick="toggleLanguage()"
+                    <button onclick="toggleLanguage()" aria-label="言語を切り替え"
                         class="text-cosmic-cyan hover:text-white transition-colors hidden sm:inline-flex">
                         <span class="mr-1">🌐</span><span id="langToggle">EN</span>
                     </button>
@@ -533,19 +544,19 @@
     <div id="mobileMenu"
         class="mobile-menu fixed top-16 right-0 w-80 h-full bg-cosmic-card z-40 border-l border-blue-500">
         <nav class="p-6 space-y-4">
-            <button onclick="showSection('game'); closeMobileMenu()"
+            <button onclick="showSection('game'); closeMobileMenu()" aria-label="ゲームセクションを表示"
                 class="w-full text-left p-3 hover:bg-blue-900 rounded-lg transition-colors">
                 <span class="mr-3 text-cosmic-cyan">🎮</span>ゲーム
             </button>
-            <button onclick="showSection('stats'); closeMobileMenu()"
+            <button onclick="showSection('stats'); closeMobileMenu()" aria-label="統計セクションを表示"
                 class="w-full text-left p-3 hover:bg-blue-900 rounded-lg transition-colors">
                 <span class="mr-3 text-cosmic-cyan">📈</span>統計
             </button>
-            <button onclick="showSection('fleet'); closeMobileMenu()"
+            <button onclick="showSection('fleet'); closeMobileMenu()" aria-label="艦隊セクションを表示"
                 class="w-full text-left p-3 hover:bg-blue-900 rounded-lg transition-colors">
                 <span class="mr-3 text-cosmic-cyan">🛸</span>艦隊
             </button>
-            <button onclick="showSection('settings'); closeMobileMenu()"
+            <button onclick="showSection('settings'); closeMobileMenu()" aria-label="設定セクションを表示"
                 class="w-full text-left p-3 hover:bg-blue-900 rounded-lg transition-colors">
                 <span class="mr-3 text-cosmic-cyan">⚙️</span>設定
             </button>
