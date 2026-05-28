@@ -4,7 +4,7 @@
   "description": "宇宙テーマのタイピング練習アプリ",
   "start_url": "/cosmic-typing-adventure/",
   "display": "standalone",
-  "background_color": "#1a1a2e",
+  "background_color": "#ffffff",
   "theme_color": "#7c3aed",
   "orientation": "any",
   "scope": "/cosmic-typing-adventure/",
