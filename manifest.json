@@ -2,14 +2,18 @@
   "name": "Cosmic Typing Adventure",
   "short_name": "Cosmic Typing",
   "description": "宇宙テーマのタイピング練習アプリ",
-  "start_url": "/",
+  "start_url": "/cosmic-typing-adventure/",
   "display": "standalone",
   "background_color": "#1a1a2e",
   "theme_color": "#6366F1",
   "orientation": "any",
-  "scope": "/",
+  "scope": "/cosmic-typing-adventure/",
   "lang": "ja",
-  "categories": ["education", "productivity", "games"],
+  "categories": [
+    "education",
+    "productivity",
+    "games"
+  ],
   "icons": [
     {
       "src": "/images/icons/icon-72x72.png",
@@ -108,4 +112,4 @@
   "launch_handler": {
     "client_mode": "navigate-existing"
   }
-} 
+}
