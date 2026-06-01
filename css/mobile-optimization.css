@@ -132,10 +132,35 @@
         flex-direction: column;
         gap: 0.5rem;
     }
-    
+
     .nav-link {
         padding: 0.75rem 1rem;
         font-size: 1rem;
+    }
+
+    /* モバイルでキーボード表示時のタイピング画面最適化 */
+    #textDisplay {
+        max-height: 6rem;
+        overflow-y: auto;
+        min-height: 4rem !important;
+        font-size: 1rem !important;
+    }
+
+    /* モバイルで入力欄が常に見えるよう調整 */
+    #typingInput,
+    #timeAttackInput {
+        min-height: 80px !important;
+    }
+
+    /* WPMグラフをモバイルでは非表示（スペース節約） */
+    #wpmChartContainer,
+    #taWpmChartContainer {
+        display: none !important;
+    }
+
+    /* 残り文字カウンターをよりコンパクトに */
+    #remainingChars {
+        font-size: 0.7rem;
     }
 }
 
@@ -643,4 +668,39 @@
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-} 
+}
+
+/* P4: モバイル固定スタートボタン（ゲーム中に常時表示） */
+@media (max-width: 768px) {
+    #mobileStickyStart {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 40;
+        background: linear-gradient(to top, rgba(10,10,26,0.98), rgba(10,10,26,0.85));
+        padding: 10px 16px 14px;
+        border-top: 1px solid rgba(6,182,212,0.3);
+        gap: 10px;
+    }
+    #mobileStickyStart.active {
+        display: flex;
+    }
+    #mobileStickyStart button {
+        flex: 1;
+        min-height: 48px;
+        font-size: 1rem;
+        font-weight: 700;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.2s;
+    }
+    #mobileStickyStart button:active {
+        opacity: 0.75;
+    }
+    #mobileStartBtn  { background: #10b981; color: #fff; }
+    #mobilePauseBtn  { background: #f97316; color: #fff; }
+    #mobileResetBtn  { background: #374151; color: #e5e7eb; }
+}

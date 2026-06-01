@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "version": "2.0.0",
-    "lastUpdated": "2026-01-30",
-    "totalTexts": 220,
-    "totalCategories": 5,
+    "version": "2.1.0",
+    "lastUpdated": "2026-05-30",
+    "totalTexts": 259,
+    "totalCategories": 7,
     "difficultyLevels": {
       "1": "初級",
       "2": "中級",
@@ -35,6 +35,16 @@
       "name": "コードスニペット",
       "description": "実際のプログラムコード（英語・記号）のタイピング練習",
       "difficulty": 3
+    },
+    "japanese_basic": {
+      "name": "日本語基礎",
+      "description": "ひらがな・日本語の基礎フレーズ（ローマ字入力）",
+      "difficulty": 1
+    },
+    "japanese_phrases": {
+      "name": "日本語フレーズ",
+      "description": "日常・ビジネスの日本語フレーズ（ローマ字入力）",
+      "difficulty": 2
     }
   },
   "texts": [
@@ -2017,6 +2027,357 @@
       "content": "SELECT name, email FROM users WHERE active = 1 ORDER BY name LIMIT 10;",
       "wordCount": 11,
       "charCount": 70
+    },
+    {
+      "id": "code_021",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "TypeScript 型定義",
+      "content": "interface User { id: number; name: string; email: string; isActive: boolean; }",
+      "wordCount": 9,
+      "charCount": 72
+    },
+    {
+      "id": "code_022",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "React useState",
+      "content": "const [count, setCount] = useState<number>(0);",
+      "wordCount": 5,
+      "charCount": 47
+    },
+    {
+      "id": "code_023",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "CSS Flexbox",
+      "content": "display: flex; justify-content: space-between; align-items: center; gap: 16px;",
+      "wordCount": 7,
+      "charCount": 78
+    },
+    {
+      "id": "code_024",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "CSS Grid",
+      "content": "display: grid; grid-template-columns: repeat(3, 1fr); grid-gap: 24px; padding: 16px;",
+      "wordCount": 8,
+      "charCount": 85
+    },
+    {
+      "id": "code_025",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "Bash コマンド",
+      "content": "git add . && git commit -m 'fix: update styles' && git push origin main",
+      "wordCount": 9,
+      "charCount": 72
+    },
+    {
+      "id": "code_026",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "SQL JOIN",
+      "content": "SELECT u.name, o.total FROM users u INNER JOIN orders o ON u.id = o.user_id WHERE o.status = 'paid';",
+      "wordCount": 16,
+      "charCount": 99
+    },
+    {
+      "id": "code_027",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "Node.js HTTP",
+      "content": "const server = http.createServer((req, res) => { res.writeHead(200); res.end('OK'); });",
+      "wordCount": 12,
+      "charCount": 88
+    },
+    {
+      "id": "code_028",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "Python Lambda",
+      "content": "sorted_data = sorted(items, key=lambda x: x['price'], reverse=True)",
+      "wordCount": 7,
+      "charCount": 67
+    },
+    {
+      "id": "code_029",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "HTML5 セマンティクス",
+      "content": "<header><nav><ul><li><a href='/'>Home</a></li></ul></nav></header>",
+      "wordCount": 6,
+      "charCount": 65
+    },
+    {
+      "id": "code_030",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "CSS アニメーション",
+      "content": "@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }",
+      "wordCount": 13,
+      "charCount": 116
+    },
+    {
+      "id": "code_031",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "JS Optional Chain",
+      "content": "const city = user?.address?.city ?? 'Unknown';",
+      "wordCount": 5,
+      "charCount": 47
+    },
+    {
+      "id": "code_032",
+      "category": "code_snippets",
+      "difficulty": 3,
+      "title": "TypeScript Enum",
+      "content": "enum Status { Active = 'active', Inactive = 'inactive', Pending = 'pending' }",
+      "wordCount": 8,
+      "charCount": 77
+    },
+    {
+      "id": "jp_basic_001",
+      "category": "japanese_basic",
+      "difficulty": 1,
+      "title": "あいさつ基礎",
+      "content": "ohayou gozaimasu konnichiwa konbanwa arigatou gozaimasu sumimasen",
+      "wordCount": 6,
+      "charCount": 64
+    },
+    {
+      "id": "jp_basic_002",
+      "category": "japanese_basic",
+      "difficulty": 1,
+      "title": "数字を読もう",
+      "content": "ichi ni san shi go roku nana hachi kyuu juu hyaku sen man",
+      "wordCount": 13,
+      "charCount": 57
+    },
+    {
+      "id": "jp_basic_003",
+      "category": "japanese_basic",
+      "difficulty": 1,
+      "title": "曜日の練習",
+      "content": "getsuyoubi kayoubi suiyoubi mokuyoubi kinyoubi doyoubi nichiyoubi",
+      "wordCount": 7,
+      "charCount": 63
+    },
+    {
+      "id": "jp_basic_004",
+      "category": "japanese_basic",
+      "difficulty": 1,
+      "title": "家族の呼び方",
+      "content": "otousan okaasan oniisan oneesan otouto imouto ojisan obasan",
+      "wordCount": 7,
+      "charCount": 58
+    },
+    {
+      "id": "jp_basic_005",
+      "category": "japanese_basic",
+      "difficulty": 1,
+      "title": "色の名前",
+      "content": "aka ao kiiro midori shiro kuro kiiro momo iro murasaki",
+      "wordCount": 10,
+      "charCount": 55
+    },
+    {
+      "id": "jp_basic_006",
+      "category": "japanese_basic",
+      "difficulty": 1,
+      "title": "食べ物",
+      "content": "gohan ramen sushi tempura udon soba yakitori takoyaki okonomiyaki",
+      "wordCount": 9,
+      "charCount": 63
+    },
+    {
+      "id": "jp_basic_007",
+      "category": "japanese_basic",
+      "difficulty": 1,
+      "title": "動詞の基礎",
+      "content": "taberu nomu miru kiku hanasu yomu kaku aruku hashiru nemuru",
+      "wordCount": 10,
+      "charCount": 59
+    },
+    {
+      "id": "jp_basic_008",
+      "category": "japanese_basic",
+      "difficulty": 1,
+      "title": "形容詞",
+      "content": "ookii chiisai nagai mijikai hayai osoi atarashii furui utsukushii",
+      "wordCount": 9,
+      "charCount": 63
+    },
+    {
+      "id": "jp_basic_009",
+      "category": "japanese_basic",
+      "difficulty": 1,
+      "title": "場所の言葉",
+      "content": "ie gakkou kaisha eki mise kouen byouin toshokan shiyakusho",
+      "wordCount": 9,
+      "charCount": 58
+    },
+    {
+      "id": "jp_basic_010",
+      "category": "japanese_basic",
+      "difficulty": 1,
+      "title": "天気の表現",
+      "content": "hare kumori ame yuki kaze samui atsui suzushii atatakai",
+      "wordCount": 9,
+      "charCount": 55
+    },
+    {
+      "id": "jp_basic_011",
+      "category": "japanese_basic",
+      "difficulty": 1,
+      "title": "時間の言葉",
+      "content": "asa hiru yoru kyou ashita kinou raishuu senshuu kotoshi rainen",
+      "wordCount": 11,
+      "charCount": 60
+    },
+    {
+      "id": "jp_basic_012",
+      "category": "japanese_basic",
+      "difficulty": 1,
+      "title": "乗り物",
+      "content": "densha basu takushii kuruma jitensha hikoki fune shinkansen",
+      "wordCount": 8,
+      "charCount": 57
+    },
+    {
+      "id": "jp_phrase_001",
+      "category": "japanese_phrases",
+      "difficulty": 2,
+      "title": "自己紹介",
+      "content": "watashi no namae wa tanaka desu yoroshiku onegaishimasu",
+      "wordCount": 8,
+      "charCount": 55
+    },
+    {
+      "id": "jp_phrase_002",
+      "category": "japanese_phrases",
+      "difficulty": 2,
+      "title": "買い物で",
+      "content": "kore wa ikura desu ka sumimasen mite mo ii desu ka kudasai",
+      "wordCount": 14,
+      "charCount": 57
+    },
+    {
+      "id": "jp_phrase_003",
+      "category": "japanese_phrases",
+      "difficulty": 2,
+      "title": "道を聞く",
+      "content": "eki wa doko desu ka migi ni magatte hidari ni iku to arimasu",
+      "wordCount": 13,
+      "charCount": 58
+    },
+    {
+      "id": "jp_phrase_004",
+      "category": "japanese_phrases",
+      "difficulty": 2,
+      "title": "レストランで",
+      "content": "menyu wo misete kudasai kore wo futatsu onegaishimasu okaikei wo",
+      "wordCount": 9,
+      "charCount": 63
+    },
+    {
+      "id": "jp_phrase_005",
+      "category": "japanese_phrases",
+      "difficulty": 2,
+      "title": "電話で",
+      "content": "moshi moshi tanaka desu ga sukoshi matte kudasai mata kakeimasu",
+      "wordCount": 10,
+      "charCount": 61
+    },
+    {
+      "id": "jp_phrase_006",
+      "category": "japanese_phrases",
+      "difficulty": 2,
+      "title": "ビジネス敬語",
+      "content": "osewani natte orimasu yoroshiku onegai itashimasu otsukare sama deshita",
+      "wordCount": 9,
+      "charCount": 67
+    },
+    {
+      "id": "jp_phrase_007",
+      "category": "japanese_phrases",
+      "difficulty": 2,
+      "title": "感謝と謝罪",
+      "content": "taihen osewani natte orimasu moushiwake gozaimasen douzo yoroshiku",
+      "wordCount": 9,
+      "charCount": 63
+    },
+    {
+      "id": "jp_phrase_008",
+      "category": "japanese_phrases",
+      "difficulty": 2,
+      "title": "予約の電話",
+      "content": "yoyaku shitai no desu ga ashita no gozen juu ji wa aite imasu ka",
+      "wordCount": 14,
+      "charCount": 64
+    },
+    {
+      "id": "jp_phrase_009",
+      "category": "japanese_phrases",
+      "difficulty": 2,
+      "title": "趣味を話す",
+      "content": "watashi no shumi wa ongaku wo kiku koto to ryouri wo suru koto desu",
+      "wordCount": 13,
+      "charCount": 66
+    },
+    {
+      "id": "jp_phrase_010",
+      "category": "japanese_phrases",
+      "difficulty": 2,
+      "title": "体調を伝える",
+      "content": "sukoshi atama ga itai desu kyou wa hayame ni kaette mo ii desu ka",
+      "wordCount": 14,
+      "charCount": 63
+    },
+    {
+      "id": "jp_phrase_011",
+      "category": "japanese_phrases",
+      "difficulty": 2,
+      "title": "会議の日本語",
+      "content": "kaigi wo hajimemasu gidai wa tsugi no toori desu iken wa arimasu ka",
+      "wordCount": 12,
+      "charCount": 66
+    },
+    {
+      "id": "jp_phrase_012",
+      "category": "japanese_phrases",
+      "difficulty": 2,
+      "title": "メールの書き出し",
+      "content": "itsumo osewani natte orimasu sate konkai no ken ni tsukimashite",
+      "wordCount": 11,
+      "charCount": 62
+    },
+    {
+      "id": "jp_phrase_013",
+      "category": "japanese_phrases",
+      "difficulty": 2,
+      "title": "旅行の会話",
+      "content": "chekku in onegaishimasu pasupoto wo misete itadakemasu ka heya wa doko desu ka",
+      "wordCount": 13,
+      "charCount": 73
+    },
+    {
+      "id": "jp_phrase_014",
+      "category": "japanese_phrases",
+      "difficulty": 2,
+      "title": "友達との会話",
+      "content": "saikin dou sore wa yokatta ne kondo issho ni tabeni ikouyo",
+      "wordCount": 11,
+      "charCount": 59
+    },
+    {
+      "id": "jp_phrase_015",
+      "category": "japanese_phrases",
+      "difficulty": 2,
+      "title": "宇宙の話",
+      "content": "uchu no hirosa ni wa odoroki wo kanjiru taiyoukei ni wa hachi ko no wakusei ga aru",
+      "wordCount": 16,
+      "charCount": 78
     }
   ]
 }

@@ -564,7 +564,7 @@
     </div>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10 pb-20">
 
         <!-- Game Section -->
         <section id="gameSection" class="section-content">
@@ -649,6 +649,18 @@
                     <div id="missionSelection" class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
                         <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-4 text-center">ミッション選択</h3>
 
+                        <!-- 前回のミッション クイック再開 -->
+                        <div id="lastMissionBar" class="hidden mb-3">
+                            <button id="lastMissionBtn" onclick="resumeLastMission()"
+                                class="w-full bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-cosmic-cyan rounded-lg px-4 py-2 transition-all flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-lg">🔁</span>
+                                    <span class="text-sm text-gray-300">前回のミッションで再開</span>
+                                </div>
+                                <span id="lastMissionLabel" class="text-xs font-bold text-cosmic-cyan px-2 py-0.5 bg-gray-700 rounded-full"></span>
+                            </button>
+                        </div>
+
                         <!-- P2: デイリーチャレンジ -->
                         <div class="mb-4">
                             <div class="flex gap-2 mb-2">
@@ -729,6 +741,16 @@
                                 </div>
                                 <div class="font-bold mt-1">💻 コードモード</div>
                                 <div class="text-xs text-gray-400 mt-0.5">実際のコードスニペット</div>
+                            </button>
+
+                            <button onclick="startJapaneseMission()" data-preview="例：「watashi no namae wa tanaka desu」ローマ字でひらがな・日本語フレーズを練習します。"
+                                class="mission-btn mission-preview bg-red-950 hover:bg-red-900 p-4 rounded-lg transition-colors border border-red-600 text-left relative">
+                                <div class="flex items-start justify-between mb-1">
+                                    <span class="text-2xl">🇯🇵</span>
+                                    <span class="text-xs bg-red-900 text-red-200 px-2 py-0.5 rounded-full">★ 入門</span>
+                                </div>
+                                <div class="font-bold mt-1">🇯🇵 日本語練習</div>
+                                <div class="text-xs text-gray-400 mt-0.5">ローマ字で日本語フレーズ</div>
                             </button>
 
                             <button onclick="toggleCustomPanel()"
@@ -813,6 +835,10 @@
 
                     <!-- Typing Interface -->
                     <div id="typingInterface" class="bg-cosmic-card rounded-xl p-6 border border-blue-500 hidden">
+                        <!-- ミッション名バッジ (P2: 現在のモード表示) -->
+                        <div class="flex justify-center mb-3">
+                            <span id="currentMissionBadge" class="hidden text-xs font-bold px-3 py-1 rounded-full border" style="background:rgba(6,182,212,0.15);border-color:#06b6d4;color:#06b6d4;"></span>
+                        </div>
                         <!-- Timer and Stats -->
                         <div class="flex justify-between items-center mb-6">
                             <div class="text-center">
@@ -824,8 +850,10 @@
                                 <div class="text-xl font-bold text-energy-green drop-shadow-md" id="liveWPM" style="transition:color 0.4s ease,text-shadow 0.4s ease,transform 0.15s ease;" aria-live="polite" aria-atomic="true">0</div>
                                 <div class="text-sm text-gray-300">WPM</div>
                             </div>
-                            <div class="text-xl font-bold text-cosmic-cyan drop-shadow-md" id="liveAccuracy" aria-live="polite" aria-atomic="true">100%</div>
-                            <div class="text-sm text-gray-300">正確率</div>
+                            <div class="text-center">
+                                <div class="text-xl font-bold text-cosmic-cyan drop-shadow-md" id="liveAccuracy" aria-live="polite" aria-atomic="true">100%</div>
+                                <div class="text-sm text-gray-300">正確率</div>
+                            </div>
                         </div>
                             <!-- Survival Lives Display (Hidden by default) -->
                         <div id="survivalLivesContainer" class="text-center hidden">
@@ -867,11 +895,21 @@
                     </div>
 
                     <!-- Text Display -->
-                    <div id="textDisplay"
-                        class="typing-display bg-gray-900 p-6 rounded-lg mb-4 border-2 border-cosmic-cyan min-h-32 text-gray-300 shadow-lg text-base"
-                        role="article"
-                        aria-label="タイピング練習テキスト">
-                        <!-- Text will be dynamically inserted here -->
+                    <div class="relative">
+                        <div id="textDisplay"
+                            class="typing-display bg-gray-900 p-6 rounded-lg mb-4 border-2 border-cosmic-cyan min-h-32 text-gray-300 shadow-lg text-base"
+                            role="article"
+                            aria-label="タイピング練習テキスト">
+                            <div id="textDisplayGuide" class="text-gray-500 text-sm text-center py-2">
+                                👆 上のミッションボタンを選ぶと練習テキストが表示されます
+                            </div>
+                        </div>
+                        <!-- 一時停止オーバーレイ -->
+                        <div id="pauseOverlay" class="hidden" style="position:absolute;inset:0;background:rgba(10,10,26,0.85);border-radius:8px;display:none;align-items:center;justify-content:center;flex-direction:column;gap:8px;z-index:10;">
+                            <span style="font-size:2.5rem;">⏸</span>
+                            <span style="font-family:Orbitron,monospace;font-size:1.1rem;color:#06b6d4;font-weight:700;">一時停止中</span>
+                            <span style="font-size:0.75rem;color:#9ca3af;">開始ボタンまたは <kbd style="background:#374151;padding:2px 6px;border-radius:4px;color:#d1d5db;">Esc</kbd> で再開</span>
+                        </div>
                     </div>
 
                     <!-- Input Area -->
@@ -879,29 +917,19 @@
                         <label for="typingInput" class="sr-only">タイピング入力欄</label>
                         <textarea id="typingInput"
                             class="w-full bg-gray-800 text-white p-4 rounded-lg border-2 border-cosmic-cyan focus:border-energy-green focus:outline-none resize-none placeholder-gray-400 shadow-lg"
-                            rows="3" 
-                            placeholder="📝 ここに入力してください。開始ボタンを押すと入力可能になります。" 
+                            rows="3"
+                            placeholder="📝 ここに入力してください。開始ボタンを押すと入力可能になります。"
                             disabled
+                            autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
                             aria-describedby="input-instructions"></textarea>
                         <div id="input-instructions" class="sr-only">
                             開始ボタンを押してからこのテキストエリアに入力してください
                         </div>
                         
-                        <!-- 日本語タイピング入力候補表示 -->
+                        <!-- 日本語タイピング入力候補表示（コンテンツ挿入時のみ表示） -->
                         <div class="mt-3 space-y-2">
-                            <div id="currentInputDisplay" class="bg-gray-900 rounded-lg p-3 border border-gray-700">
-                                <!-- 現在の入力がここに表示されます -->
-                            </div>
-                            <div id="inputHintDisplay" class="bg-gray-900 rounded-lg p-3 border border-gray-700">
-                                <!-- 入力候補がここに表示されます -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- P1: タイピング進行バー -->
-                    <div class="mt-2 mb-1">
-                        <div class="w-full bg-gray-700 rounded-full h-1.5">
-                            <div id="typingProgressBar" class="h-1.5 rounded-full transition-all duration-200" style="width:0%;background:linear-gradient(90deg,#10b981,#06b6d4);"></div>
+                            <div id="currentInputDisplay" class="hidden bg-gray-900 rounded-lg p-3 border border-gray-700"></div>
+                            <div id="inputHintDisplay" class="hidden bg-gray-900 rounded-lg p-3 border border-gray-700"></div>
                         </div>
                     </div>
 
@@ -1053,15 +1081,16 @@
 
                     <!-- Text Display -->
                     <div id="timeAttackTextDisplay"
-                        class="typing-display bg-gray-900 p-6 rounded-lg mb-4 border border-gray-600 min-h-32">
+                        class="typing-display bg-gray-900 p-6 rounded-lg mb-4 border-2 border-cosmic-cyan min-h-32">
                         <!-- Text will be dynamically inserted here -->
                     </div>
 
                     <!-- Input Area -->
                     <div class="relative">
                         <textarea id="timeAttackInput"
-                            class="w-full bg-gray-800 text-white p-4 rounded-lg border border-gray-600 focus:border-cosmic-cyan focus:outline-none resize-none"
-                            rows="3" placeholder="ここに入力してください..." disabled></textarea>
+                            class="w-full bg-gray-800 text-white p-4 rounded-lg border-2 border-cosmic-cyan focus:border-energy-green focus:outline-none resize-none placeholder-gray-400 shadow-lg"
+                            rows="3" placeholder="📝 ここに入力してください..." disabled
+                            autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
                     </div>
 
                     <!-- P3-1: タイムアタック用WPMグラフ -->
@@ -1096,6 +1125,8 @@
                     <div class="grid grid-cols-2 sm:grid-cols-5 gap-4 mb-6">
                         <div class="text-center">
                             <div class="text-2xl font-bold text-energy-green" id="ta-finalWPM">0</div>
+                            <!-- P4: 前回比較バッジ -->
+                            <div id="ta-wpmDiff" class="hidden text-xs font-bold mt-0.5"></div>
                             <div class="text-sm text-gray-400">WPM</div>
                         </div>
                         <div class="text-center">
@@ -1120,6 +1151,13 @@
                         </div>
                     </div>
 
+                    <!-- 自己ベスト表示バー -->
+                    <div class="flex items-center justify-center gap-3 mt-2 mb-4 py-2 px-4 rounded-lg" style="background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.25);">
+                        <span class="text-sm text-gray-400">🏆 自己ベスト:</span>
+                        <span class="text-lg font-bold font-orbitron text-cosmic-cyan" id="ta-bestWPM">−</span>
+                        <span class="text-sm text-gray-400">WPM</span>
+                    </div>
+
                     <div class="flex flex-wrap justify-center gap-2">
                         <button onclick="shareTimeAttackResults()"
                             class="bg-cosmic-cyan hover:bg-blue-500 px-4 py-2 rounded-lg font-bold transition-colors text-sm">
@@ -1137,7 +1175,7 @@
                             class="bg-planet-orange hover:bg-orange-600 px-4 py-2 rounded-lg font-bold transition-colors text-sm">
                             <span class="mr-1">←</span>戻る
                         </button>
-                        <button id="taLeaderboardBtn" onclick="showLeaderboardModal('time_attack', window._lastTimeLimit)"
+                        <button id="taLeaderboardBtn" onclick="showLeaderboardModal('time_attack', window._lastTimeLimit || parseInt(localStorage.getItem('cosmicTyping_lastTimeAttack') || '60'))"
                             class="bg-yellow-800 hover:bg-yellow-700 px-4 py-2 rounded-lg font-bold transition-colors text-sm border border-yellow-600">
                             🏆 ランキング
                         </button>
@@ -1203,7 +1241,10 @@
                 <div class="lg:col-span-2">
                     <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500 mb-6">
                         <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-6">パフォーマンス推移</h3>
-                        <div id="performanceChartPlaceholder" style="height:120px;display:flex;align-items:center;justify-content:center;color:#64748b;font-size:13px;">ゲームをプレイするとグラフが表示されます 🚀</div>
+                        <div id="performanceChartPlaceholder" style="height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#64748b;font-size:13px;gap:12px;">
+                            <div>ゲームをプレイするとグラフが表示されます 🚀</div>
+                            <button onclick="showSection('game'); startMission('basic')" style="background:#10b981;color:#fff;border:none;padding:8px 18px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;">🎓 基礎訓練を始める</button>
+                        </div>
                         <canvas id="performanceChart" style="height: 400px; max-height: 400px; display:none;"></canvas>
                     </div>
 
@@ -1229,23 +1270,23 @@
                                 <h4 class="font-orbitron font-bold text-md text-cosmic-cyan mb-3">詳細分析</h4>
                                 <div class="grid grid-cols-2 gap-2 mb-4">
                                     <button data-analytics="daily"
-                                        class="bg-cosmic-card hover:bg-cosmic-hover p-2 rounded border border-cosmic-border text-sm transition-colors">
+                                        class="bg-gray-800 hover:bg-gray-700 p-2 rounded border border-gray-600 text-sm transition-colors">
                                         日別統計
                                     </button>
                                     <button data-analytics="weekly"
-                                        class="bg-cosmic-card hover:bg-cosmic-hover p-2 rounded border border-cosmic-border text-sm transition-colors">
+                                        class="bg-gray-800 hover:bg-gray-700 p-2 rounded border border-gray-600 text-sm transition-colors">
                                         週別統計
                                     </button>
                                     <button data-analytics="monthly"
-                                        class="bg-cosmic-card hover:bg-cosmic-hover p-2 rounded border border-cosmic-border text-sm transition-colors">
+                                        class="bg-gray-800 hover:bg-gray-700 p-2 rounded border border-gray-600 text-sm transition-colors">
                                         月別統計
                                     </button>
                                     <button data-analytics="keys"
-                                        class="bg-cosmic-card hover:bg-cosmic-hover p-2 rounded border border-cosmic-border text-sm transition-colors">
+                                        class="bg-gray-800 hover:bg-gray-700 p-2 rounded border border-gray-600 text-sm transition-colors">
                                         キー分析
                                     </button>
                                     <button data-analytics="progress"
-                                        class="bg-cosmic-card hover:bg-cosmic-hover p-2 rounded border border-cosmic-border text-sm transition-colors">
+                                        class="bg-gray-800 hover:bg-gray-700 p-2 rounded border border-gray-600 text-sm transition-colors">
                                         進歩トレンド
                                     </button>
                                 </div>
@@ -1642,7 +1683,14 @@
             </div>
         </section>
     </main>
-    
+
+    <!-- P4: モバイル固定スタートボタンバー（ゲーム中に常時表示） -->
+    <div id="mobileStickyStart" role="toolbar" aria-label="ゲームコントロール">
+        <button id="mobileStartBtn" onclick="document.getElementById('startBtn')?.click()" aria-label="開始">▶ 開始</button>
+        <button id="mobilePauseBtn" onclick="pauseTyping()" style="display:none;" aria-label="一時停止">⏸ 一時停止</button>
+        <button id="mobileResetBtn" onclick="resetTyping()" aria-label="リセット">🔄 リセット</button>
+    </div>
+
     <!-- Global Functions -->
     <script>
         // Section navigation
@@ -1818,10 +1866,10 @@
             var bgmChk = document.getElementById('backgroundMusic');
             if (bgmChk) {
                 bgmChk.checked = localStorage.getItem('cosmicTyping_bgm') === 'true';
-                if (bgmChk.checked) CosmicBgm.start();
+                if (bgmChk.checked && window.CosmicBgm) CosmicBgm.start();
                 bgmChk.addEventListener('change', function () {
                     localStorage.setItem('cosmicTyping_bgm', bgmChk.checked ? 'true' : 'false');
-                    bgmChk.checked ? CosmicBgm.start() : CosmicBgm.stop();
+                    bgmChk.checked ? (window.CosmicBgm && CosmicBgm.start()) : (window.CosmicBgm && CosmicBgm.stop());
                     showToast(bgmChk.checked ? '🎵 BGM ON' : '🎵 BGM OFF');
                 });
             }
@@ -1852,19 +1900,53 @@
                 }, 300);
             }
         }
-        function pauseTyping()          { window.app?.pausePractice(); }
-        function resetTyping()          { _clearCodeMode(); window.app?.resetPractice(); }
-        function playAgain()            { _clearCodeMode(); window.app?.retryPractice(); }
-        function nextText()             { var p = (window.app && window.app.currentPlanet) || 'earth'; _clearCodeMode(); if (window.app) window.app.selectPlanet(p); }
-        function selectNewMission()     { _clearCodeMode(); window.app?.showPlanetSelection(); }
-        function backToMissionSelection() { _clearCodeMode(); window.app?.showPlanetSelection(); }
+        function _setPauseOverlay(visible) {
+            var ov = document.getElementById('pauseOverlay');
+            if (!ov) return;
+            if (visible) {
+                ov.classList.remove('hidden');
+                ov.style.display = 'flex';
+            } else {
+                ov.style.display = 'none';
+                ov.classList.add('hidden');
+            }
+        }
+        function pauseTyping() {
+            window.app?.pausePractice();
+            _setPauseOverlay(true);
+        }
+        function resetTyping()          { _clearCodeMode(); _setPauseOverlay(false); window.app?.resetPractice(); }
+        function playAgain()            { _clearCodeMode(); _setPauseOverlay(false); window.app?.retryPractice(); }
+        function nextText()             { var p = (window.app && window.app.currentPlanet) || 'earth'; _clearCodeMode(); _setPauseOverlay(false); if (window.app) window.app.selectPlanet(p); }
+        function selectNewMission()     { _clearCodeMode(); _setPauseOverlay(false); clearMissionBadge(); window.app?.showPlanetSelection(); }
+        function backToMissionSelection() { _clearCodeMode(); _setPauseOverlay(false); clearMissionBadge(); window.app?.showPlanetSelection(); }
         function resetTimeAttack()      { window.app?.showPlanetSelection(); }
         function playTimeAttackAgain()  {
             const last = parseInt(localStorage.getItem('cosmicTyping_lastTimeAttack') || '60');
             window.app?.startTimeAttack(last);
         }
 
-        // P2-2: Xでシェア
+        // P2: ミッション名バッジ更新
+        var MISSION_BADGE_MAP = {
+            basic:       '🎓 基礎訓練',
+            exploration: '🚀 惑星探索',
+            speed:       '⚡ 高速航行',
+            accuracy:    '🎯 精密制御',
+            survival:    '💓 サバイバル',
+            code:        '💻 コードモード',
+            custom:      '✏️ カスタム',
+        };
+        function setMissionBadge(label) {
+            var badge = document.getElementById('currentMissionBadge');
+            if (!badge) return;
+            badge.textContent = label;
+            badge.classList.remove('hidden');
+        }
+        function clearMissionBadge() {
+            var badge = document.getElementById('currentMissionBadge');
+            if (badge) badge.classList.add('hidden');
+        }
+
         // P1: カスタムパネル開閉
         function toggleCustomPanel() {
             var panel = document.getElementById('customTextPanel');
@@ -1886,11 +1968,18 @@
             }
         }
 
+        // textDisplay ガイダンスを非表示にする
+        function _hideTextDisplayGuide() {
+            var guide = document.getElementById('textDisplayGuide');
+            if (guide) guide.remove();
+        }
+
         // P2-1: カスタムテキスト練習（prompt廃止 → インラインパネル）
         function startCustomMission() {
             var ta = document.getElementById('customTextInput');
             var text = ta ? ta.value : '';
             if (!text || text.trim().length < 5) { showToast('テキストが短すぎます（5文字以上）'); return; }
+            setMissionBadge('✏️ カスタム');
             var clean = text.trim().substring(0, 200);
             localStorage.setItem('cosmicTyping_customText', clean);
             // パネルを閉じる
@@ -1902,10 +1991,59 @@
                 var td = document.getElementById('textDisplay');
                 if (td) {
                     td.textContent = clean;
-                    if (window.app.typingEngine) window.app.typingEngine.reset();
+                    // タイピングエンジンのcurrentTextもセット（selectPlanetの非同期上書きを防止）
+                    if (window.app.typingEngine) {
+                        window.app.typingEngine.currentText = clean;
+                        window.app.typingEngine.reset();
+                    }
                 }
                 showToast('📝 カスタムテキストを設定しました');
-            }, 200);
+            }, 400);
+        }
+
+        // 日本語練習ミッション: practice-texts.json の japanese_basic/japanese_phrases からランダム選択
+        function startJapaneseMission() {
+            setMissionBadge('🇯🇵 日本語練習');
+            if (!window.app) { showToast('アプリが読み込まれていません'); return; }
+            // JSONから日本語テキストを取得してランダム選択
+            fetch('data/practice-texts.json')
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    var jpTexts = (data.texts || []).filter(function(t) {
+                        return t.category === 'japanese_basic' || t.category === 'japanese_phrases';
+                    });
+                    if (jpTexts.length === 0) { showToast('日本語テキストが見つかりません'); return; }
+                    var picked = jpTexts[Math.floor(Math.random() * jpTexts.length)];
+                    var clean = picked.content.trim();
+                    window.app.selectPlanet('earth');
+                    setTimeout(function() {
+                        var td = document.getElementById('textDisplay');
+                        if (td) {
+                            td.textContent = clean;
+                            if (window.app.typingEngine) {
+                                window.app.typingEngine.currentText = clean;
+                                window.app.typingEngine.reset();
+                            }
+                        }
+                        showToast('🇯🇵 日本語練習「' + picked.title + '」を開始します！');
+                    }, 400);
+                })
+                .catch(function() {
+                    // フォールバック: 固定テキストで練習
+                    var fallback = 'ohayou gozaimasu konnichiwa konbanwa arigatou gozaimasu';
+                    window.app.selectPlanet('earth');
+                    setTimeout(function() {
+                        var td = document.getElementById('textDisplay');
+                        if (td) {
+                            td.textContent = fallback;
+                            if (window.app.typingEngine) {
+                                window.app.typingEngine.currentText = fallback;
+                                window.app.typingEngine.reset();
+                            }
+                        }
+                        showToast('🇯🇵 日本語基礎練習を開始します！');
+                    }, 400);
+                });
         }
 
         // P2-3: フォントサイズ切り替え
@@ -1935,24 +2073,32 @@
 
         function shareToX() {
             var panel = document.getElementById('resultsPanel');
-            var wpm = panel ? (panel.querySelector('[id="finalWPM"]') || {}).textContent || '?' : '?';
-            var acc = panel ? (panel.querySelector('[id="finalAccuracy"]') || {}).textContent || '?' : '?';
+            var wpm = panel ? (document.getElementById('finalWPM') || {}).textContent || '?' : '?';
+            var acc = panel ? (document.getElementById('finalAccuracy') || {}).textContent || '?' : '?';
+            var rank = (document.getElementById('finalRank') || document.getElementById('missionRank') || {}).textContent || '';
             var streak = (window.StreakManager ? window.StreakManager.getStreak() : 0);
-            var text = '⌨️ WPM ' + wpm + ' / 正確率 ' + acc + '% を達成！' + (streak > 1 ? ' 🔥' + streak + '日連続！' : '') + '\n#CosmicTyping #タイピング練習\nhttps://appadaycreator.com/cosmic-typing-adventure/';
+            var rankPart = rank ? ' ランク ' + rank.replace(/[^\w級A-Z]/g, '') + ' 🏅' : '';
+            var streakPart = streak > 1 ? ' 🔥' + streak + '日連続！' : '';
+            var text = '🚀 宇宙タイピング WPM ' + wpm + ' / 正確率 ' + acc + rankPart + streakPart
+                + '\n無料タイピング練習 #CosmicTyping #タイピング練習\nhttps://appadaycreator.com/cosmic-typing-adventure/';
             window.open('https://x.com/intent/tweet?text=' + encodeURIComponent(text), '_blank', 'noopener');
         }
         function shareToLine() {
             var panel = document.getElementById('resultsPanel');
-            var wpm = panel ? (panel.querySelector('[id="finalWPM"]') || {}).textContent || '?' : '?';
-            var acc = panel ? (panel.querySelector('[id="finalAccuracy"]') || {}).textContent || '?' : '?';
-            var text = '⌨️ WPM ' + wpm + ' / 正確率 ' + acc + '% を達成！無料タイピング練習→\nhttps://appadaycreator.com/cosmic-typing-adventure/';
+            var wpm = panel ? (document.getElementById('finalWPM') || {}).textContent || '?' : '?';
+            var acc = panel ? (document.getElementById('finalAccuracy') || {}).textContent || '?' : '?';
+            var text = '🚀 宇宙タイピング WPM ' + wpm + ' / 正確率 ' + acc + ' を達成！\n無料でタイピング練習→';
             window.open('https://social-plugins.line.me/lineit/share?url=' + encodeURIComponent('https://appadaycreator.com/cosmic-typing-adventure/') + '&text=' + encodeURIComponent(text), '_blank', 'noopener');
         }
         function shareTimeAttackToX() {
             var panel = document.getElementById('timeAttackResults');
-            var wpm = panel ? (panel.querySelector('[id="ta-finalWPM"]') || {}).textContent || '?' : '?';
+            var wpm = panel ? (document.getElementById('ta-finalWPM') || {}).textContent || '?' : '?';
+            var acc = panel ? (document.getElementById('ta-finalAccuracy') || {}).textContent || '?' : '?';
             var rating = (document.getElementById('performanceRating') || {}).textContent || '?';
-            var text = '🚀 Cosmic Typing Adventure タイムアタックで WPM ' + wpm + ' / 評価 ' + rating + ' を達成！ #タイピング #CosmicTyping\nhttps://appadaycreator.com/cosmic-typing-adventure/';
+            var streak = (window.StreakManager ? window.StreakManager.getStreak() : 0);
+            var streakPart = streak > 1 ? ' 🔥' + streak + '日連続！' : '';
+            var text = '🚀 宇宙タイピング タイムアタック WPM ' + wpm + ' / 正確率 ' + acc + ' / 評価 ' + rating + streakPart
+                + '\n#CosmicTyping #タイピング練習\nhttps://appadaycreator.com/cosmic-typing-adventure/';
             window.open('https://x.com/intent/tweet?text=' + encodeURIComponent(text), '_blank', 'noopener');
         }
 
@@ -2133,7 +2279,11 @@
                 // P3-1: 直近14セッションのWPM推移グラフ（週間ビュー）
                 var allSessions = discoveries.slice(0, 14).reverse();
                 var wkWPMs = allSessions.map(function(d) { return parseFloat(d.wpm) || 0; });
-                var wkLabels = allSessions.map(function(d, i) { return (i + 1) + ''; });
+                var wkLabels = allSessions.map(function(d, i) {
+                    // date フィールドがあれば M/D HH:mm 形式、なければ番号
+                    if (d.date) { return d.date.slice(5).replace('-', '/') + (d.time ? ' ' + d.time : ''); }
+                    return (i + 1) + '回目';
+                });
                 var wkChartHtml = '';
                 if (wkWPMs.length > 1) {
                     var wkId = 'weeklyChart_' + Date.now();
@@ -2208,11 +2358,30 @@
                         showToast('⌨️ Enterキーで開始');
                     }
                 } else if (e.key === 'Escape') {
+                    var pauseOverlayEl = document.getElementById('pauseOverlay');
                     var pauseBtn = document.getElementById('pauseBtn');
-                    if (pauseBtn && !pauseBtn.classList.contains('hidden') && pauseBtn.style.display !== 'none') {
+                    if (pauseOverlayEl && pauseOverlayEl.style.display !== 'none') {
+                        // 一時停止中 → Escで再開
+                        e.preventDefault();
+                        _setPauseOverlay(false);
+                        var startBtn2 = document.getElementById('startBtn');
+                        if (startBtn2) startBtn2.click();
+                    } else if (pauseBtn && !pauseBtn.classList.contains('hidden') && pauseBtn.style.display !== 'none') {
                         e.preventDefault();
                         pauseTyping();
                     }
+                }
+            });
+        })();
+
+        // 一時停止オーバーレイ: startBtn クリック時に非表示
+        (function setupPauseOverlayClear() {
+            document.addEventListener('DOMContentLoaded', function() {
+                var startBtn = document.getElementById('startBtn');
+                if (startBtn) {
+                    startBtn.addEventListener('click', function() {
+                        _setPauseOverlay(false);
+                    });
                 }
             });
         })();
@@ -2260,8 +2429,110 @@
                 });
             });
         })();
+
+        // P2: ミッションボタン・TAボタン クリック時にバッジ更新
+        (function initMissionBadgeUpdate() {
+            // ミッションボタン名のマップ
+            var ONCLICK_BADGE = {
+                'startMission(\'basic\')':       '🎓 基礎訓練',
+                'startMission(\'exploration\')': '🚀 惑星探索',
+                'startMission(\'speed\')':        '⚡ 高速航行',
+                'startMission(\'accuracy\')':    '🎯 精密制御',
+                'startMission(\'survival\')':    '💓 サバイバル',
+                'startCodeMission()':            '💻 コードモード',
+            };
+            document.addEventListener('DOMContentLoaded', function() {
+                // ミッションボタン
+                document.querySelectorAll('.mission-btn[onclick]').forEach(function(btn) {
+                    var oc = (btn.getAttribute('onclick') || '').trim();
+                    var label = ONCLICK_BADGE[oc];
+                    if (label) {
+                        btn.addEventListener('click', function() { setMissionBadge(label); });
+                    }
+                });
+                // TAボタン
+                document.querySelectorAll('.time-attack-btn[data-time-attack]').forEach(function(btn) {
+                    btn.addEventListener('click', function() {
+                        var sec = parseInt(btn.dataset.timeAttack || 60);
+                        var m = Math.floor(sec / 60), s = sec % 60;
+                        setMissionBadge('⏱ タイムアタック ' + (m > 0 ? m + '分' : '') + (s > 0 ? s + '秒' : ''));
+                    });
+                });
+            });
+        })();
+
+        // モバイル仮想キーボード出現時に入力エリアを視野内にスクロール
+        (function initMobileKeyboardScroll() {
+            function scrollToInput(inputEl) {
+                if (!inputEl) return;
+                setTimeout(function() {
+                    var rect = inputEl.getBoundingClientRect();
+                    var viewH = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+                    if (rect.bottom > viewH - 20) {
+                        inputEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 350);
+            }
+            document.addEventListener('DOMContentLoaded', function() {
+                ['typingInput', 'timeAttackInput'].forEach(function(id) {
+                    var el = document.getElementById(id);
+                    if (!el) return;
+                    el.addEventListener('focus', function() {
+                        if (window.innerWidth <= 768) scrollToInput(el);
+                    });
+                });
+                if (window.visualViewport) {
+                    window.visualViewport.addEventListener('resize', function() {
+                        var active = document.activeElement;
+                        if (active && (active.id === 'typingInput' || active.id === 'timeAttackInput')) {
+                            scrollToInput(active);
+                        }
+                    });
+                }
+            });
+        })();
+
+        // P4: モバイル固定スタートボタンバーの表示切替
+        (function initMobileStickyBar() {
+            function updateStickyBar() {
+                var bar = document.getElementById('mobileStickyStart');
+                var startBtn = document.getElementById('mobileStartBtn');
+                var pauseBtn = document.getElementById('mobilePauseBtn');
+                if (!bar) return;
+                var isMobile = window.innerWidth <= 768;
+                // タイピングインターフェース表示中かどうか
+                var ti = document.getElementById('typingInterface');
+                var isGameActive = ti && !ti.classList.contains('hidden') && ti.style.display !== 'none';
+                // TAインターフェース表示中
+                var taI = document.getElementById('timeAttackInterface');
+                var isTAActive = taI && !taI.classList.contains('hidden') && taI.style.display !== 'none';
+                if (isMobile && (isGameActive || isTAActive)) {
+                    bar.classList.add('active');
+                } else {
+                    bar.classList.remove('active');
+                }
+                // 一時停止ボタンの表示/非表示
+                var origPause = document.getElementById('pauseBtn');
+                if (pauseBtn && origPause) {
+                    pauseBtn.style.display = origPause.classList.contains('hidden') ? 'none' : 'block';
+                    if (startBtn) startBtn.style.display = origPause.classList.contains('hidden') ? 'block' : 'none';
+                }
+            }
+            // MutationObserverで typingInterface/timeAttackInterface の表示変化を監視
+            document.addEventListener('DOMContentLoaded', function() {
+                var targets = ['typingInterface', 'timeAttackInterface', 'pauseBtn'];
+                targets.forEach(function(id) {
+                    var el = document.getElementById(id);
+                    if (el) {
+                        new MutationObserver(updateStickyBar).observe(el, { attributes: true, attributeFilter: ['style', 'class'] });
+                    }
+                });
+                window.addEventListener('resize', updateStickyBar);
+                updateStickyBar();
+            });
+        })();
     </script>
-    
+
     <!-- P1: 宇宙アンビエントBGM -->
     <script>
     window.CosmicBgm = (function () {
@@ -2388,11 +2659,11 @@
     </div>
 
     <!-- P2-2: 実績解放モーダル -->
-    <div id="achievementModal" class="hidden fixed inset-0 z-[500] flex items-center justify-center pointer-events-none">
+    <div id="achievementModal" class="hidden fixed inset-0 z-[500] flex items-center justify-center pointer-events-none" role="alertdialog" aria-live="assertive" aria-atomic="true">
         <div class="bg-cosmic-card border-2 border-yellow-400 rounded-2xl p-8 text-center shadow-2xl max-w-xs mx-4"
              style="animation:achievePopIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;box-shadow:0 0 40px rgba(250,204,21,0.4);">
             <div class="text-yellow-300 text-xs font-bold tracking-widest mb-2">🏅 ACHIEVEMENT UNLOCKED</div>
-            <span class="text-5xl text-yellow-400 mb-3 block" >🏅</span>
+            <span id="achievementModalIcon" class="text-5xl text-yellow-400 mb-3 block">🏅</span>
             <div id="achievementModalTitle" class="font-orbitron font-bold text-xl text-white mb-2"></div>
             <div id="achievementModalDesc" class="text-sm text-gray-300"></div>
         </div>
@@ -2429,11 +2700,22 @@
             z-index: 100;
             box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
-        .mission-preview:hover::after { opacity: 1; }
+        .mission-preview:hover::after,
+        .mission-preview:active::after,
+        .mission-preview.preview-show::after { opacity: 1; }
+
+        @media (max-width: 768px) {
+            .mission-preview::after {
+                bottom: auto;
+                top: calc(100% + 8px);
+                font-size: 10px;
+                width: 180px;
+            }
+        }
     </style>
 
     <!-- P4: レベルアップモーダル -->
-    <div id="levelUpModal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="レベルアップ">
+    <div id="levelUpModal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4" role="alertdialog" aria-modal="true" aria-label="レベルアップ" aria-live="assertive">
         <div class="bg-cosmic-card border-2 border-yellow-400 rounded-xl p-8 text-center max-w-sm w-full" style="animation: achievePopIn 0.4s ease-out">
             <div class="text-6xl mb-4">🚀</div>
             <div class="font-orbitron font-bold text-3xl text-yellow-400 mb-2">LEVEL UP!</div>
@@ -2478,6 +2760,31 @@
     </div>
 
     <script>
+    // ========== ローカルランキング保存 ==========
+    function saveToLocalLeaderboard(mode, wpm, accuracy, rank, timeLimit) {
+        try {
+            var all = JSON.parse(localStorage.getItem('cosmic_typing_leaderboard') || '[]');
+            var pilotName = localStorage.getItem('cosmicTyping_pilotName') || '宇宙探険家';
+            all.push({
+                mode: mode,
+                wpm: parseFloat(wpm) || 0,
+                accuracy: parseFloat(accuracy) || 0,
+                rank: rank || 'D',
+                time_limit: timeLimit || null,
+                pilot: pilotName,
+                created_at: new Date().toISOString()
+            });
+            // モード・時間別に上位10件のみ保持
+            var filtered = all.filter(function(e) {
+                return e.mode === mode && (timeLimit == null || e.time_limit == timeLimit);
+            }).sort(function(a, b) { return b.wpm - a.wpm; }).slice(0, 10);
+            var others = all.filter(function(e) {
+                return !(e.mode === mode && (timeLimit == null || e.time_limit == timeLimit));
+            });
+            localStorage.setItem('cosmic_typing_leaderboard', JSON.stringify(others.concat(filtered)));
+        } catch(e) {}
+    }
+
     // ========== P1: リーダーボードモーダル表示 ==========
     function showLeaderboardModal(mode, timeLimit) {
         const modal = document.getElementById('leaderboardModal');
@@ -2644,50 +2951,86 @@
         var wpm = document.getElementById('finalWPM') ? document.getElementById('finalWPM').textContent : '0';
         var acc = document.getElementById('finalAccuracy') ? document.getElementById('finalAccuracy').textContent : '0%';
         var combo = document.getElementById('finalCombo') ? document.getElementById('finalCombo').textContent : '0x';
+        var xp = document.getElementById('earnedXP') ? document.getElementById('earnedXP').textContent : '0';
         var date = new Date().toLocaleDateString('ja-JP', {month:'numeric',day:'numeric'});
+        // ランク算出
+        var wpmNum = parseFloat(wpm) || 0;
+        var accNum = parseFloat(acc) || 0;
+        var rank, rankColor;
+        if (wpmNum >= 80 && accNum >= 95) { rank = 'S'; rankColor = '#facc15'; }
+        else if (wpmNum >= 60 && accNum >= 90) { rank = 'A'; rankColor = '#4ade80'; }
+        else if (wpmNum >= 40) { rank = 'B'; rankColor = '#60a5fa'; }
+        else if (wpmNum >= 20) { rank = 'C'; rankColor = '#fbbf24'; }
+        else { rank = 'D'; rankColor = '#94a3b8'; }
         var cvs = document.createElement('canvas');
-        cvs.width = 480; cvs.height = 240;
+        cvs.width = 480; cvs.height = 280;
         var ctx = cvs.getContext('2d');
         // 背景グラデーション
-        var grad = ctx.createLinearGradient(0, 0, 480, 240);
+        var grad = ctx.createLinearGradient(0, 0, 480, 280);
         grad.addColorStop(0, '#0f172a');
         grad.addColorStop(1, '#1e1b4b');
         ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, 480, 240);
+        ctx.fillRect(0, 0, 480, 280);
         // 星をランダムに描画
         ctx.fillStyle = 'rgba(255,255,255,0.6)';
-        for (var i = 0; i < 40; i++) {
-            var sx = Math.random() * 480, sy = Math.random() * 240;
+        for (var i = 0; i < 50; i++) {
+            var sx = Math.random() * 480, sy = Math.random() * 280;
             ctx.fillRect(sx, sy, Math.random() < 0.3 ? 2 : 1, Math.random() < 0.3 ? 2 : 1);
         }
         // ボーダー
         ctx.strokeStyle = '#06b6d4';
         ctx.lineWidth = 2;
-        ctx.strokeRect(4, 4, 472, 232);
+        ctx.strokeRect(4, 4, 472, 272);
         // タイトル
         ctx.fillStyle = '#06b6d4';
         ctx.font = 'bold 14px monospace';
-        ctx.fillText('🚀 39 TypingMaster Pro', 16, 30);
+        ctx.fillText('Cosmic Typing Adventure', 16, 30);
         ctx.fillStyle = '#64748b';
         ctx.font = '11px monospace';
-        ctx.fillText(date, 400, 30);
-        // スコア表示
+        ctx.fillText(date, 390, 30);
+        // ランクバッジ（右上）
+        ctx.fillStyle = rankColor;
+        ctx.font = 'bold 48px monospace';
+        ctx.textAlign = 'right';
+        ctx.fillText(rank, 462, 75);
+        ctx.textAlign = 'left';
+        ctx.fillStyle = '#64748b';
+        ctx.font = '10px monospace';
+        ctx.textAlign = 'right';
+        ctx.fillText('RANK', 462, 88);
+        ctx.textAlign = 'left';
+        // スコア3列
         var cols = [{label:'WPM',value:wpm,color:'#4ade80'},{label:'正確率',value:acc,color:'#06b6d4'},{label:'コンボ',value:combo,color:'#fb923c'}];
-        cols.forEach(function(c, i) {
-            var x = 24 + i * 150;
+        cols.forEach(function(c, ci) {
+            var x = 24 + ci * 140;
             ctx.fillStyle = 'rgba(255,255,255,0.05)';
-            ctx.beginPath(); ctx.roundRect(x, 50, 130, 80, 8); ctx.fill();
+            ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, 48, 124, 80, 8); else ctx.rect(x, 48, 124, 80); ctx.fill();
             ctx.fillStyle = c.color;
-            ctx.font = 'bold 36px monospace';
-            ctx.fillText(c.value, x + 12, 105);
+            ctx.font = 'bold 34px monospace';
+            ctx.fillText(c.value, x + 10, 100);
             ctx.fillStyle = '#94a3b8';
-            ctx.font = '12px monospace';
-            ctx.fillText(c.label, x + 12, 125);
+            ctx.font = '11px monospace';
+            ctx.fillText(c.label, x + 10, 118);
         });
-        // フッター
-        ctx.fillStyle = '#475569';
+        // XP行
+        ctx.fillStyle = 'rgba(124,58,237,0.2)';
+        if (ctx.roundRect) ctx.roundRect(24, 144, 200, 40, 6); else ctx.rect(24, 144, 200, 40);
+        ctx.fill();
+        ctx.fillStyle = '#c4b5fd';
+        ctx.font = 'bold 20px monospace';
+        ctx.fillText('+' + xp + ' XP', 34, 170);
+        ctx.fillStyle = '#7c3aed';
         ctx.font = '11px monospace';
-        ctx.fillText('appadaycreator.com', 16, 215);
+        ctx.fillText('EXPERIENCE', 140, 170);
+        // パイロット名
+        var pilotName = localStorage.getItem('cosmicTyping_pilotName') || '宇宙探険家';
+        ctx.fillStyle = '#e2e8f0';
+        ctx.font = '13px monospace';
+        ctx.fillText(pilotName, 24, 215);
+        // フッター
+        ctx.fillStyle = '#334155';
+        ctx.font = '10px monospace';
+        ctx.fillText('appadaycreator.com/cosmic-typing-adventure/', 24, 255);
         // ダウンロード
         var a = document.createElement('a');
         a.download = 'typing-score-' + date.replace('/','-') + '.png';
@@ -2723,8 +3066,7 @@
                 }
             });
         });
-        // ゲーム開始時に進捗バーリセット
-        var origStartTyping = window.startTyping;
+        // ゲーム開始時に進捗バーリセット・ガイダンス削除
         document.addEventListener('DOMContentLoaded', function () {
             // startTypingはapp.jsのモジュール内なのでMutationObserverでtextDisplayの変化を検知
             var td = document.getElementById('textDisplay');
@@ -2733,13 +3075,15 @@
                 var bar = document.getElementById('typingProgressBar');
                 var label = document.getElementById('typingProgressLabel');
                 var wrap = document.getElementById('typingProgressWrap');
-                var total = (td.textContent || '').length;
+                var total = (td.textContent || '').trim().length;
                 if (bar) bar.style.width = '0%';
                 if (label) label.textContent = 'あと ' + total + ' 文字';
                 if (wrap) wrap.classList.toggle('hidden', total === 0);
                 // inputもリセット
                 var inp = document.getElementById('typingInput');
                 if (inp) inp.value = '';
+                // 初期ガイダンスを削除
+                _hideTextDisplayGuide();
             }).observe(td, { childList: true, subtree: true, characterData: true });
         });
     })();
@@ -2925,9 +3269,10 @@ function startWeakKeyPractice() {
     var ta = document.getElementById('customTextInput');
     if (panel) panel.classList.remove('hidden');
     if (ta) { ta.value = text; updateCustomCounter(text); }
-    // ミッションセクションへスクロール
-    if (typeof window.showSection === 'function') window.showSection('missions');
-    setTimeout(function(){ if (panel) panel.scrollIntoView({behavior:'smooth',block:'nearest'}); }, 150);
+    // ミッションセクションへ移動して自動開始
+    if (typeof window.showSection === 'function') window.showSection('game');
+    showToast('🎯 弱点キー練習を自動開始します…');
+    setTimeout(function() { startCustomMission(); }, 500);
 }
 
 // ── P2: カスタムテキストお気に入り ──────────────────────────────────
@@ -3041,16 +3386,33 @@ function switchPhraseTab(tab) {
     });
     renderPhraseBankTab(tab);
 }
+function _escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 function renderPhraseBankTab(tab) {
     var list = document.getElementById('phraseBankList');
     if (!list) return;
     var phrases = PHRASE_BANK[tab] || [];
+    if (phrases.length === 0) {
+        list.innerHTML = '<div class="text-center py-8 text-gray-400">'
+            + '<div class="text-4xl mb-3">📭</div>'
+            + '<div class="font-bold mb-1">フレーズがありません</div>'
+            + '<div class="text-sm">このカテゴリにはフレーズが登録されていません</div>'
+            + '</div>';
+        return;
+    }
     list.innerHTML = phrases.map(function(p) {
-        return '<button onclick="insertPhrase('+JSON.stringify(p.text)+')" '
-            + 'class="w-full text-left bg-gray-800 hover:bg-gray-700 rounded-lg p-3 transition-colors mb-2">'
-            + '<div class="text-xs text-indigo-300 font-bold mb-1">'+p.title+'</div>'
-            + '<div class="text-sm text-gray-200 truncate">'+p.text+'</div>'
-            + '</button>';
+        var escaped = _escHtml(p.text);
+        var textJson = JSON.stringify(p.text);
+        return '<div class="flex items-stretch gap-2 mb-2">'
+            + '<button onclick="insertPhrase('+textJson+')" '
+            + 'class="flex-1 text-left bg-gray-800 hover:bg-gray-700 rounded-lg p-3 transition-colors">'
+            + '<div class="text-xs text-indigo-300 font-bold mb-1">'+_escHtml(p.title)+'</div>'
+            + '<div class="text-sm text-gray-200 truncate">'+escaped+'</div>'
+            + '</button>'
+            + '<button onclick="quickPracticePhrase('+textJson+')" title="すぐに練習開始" '
+            + 'class="bg-green-800 hover:bg-green-700 text-white text-xs px-3 rounded-lg transition-colors flex-shrink-0 flex items-center">▶ 練習</button>'
+            + '</div>';
     }).join('');
 }
 function insertPhrase(text) {
@@ -3059,6 +3421,14 @@ function insertPhrase(text) {
     var panel = document.getElementById('customTextPanel');
     if (panel) panel.classList.remove('hidden');
     closePhraseBankModal();
+    showToast('📋 テキストをカスタム入力欄に貼り付けました');
+}
+function quickPracticePhrase(text) {
+    closePhraseBankModal();
+    var ta = document.getElementById('customTextInput');
+    if (ta) { ta.value = text; updateCustomCounter(text); }
+    showToast('🚀 フレーズで練習を開始します！');
+    setTimeout(function() { startCustomMission(); }, 400);
 }
 </script>
 

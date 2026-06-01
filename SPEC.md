@@ -3,8 +3,8 @@
 ## 概要
 
 **サービス名**: Cosmic Typing Adventure
-**バージョン**: 1.1.2
-**更新日**: 2026-05-28
+**バージョン**: 1.6.0
+**更新日**: 2026-05-30
 **URL**: https://appadaycreator.com/cosmic-typing-adventure/
 
 タイピング速度（WPM）を測定しながら宇宙探索ゲームで楽しく練習。プログラミング学習・在宅ワーク・事務職に必須のタイピング力を無料でスキルアップ。苦手キー克服機能付き。
@@ -30,6 +30,60 @@
 5. 一時停止・リセットボタンで時間を管理する
 
 ## 変更履歴
+
+### v1.6.0 (2026-05-30) - モバイルUX改善・機能強化
+
+- **P1**: `app.html` の `#typingInput` / `#timeAttackInput` に `autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"` 追加（スマホでのオートコレクト・大文字化・スペルチェック妨害を防止）
+- **P1**: `js/advanced-analytics.js` の `setupEventListeners()` からクリックリスナー登録を削除（app.html の buildAnalyticsHTML ハンドラとのダブルリスナー競合を解消）
+- **P1**: `js/app.js` の `_showTimeAttackResults()` に `ta-bestScoreBanner` 表示ロジック追加（自己ベスト更新時に金色バナーが表示されるように修正）
+- **P2**: `js/app.js` にリアルタイムWPMグラフ機能を実装（`_initLiveChart()`・`_updateLiveChart()`・`_wpmHistory`）。セッション開始時に `#wpmChartContainer` を表示、5文字入力ごとにグラフ更新、完了時に非表示
+- **P2**: `app.html` に `visualViewport` API を使ったモバイル仮想キーボード出現時のスクロール制御を追加（入力欄フォーカス時に自動スクロールで画面外に隠れない改善）
+- **P3**: `app.html` の `renderPhraseBankTab()` にEmptyState表示を追加、各フレーズ行に「▶ 練習」クイックボタンを追加、`quickPracticePhrase()` 関数を新規実装（1タップで即座に練習開始）
+- **P3**: `data/practice-texts.json` に `japanese_basic`（12件）・`japanese_phrases`（15件）カテゴリを追加（計27件）。`app.html` に「🇯🇵 日本語練習」ミッションボタンと `startJapaneseMission()` 関数を追加
+- **P4**: `app.html` の `shareToX()` / `shareToLine()` / `shareTimeAttackToX()` のシェアテキストをランク・ストリーク情報を含む魅力的なフォーマットに改善
+
+### v1.5.0 (2026-05-30) - 統計バグ修正・ゲームUX改善
+
+- **P1**: `js/advanced-analytics.js` の `showAnalytics()` に全 `.analytics-content` 非表示→対象のみ表示ロジックを追加（統計タブがクリックしても表示されないバグ修正）
+- **P1**: `js/advanced-analytics.js` でアクティブタブのハイライト実装（選択中タブが視覚的に区別可能に）
+- **P1**: `app.html` 統計タブボタンの未定義CSSクラス `hover:bg-cosmic-hover` / `border-cosmic-border` → `hover:bg-gray-700` / `border-gray-600` に修正
+- **P2**: `app.html` の `#typingInterface` ヘッダーに `#currentMissionBadge` スパンを追加、ミッション選択時に `setMissionBadge()` で更新、ミッション選択画面に戻ると `clearMissionBadge()` で消去
+- **P3**: `app.html` の `startWeakKeyPractice()` にテキストセット後 500ms で `startCustomMission()` を自動呼び出し追加（弱点キー練習ボタン1タップで即座に練習開始）
+- **P4**: `app.html` タイムアタック結果パネルに `#ta-wpmDiff` バッジ追加、`js/app.js` の `_showTimeAttackResults()` で `cosmicTyping_bestTA_{time}` と比較して▲/▼差分を表示・自己ベストを自動更新
+- **P4**: `css/mobile-optimization.css` にモバイル固定スタートボタンバー（`#mobileStickyStart`）追加、`app.html` に対応HTMLと MutationObserver ベース表示切替ロジックを実装
+
+### v1.4.0 (2026-05-30) - UX改善・バグ修正・コンテンツ拡充
+
+- **P1**: `app.html` の `<main>` に `pb-20` 追加 → アフィリエイトバナーで開始ボタンが隠れる問題を修正
+- **P1**: `app.html` の `#textDisplay` に初期ガイダンステキスト追加（ミッション選択前の空UI改善）
+- **P1**: `js/features.js` の `AchievementUnlocker.checkAndUnlock()` でコードモード完了フラグ(`cosmicTyping_codeDone`)を自動保存するよう修正（「コードパイロット」実績バグ修正）
+- **P1**: `app.html` のミッションプレビューtoolipに `:active` 疑似クラス追加 → モバイルタッチで表示対応。モバイル時はツールチップを上部に表示
+- **P2**: `app.html` の `#timeAttackTextDisplay` border を `border-2 border-cosmic-cyan` に統一（通常モードとの視覚的一貫性）
+- **P2**: `app.html` の `downloadScoreCard()` 改善 → canvas高さ240→280px、ランクバッジ(S/A/B/C/D)・XP・パイロット名をスコアカード画像に追加
+- **P3**: `js/features.js` の `DiscoveryManager.addDiscovery()` で `date` フィールド（ISO date）を保存するよう変更
+- **P3**: `app.html` の週別統計グラフのラベルを日付(M/D HH:mm)形式に改善（後方互換あり）
+- **P3**: `data/practice-texts.json` にコードスニペット12件追加（TypeScript/React/CSS/Node.js/SQL等）→ code_snippets: 20→32件、total: 220→232件
+- **P4**: `app.html` の実績モーダル・レベルアップモーダルに `role="alertdialog"` + `aria-live="assertive"` 追加（スクリーンリーダー対応）
+
+### v1.3.0 (2026-05-29) - バグ修正・品質改善
+- **P1**: app.html のスコアカード canvas に誤記「39 TypingMaster Pro」→「Cosmic Typing Adventure」修正
+- **P1**: app.html の弱点キー練習ナビゲーション `showSection('missions')` → `showSection('game')` 修正（セクション名未定義エラー解消）
+- **P1**: app.html の `achievementModalIcon` に `id` 属性追加（実績解放モーダルでアイコンが表示されない不具合修正）
+- **P2**: app.html のタイムアタックランキングボタンで `window._lastTimeLimit` が undefined の場合 localStorage フォールバック追加
+- **P2**: app.html のカスタムテキスト練習開始 setTimeout 200ms → 400ms、`typingEngine.currentText` への直接セット追加（selectPlanet 競合解消）
+- **P3**: app.html の BGM 初期化に `window.CosmicBgm &&` ガード追加（初期化前呼び出し防止）
+- **P3**: app.html フレーズバンク `renderPhraseBankTab` に `_escHtml` エスケープ処理追加（XSS対策）
+- **P4**: app.html 統計タブの「パフォーマンス推移」プレースホルダーに「🎓 基礎訓練を始める」ボタン追加
+- **P4**: css/mobile-optimization.css モバイルでのタイピング画面最適化（`textDisplay` max-height・WPMグラフ非表示）
+
+### v1.2.0 (2026-05-29) - UX改善・バグ修正
+- **P1**: app.html の重複 `id="typingProgressBar"` 解消（常時表示バーが機能しないバグ修正）
+- **P1**: app.html の `liveAccuracy` + 「正確率」ラベルを `text-center div` でラップしレイアウト崩れ修正
+- **P2**: app.html に一時停止オーバーレイ追加（textDisplay 上に「⏸ 一時停止中」表示、Esc/開始ボタンで再開）
+- **P2**: features.js にタイムアタック残り時間の視覚警告追加（10秒以下でオレンジ、5秒以下で赤+点滅）
+- **P3**: features.js デイリーチャレンジ GOALS に初心者向け3ゴール追加（20WPM達成・正確率80%・コンボ10x）
+- **P3**: app.html の `timeAttackInput` スタイルを `typingInput` と統一（border-2 + border-cosmic-cyan）
+- **P4**: features.js にランクバッジカラー追加（S=金、A=緑、B=青、C=黄、D=灰）
 
 ### v1.1.5 (2026-05-29) - アクセシビリティ・パフォーマンス改善
 - **P1**: app.html の currentWPM/currentAccuracy/currentCombo/liveWPM/liveAccuracy/timeAttackWPM/timeAttackAccuracy/timeAttackCombo に aria-live="polite" aria-atomic="true" 追加（スクリーンリーダー対応）

@@ -54,11 +54,14 @@
 window.DailyChallengeManager = (function () {
     // P2-1: 日ごとに変わる具体的ゴール定義
     var GOALS = [
+        { key: 'wpm20',     label: '20 WPM 達成（入門）',       check: function(w,a,c){ return w >= 20; } },
+        { key: 'acc80',     label: '正確率 80% 以上',           check: function(w,a,c){ return a >= 80; } },
+        { key: 'combo10',   label: '最大コンボ 10x 以上',       check: function(w,a,c){ return c >= 10; } },
+        { key: 'wpm40',     label: '40 WPM 達成',               check: function(w,a,c){ return w >= 40; } },
         { key: 'wpm60',     label: '60 WPM 達成',              check: function(w,a,c){ return w >= 60; } },
         { key: 'acc95',     label: '正確率 95% 以上',           check: function(w,a,c){ return a >= 95; } },
         { key: 'wpm50acc90',label: 'WPM 50 かつ 正確率 90%',   check: function(w,a,c){ return w >= 50 && a >= 90; } },
-        { key: 'combo30',   label: '最大コンボ 30x 以上',       check: function(w,a,c){ return c >= 30; } },
-        { key: 'wpm40',     label: '40 WPM 達成',               check: function(w,a,c){ return w >= 40; } }
+        { key: 'combo30',   label: '最大コンボ 30x 以上',       check: function(w,a,c){ return c >= 30; } }
     ];
 
     function getToday() { return new Date().toISOString().split('T')[0]; }
@@ -412,6 +415,14 @@ window.TutorialManager = (function () {
         if (banner) banner.classList.toggle('hidden', !isNew);
         if (isNew) showToast('🏆 自己ベスト更新！ WPM: ' + wpm.toFixed(1));
         updateStatsDisplay();
+
+        // ローカルランキングに保存（通常モード）
+        var isTA = panel.id === 'timeAttackResults';
+        if (!isTA && typeof saveToLocalLeaderboard === 'function') {
+            var mode = (window.app && window.app.currentPlanet) || 'basic';
+            var rank = wpm >= 80 && acc >= 95 ? 'S' : wpm >= 60 && acc >= 90 ? 'A' : wpm >= 40 ? 'B' : wpm >= 20 ? 'C' : 'D';
+            saveToLocalLeaderboard(mode, wpm, acc, rank, null);
+        }
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -607,7 +618,7 @@ window.TutorialManager = (function () {
         var iconEl = document.getElementById('achievementModalIcon');
         var titleEl = document.getElementById('achievementModalTitle');
         var descEl = document.getElementById('achievementModalDesc');
-        if (iconEl) { iconEl.textContent = def.icon; iconEl.className = 'text-5xl'; }
+        if (iconEl) { iconEl.textContent = def.icon; /* classNameは維持してemoji色を保つ */ }
         if (titleEl) titleEl.textContent = def.title;
         if (descEl) descEl.textContent = def.desc;
         modal.classList.remove('hidden');
@@ -617,6 +628,10 @@ window.TutorialManager = (function () {
     }
 
     function checkAndUnlock() {
+        // コードモード完了フラグを自動セット
+        if (window.app && window.app.currentPlanet === 'code') {
+            localStorage.setItem('cosmicTyping_codeDone', '1');
+        }
         var stats = getCurrentStats();
         var unlocked = getUnlocked();
         var newDefs = [];
@@ -674,7 +689,8 @@ window.TutorialManager = (function () {
         var list = load();
         var now = new Date();
         var time = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
-        list.unshift({ planet: planet, wpm: wpm, time: time });
+        var date = now.toISOString().split('T')[0]; // 日付をISO形式で保存
+        list.unshift({ planet: planet, wpm: wpm, time: time, date: date });
         if (list.length > MAX) list = list.slice(0, MAX);
         localStorage.setItem(KEY, JSON.stringify(list));
         render(list);
@@ -979,4 +995,118 @@ window.TutorialManager = (function () {
     });
 
     window.WpmTargetManager = { getTarget: getTarget, setTarget: function(v) { localStorage.setItem(KEY, String(parseInt(v)||0)); } };
+})();
+
+// ==========================================
+// P2: タイムアタック残り時間の視覚警告
+// ==========================================
+(function TimeAttackUrgencyManager() {
+    var urgencyInterval = null;
+    var BLINK_CSS = 'ta-urgent-blink';
+
+    function addBlinkStyle() {
+        if (document.getElementById('taUrgencyStyle')) return;
+        var s = document.createElement('style');
+        s.id = 'taUrgencyStyle';
+        s.textContent = '@keyframes taUrgentBlink { 0%,100%{opacity:1} 50%{opacity:0.35} } .ta-urgent-blink { animation: taUrgentBlink 0.6s ease-in-out infinite !important; }';
+        document.head.appendChild(s);
+    }
+
+    function startUrgencyWatch() {
+        addBlinkStyle();
+        if (urgencyInterval) clearInterval(urgencyInterval);
+        urgencyInterval = setInterval(function() {
+            var timerEl = document.getElementById('timeAttackTimer');
+            if (!timerEl) return;
+            var text = timerEl.textContent || '';
+            var parts = text.split(':');
+            var secs = 0;
+            if (parts.length === 2) {
+                secs = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+            } else {
+                secs = parseInt(text);
+            }
+            if (isNaN(secs)) return;
+            if (secs <= 0) {
+                timerEl.style.color = '';
+                timerEl.classList.remove(BLINK_CSS);
+                clearInterval(urgencyInterval);
+                urgencyInterval = null;
+            } else if (secs <= 5) {
+                timerEl.style.color = '#ef4444';
+                timerEl.classList.add(BLINK_CSS);
+            } else if (secs <= 10) {
+                timerEl.style.color = '#f97316';
+                timerEl.classList.remove(BLINK_CSS);
+            } else {
+                timerEl.style.color = '';
+                timerEl.classList.remove(BLINK_CSS);
+            }
+        }, 250);
+    }
+
+    function stopUrgencyWatch() {
+        if (urgencyInterval) { clearInterval(urgencyInterval); urgencyInterval = null; }
+        var timerEl = document.getElementById('timeAttackTimer');
+        if (timerEl) { timerEl.style.color = ''; timerEl.classList.remove(BLINK_CSS); }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // タイムアタックボタンクリックで監視開始
+        document.querySelectorAll('.time-attack-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                setTimeout(startUrgencyWatch, 500);
+            });
+        });
+        // 結果表示時に停止
+        ['timeAttackResults', 'missionSelection'].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (!el) return;
+            new MutationObserver(function(muts) {
+                muts.forEach(function(m) {
+                    if (!m.target.classList.contains('hidden') && m.target.style.display !== 'none') {
+                        stopUrgencyWatch();
+                    }
+                });
+            }).observe(el, { attributes: true, attributeFilter: ['style', 'class'] });
+        });
+    });
+})();
+
+// ==========================================
+// P4: 結果画面ランクバッジカラー
+// ==========================================
+(function RankBadgeManager() {
+    var RANK_STYLES = {
+        'S': { bg: 'linear-gradient(135deg,#b45309,#f59e0b)', color: '#fff', shadow: '0 0 12px #f59e0b' },
+        'A': { bg: 'linear-gradient(135deg,#065f46,#10b981)', color: '#fff', shadow: '0 0 12px #10b981' },
+        'B': { bg: 'linear-gradient(135deg,#1e3a8a,#3b82f6)', color: '#fff', shadow: '0 0 12px #3b82f6' },
+        'C': { bg: 'linear-gradient(135deg,#78350f,#fbbf24)', color: '#1a1a2e', shadow: '0 0 8px #fbbf24' },
+        'D': { bg: 'linear-gradient(135deg,#1f2937,#4b5563)', color: '#9ca3af', shadow: 'none' }
+    };
+
+    function applyRankStyle(el, rankText) {
+        var rank = (rankText || '').replace(/[^SABCD]/g, '');
+        var style = RANK_STYLES[rank];
+        if (!style || !el) return;
+        el.style.background = style.bg;
+        el.style.webkitBackgroundClip = 'text';
+        el.style.webkitTextFillColor = style.color;
+        el.style.textShadow = style.shadow;
+        el.style.display = 'inline-block';
+        el.style.padding = '4px 16px';
+        el.style.borderRadius = '8px';
+        el.style.background = style.bg;
+        el.style.webkitBackgroundClip = '';
+        el.style.webkitTextFillColor = '';
+        el.style.color = style.color;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var el = document.getElementById('performanceRating');
+        if (!el) return;
+        new MutationObserver(function() {
+            applyRankStyle(el, el.textContent);
+        }).observe(el, { childList: true, characterData: true, subtree: true });
+    });
 })();

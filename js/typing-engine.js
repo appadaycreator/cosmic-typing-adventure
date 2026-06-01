@@ -413,51 +413,55 @@ export class TypingEngine {
         if (this.currentIndex >= this.tokens.length) {
             if (this.elements.inputHintDisplay) {
                 this.elements.inputHintDisplay.innerHTML = '';
+                this.elements.inputHintDisplay.classList.add('hidden');
             }
             if (this.elements.currentInputDisplay) {
                 this.elements.currentInputDisplay.innerHTML = '';
+                this.elements.currentInputDisplay.classList.add('hidden');
             }
             return;
         }
 
         const token = this.tokens[this.currentIndex];
-        
-        // 現在の入力を表示
+
+        // 現在の入力を表示（ダークテーマ対応カラー）
         if (this.elements.currentInputDisplay) {
             const currentHtml = `
-                <div class="text-sm text-gray-600">
-                    <span class="font-semibold">現在の入力:</span>
-                    <span class="ml-2 text-blue-600 font-mono text-lg">${this.currentInput || '(入力待ち)'}</span>
+                <div class="text-sm text-gray-300">
+                    <span class="font-semibold text-gray-400">現在の入力:</span>
+                    <span class="ml-2 text-cosmic-cyan font-mono text-lg">${this.currentInput || '(入力待ち)'}</span>
                 </div>
             `;
             this.elements.currentInputDisplay.innerHTML = currentHtml;
+            this.elements.currentInputDisplay.classList.remove('hidden');
         }
 
-        // 入力候補を表示
+        // 入力候補を表示（ダークテーマ対応カラー）
         if (this.elements.inputHintDisplay) {
-            const validPatterns = token.patterns.filter(p => 
+            const validPatterns = token.patterns.filter(p =>
                 p.startsWith(this.currentInput)
             );
-            
+
             let hintHtml = '<div class="text-sm">';
-            hintHtml += '<span class="font-semibold text-gray-700">入力候補:</span>';
+            hintHtml += '<span class="font-semibold text-gray-400">入力候補:</span>';
             hintHtml += '<div class="flex flex-wrap gap-2 mt-1">';
-            
+
             validPatterns.slice(0, 5).forEach(pattern => {
                 const remaining = pattern.substring(this.currentInput.length);
                 hintHtml += `
-                    <span class="inline-flex items-center px-2 py-1 rounded bg-blue-100 text-blue-800 font-mono text-xs">
-                        <span class="text-gray-400">${this.currentInput}</span><span class="font-bold">${remaining}</span>
+                    <span class="inline-flex items-center px-2 py-1 rounded bg-gray-700 text-gray-200 font-mono text-xs">
+                        <span class="text-gray-500">${this.currentInput}</span><span class="font-bold text-cosmic-cyan">${remaining}</span>
                     </span>
                 `;
             });
-            
+
             if (validPatterns.length > 5) {
                 hintHtml += `<span class="text-gray-500 text-xs">他 ${validPatterns.length - 5} パターン</span>`;
             }
-            
+
             hintHtml += '</div></div>';
             this.elements.inputHintDisplay.innerHTML = hintHtml;
+            this.elements.inputHintDisplay.classList.remove('hidden');
         }
     }
 

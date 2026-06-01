@@ -42,6 +42,11 @@ export class CosmicTypingApp {
     this.leaderboardManager = null; // Initialized after Supabase
     this.advancedAnalytics = new AdvancedAnalytics();
 
+    // リアルタイムWPMグラフ用
+    this._wpmHistory = [];
+    this._liveChart = null;
+    this._taLiveChart = null;
+
     // Make app available globally
     window.app = this;
 
@@ -524,6 +529,41 @@ export class CosmicTypingApp {
     set('timeUsed', Math.round(results.timeUsed || results.duration || 0) + '秒');
     set('totalTyped', results.totalTyped || 0);
 
+    // P4: 前回WPM比較バッジ
+    const timeKey = window._lastTimeLimit || parseInt(localStorage.getItem('cosmicTyping_lastTimeAttack') || '60');
+    const prevKey = 'cosmicTyping_bestTA_' + timeKey;
+    const prevWpm = parseFloat(localStorage.getItem(prevKey) || '0');
+    const diffEl = document.getElementById('ta-wpmDiff');
+    if (diffEl) {
+      if (prevWpm > 0) {
+        const diff = Math.round((results.wpm - prevWpm) * 10) / 10;
+        diffEl.textContent = diff >= 0 ? '▲ +' + diff + ' WPM' : '▼ ' + diff + ' WPM';
+        diffEl.style.color = diff >= 0 ? '#4ade80' : '#f87171';
+        diffEl.classList.remove('hidden');
+      } else {
+        diffEl.classList.add('hidden');
+      }
+    }
+    // 自己ベスト更新 + バナー表示
+    const bestBanner = document.getElementById('ta-bestScoreBanner');
+    if (results.wpm > prevWpm) {
+      localStorage.setItem(prevKey, results.wpm.toFixed(1));
+      if (bestBanner) bestBanner.classList.remove('hidden');
+    } else {
+      if (bestBanner) bestBanner.classList.add('hidden');
+    }
+
+    // 自己ベスト表示を更新
+    const bestWpmEl = document.getElementById('ta-bestWPM');
+    const currentBest = parseFloat(localStorage.getItem(prevKey) || '0');
+    if (bestWpmEl) bestWpmEl.textContent = currentBest > 0 ? currentBest.toFixed(1) : '−';
+
+    // ローカルランキングに保存（タイムアタック）
+    if (typeof saveToLocalLeaderboard === 'function') {
+      const rank = results.rank || 'D';
+      saveToLocalLeaderboard('time_attack', results.wpm, results.accuracy, rank, timeKey);
+    }
+
     this.updateButtonStates();
   }
 
@@ -551,7 +591,7 @@ export class CosmicTypingApp {
       // ローマ字表記も再表示
       this.updateRomanizedText();
       this.updateButtonStates();
-      
+
       // UX改善: タイピング開始時に入力欄へ自動フォーカス
       if (this.elements.typingInput) {
         this.elements.typingInput.disabled = false;
@@ -559,7 +599,7 @@ export class CosmicTypingApp {
         this.elements.typingInput.classList.add('typing-active');
         this.elements.typingInput.placeholder = '📝 タイピング中... 正確に入力しましょう！';
       }
-      
+
       // 視覚的フィードバック: 開始アニメーション
       if (this.elements.textDisplay) {
         this.elements.textDisplay.style.animation = 'pulse 0.3s ease-out';
@@ -569,9 +609,62 @@ export class CosmicTypingApp {
           }
         }, 300);
       }
-      
+
+      // リアルタイムWPMグラフ初期化
+      this._wpmHistory = [];
+      this._initLiveChart();
+
       this.showMessage('タイピング開始！頑張りましょう！', 'success');
     }
+  }
+
+  _initLiveChart() {
+    const container = document.getElementById('wpmChartContainer');
+    const canvas = document.getElementById('liveWPMChart');
+    if (!container || !canvas || !window.Chart) return;
+    // 「WPMグラフを表示する」設定を確認（デフォルトON）
+    if (localStorage.getItem('cosmicTyping_showWpmGraph') === 'false') return;
+    container.classList.remove('hidden');
+    if (this._liveChart) { this._liveChart.destroy(); this._liveChart = null; }
+    const ctx = canvas.getContext('2d');
+    this._liveChart = new window.Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'WPM',
+          data: [],
+          borderColor: '#10b981',
+          backgroundColor: 'rgba(16,185,129,0.15)',
+          tension: 0.4,
+          fill: true,
+          pointRadius: 2,
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        animation: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: '#9ca3af', font: { size: 9 } }, grid: { display: false } },
+          y: { beginAtZero: true, ticks: { color: '#9ca3af', font: { size: 9 } }, grid: { color: 'rgba(75,85,99,0.3)' } }
+        }
+      }
+    });
+  }
+
+  _updateLiveChart(wpm) {
+    if (!this._liveChart) return;
+    const label = this._wpmHistory.length + 1 + '回';
+    this._liveChart.data.labels.push(label);
+    this._liveChart.data.datasets[0].data.push(Math.round(wpm));
+    // 最大20点まで保持
+    if (this._liveChart.data.labels.length > 20) {
+      this._liveChart.data.labels.shift();
+      this._liveChart.data.datasets[0].data.shift();
+    }
+    this._liveChart.update('none');
   }
 
   pausePractice() {
@@ -641,7 +734,7 @@ export class CosmicTypingApp {
   }
 
   onTypingProgress(stats) {
-    // Update real-time statistics
+    // リアルタイム統計更新
     if (this.elements.wpmDisplay) {
       this.elements.wpmDisplay.textContent = stats.wpm.toFixed(1);
     }
@@ -651,12 +744,25 @@ export class CosmicTypingApp {
     if (this.elements.elapsedTimeDisplay) {
       this.elements.elapsedTimeDisplay.textContent = stats.elapsedTime;
     }
+    // リアルタイムWPMグラフ: 5文字入力ごとに更新
+    if (stats.wpm > 0) {
+      this._wpmHistory.push(stats.wpm);
+      if (this._wpmHistory.length % 5 === 0) {
+        this._updateLiveChart(stats.wpm);
+      }
+    }
   }
 
   async onTypingComplete(results) {
     this.isPracticeActive = false;
     this.updateButtonStates();
-    
+
+    // リアルタイムWPMグラフを非表示
+    const wpmContainer = document.getElementById('wpmChartContainer');
+    if (wpmContainer) wpmContainer.classList.add('hidden');
+    if (this._liveChart) { this._liveChart.destroy(); this._liveChart = null; }
+    this._wpmHistory = [];
+
     // 入力欄を無効化
     if (this.elements.typingInput) {
       this.elements.typingInput.disabled = true;

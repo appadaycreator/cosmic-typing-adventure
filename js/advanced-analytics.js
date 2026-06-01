@@ -56,14 +56,8 @@ export class AdvancedAnalytics {
     }
 
     setupEventListeners() {
-        // Analytics tab buttons
-        const analyticsButtons = document.querySelectorAll('[data-analytics]');
-        analyticsButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                const type = e.target.getAttribute('data-analytics');
-                this.showAnalytics(type);
-            });
-        });
+        // app.html のインラインハンドラ（buildAnalyticsHTML）が同じボタンを管理するため
+        // ここでは重複登録しない（ダブルリスナー競合を防止）
     }
 
     recordSession(sessionData) {
@@ -209,6 +203,35 @@ export class AdvancedAnalytics {
     }
 
     showAnalytics(type) {
+        // 全コンテナを非表示にしてから対象だけ表示
+        document.querySelectorAll('.analytics-content').forEach(el => el.classList.add('hidden'));
+        // タブボタンのアクティブ状態をリセット
+        document.querySelectorAll('[data-analytics]').forEach(btn => {
+            btn.classList.remove('bg-cosmic-cyan', 'text-black', 'font-bold');
+            btn.style.background = '';
+            btn.style.color = '';
+            btn.style.fontWeight = '';
+        });
+        // 対象コンテナを表示
+        const containerMap = {
+            'daily': 'dailyAnalytics',
+            'weekly': 'weeklyAnalytics',
+            'monthly': 'monthlyAnalytics',
+            'keys': 'keyAnalysis',
+            'progress': 'progressTrends'
+        };
+        const targetId = containerMap[type];
+        if (targetId) {
+            const container = document.getElementById(targetId);
+            if (container) container.classList.remove('hidden');
+        }
+        // アクティブタブをハイライト
+        const activeBtn = document.querySelector(`[data-analytics="${type}"]`);
+        if (activeBtn) {
+            activeBtn.style.background = '#06b6d4';
+            activeBtn.style.color = '#0a0a1a';
+            activeBtn.style.fontWeight = 'bold';
+        }
         switch (type) {
             case 'daily':
                 this.showDailyAnalytics();
