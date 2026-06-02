@@ -310,10 +310,16 @@ export class TypingEngine {
             this.totalErrors++;
             token.isError = true;
             this.addError(this.currentIndex, token.kana, inputChar);
-            
+
             // エラーサウンド
             if (this.soundManager) {
                 this.soundManager.play('error');
+            }
+
+            // 入力欄の赤フラッシュエフェクト
+            if (event.target) {
+                event.target.classList.add('input-error-flash');
+                setTimeout(() => event.target.classList.remove('input-error-flash'), 300);
             }
 
             // サバイバルモードの処理

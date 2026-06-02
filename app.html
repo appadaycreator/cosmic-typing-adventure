@@ -457,6 +457,61 @@
             color: #a5f3fc;
         }
 
+        /* P2: 入力ミス時の赤フラッシュエフェクト */
+        @keyframes errorFlash {
+            0%   { border-color: #ef4444; box-shadow: 0 0 0 4px rgba(239,68,68,0.35); }
+            50%  { border-color: #fca5a5; box-shadow: 0 0 0 6px rgba(239,68,68,0.15); }
+            100% { border-color: #ef4444; box-shadow: 0 0 0 4px rgba(239,68,68,0.35); }
+        }
+        .input-error-flash {
+            animation: errorFlash 0.3s ease-out !important;
+            border-color: #ef4444 !important;
+        }
+
+        /* P2: テキスト完了時のセレブレーション演出 */
+        @keyframes celebrationFlash {
+            0%   { background-color: rgba(16, 185, 129, 0); }
+            50%  { background-color: rgba(16, 185, 129, 0.3); }
+            100% { background-color: rgba(16, 185, 129, 0); }
+        }
+        @keyframes particlesFall {
+            0%   { transform: translateY(-30px) scale(1); opacity: 1; }
+            100% { transform: translateY(300px) scale(0); opacity: 0; }
+        }
+        @keyframes celebrationTextFall {
+            0%   { transform: translateY(-100px) scale(0.5); opacity: 0; }
+            50%  { opacity: 1; }
+            80%  { opacity: 1; }
+            100% { transform: translateY(100px) scale(1); opacity: 0; }
+        }
+        .celebration-flash {
+            animation: celebrationFlash 0.4s ease-out;
+        }
+        .celebration-particles {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        .particle {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: particlesFall 0.8s ease-in forwards;
+        }
+        .celebration-text {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            font-weight: bold;
+            color: #10b981;
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.8);
+            pointer-events: none;
+            z-index: 1001;
+            animation: celebrationTextFall 1.2s ease-out forwards;
+            font-family: 'Orbitron', monospace;
+        }
+
         /* スキップリンク（アクセシビリティ） */
         .skip-link {
             position: absolute;
@@ -483,6 +538,9 @@
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQGZRF9" height="0" width="0"
             style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+
+    <!-- Celebration Effects Container (P2) -->
+    <div id="celebrationEffectsContainer"></div>
 
     <!-- Header -->
     <header class="bg-cosmic-card border-b border-blue-500 relative z-50">
@@ -1089,7 +1147,7 @@
                     <div class="relative">
                         <textarea id="timeAttackInput"
                             class="w-full bg-gray-800 text-white p-4 rounded-lg border-2 border-cosmic-cyan focus:border-energy-green focus:outline-none resize-none placeholder-gray-400 shadow-lg"
-                            rows="3" placeholder="📝 ここに入力してください..." disabled
+                            rows="2" placeholder="📝 ここに入力してください..." disabled
                             autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
                     </div>
 
@@ -2458,6 +2516,62 @@
                         setMissionBadge('⏱ タイムアタック ' + (m > 0 ? m + '分' : '') + (s > 0 ? s + '秒' : ''));
                     });
                 });
+            });
+        })();
+
+        // P1: 前回のミッション再開バー
+        (function initLastMissionBar() {
+            var MISSION_LABELS = {
+                basic: '🎓 基礎訓練',
+                exploration: '🚀 惑星探索',
+                speed: '⚡ 高速航行',
+                accuracy: '🎯 精密制御',
+                survival: '💓 サバイバル',
+                code: '💻 コードモード',
+                japanese: '🇯🇵 日本語練習',
+                custom: '✏️ カスタム'
+            };
+
+            function saveLastMission(type) {
+                localStorage.setItem('cosmicTyping_lastMission', type);
+            }
+
+            function showLastMissionBar() {
+                var last = localStorage.getItem('cosmicTyping_lastMission');
+                if (!last) return;
+                var bar = document.getElementById('lastMissionBar');
+                var label = document.getElementById('lastMissionLabel');
+                if (!bar || !label) return;
+                label.textContent = MISSION_LABELS[last] || last;
+                bar.classList.remove('hidden');
+            }
+
+            window.resumeLastMission = function () {
+                var last = localStorage.getItem('cosmicTyping_lastMission');
+                if (!last) return;
+                if (last === 'code') { startCodeMission(); }
+                else if (last === 'japanese') { startJapaneseMission(); }
+                else if (last === 'custom') { toggleCustomPanel(); }
+                else { startMission(last); }
+                showToast('🔁 前回のミッション「' + (MISSION_LABELS[last] || last) + '」を再開します');
+            };
+
+            // startMission呼び出し時に保存（上書き）
+            var _origStartMission = window.startMission;
+            window.startMission = function(type) {
+                saveLastMission(type);
+                if (_origStartMission) _origStartMission(type);
+            };
+            var _origStartCode = window.startCodeMission;
+            // startCodeMission はグローバル関数としてあとで定義されるため遅延ラップ
+            document.addEventListener('DOMContentLoaded', function() {
+                saveLastMission._origStartCode = window.startCodeMission;
+                var _oc = window.startCodeMission;
+                window.startCodeMission = function() {
+                    saveLastMission('code');
+                    if (_oc) _oc();
+                };
+                showLastMissionBar();
             });
         })();
 
