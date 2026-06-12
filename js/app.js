@@ -471,6 +471,11 @@ export class CosmicTypingApp {
       return;
     }
 
+    // P2-b: セレブレーション演出（完了時のみ）
+    if (results.cause !== 'death' && results.cause !== 'timeout') {
+      this.triggerCelebration();
+    }
+
     if (this.elements.results) {
       this.elements.results.style.display = "block";
 
@@ -501,6 +506,32 @@ export class CosmicTypingApp {
     if (this.elements.totalErrorsDisplay) {
       this.elements.totalErrorsDisplay.textContent = results.totalErrors;
     }
+
+    // M4-P1: 自己ベスト記録の確認と前回比較
+    const prevBestWPM = parseFloat(localStorage.getItem('cosmicTyping_bestWPM') || '0');
+    const wpmDiffEl = document.getElementById('wpmDiff');
+    const bestBannerEl = document.getElementById('bestScoreBanner');
+
+    if (wpmDiffEl) {
+      if (prevBestWPM > 0) {
+        const diff = Math.round((results.wpm - prevBestWPM) * 10) / 10;
+        wpmDiffEl.textContent = diff >= 0 ? '▲ +' + diff + ' WPM' : '▼ ' + diff + ' WPM';
+        wpmDiffEl.style.color = diff >= 0 ? '#4ade80' : '#f87171';
+        wpmDiffEl.classList.remove('hidden');
+      } else {
+        wpmDiffEl.classList.add('hidden');
+      }
+    }
+
+    // 自己ベスト更新時にバナーを表示
+    if (results.wpm > prevBestWPM && bestBannerEl) {
+      bestBannerEl.classList.remove('hidden');
+    } else if (bestBannerEl) {
+      bestBannerEl.classList.add('hidden');
+    }
+
+    // M4-P1: グラフを初期化・描画
+    this._initResultCharts(results);
 
     this.updateButtonStates();
   }
@@ -553,6 +584,9 @@ export class CosmicTypingApp {
       if (bestBanner) bestBanner.classList.add('hidden');
     }
 
+    // M4-P1: タイムアタック結果用グラフを初期化
+    this._initTimeAttackResultCharts(results);
+
     // 自己ベスト表示を更新
     const bestWpmEl = document.getElementById('ta-bestWPM');
     const currentBest = parseFloat(localStorage.getItem(prevKey) || '0');
@@ -582,6 +616,43 @@ export class CosmicTypingApp {
     if (taInterface) taInterface.style.display = "none";
     const taResults = document.getElementById('timeAttackResults');
     if (taResults) taResults.style.display = "none";
+  }
+
+  // P2-b: セレブレーション演出
+  triggerCelebration() {
+    const container = document.getElementById('celebrationEffectsContainer');
+    if (!container) return;
+
+    // 背景フラッシュ
+    const flash = document.createElement('div');
+    flash.className = 'celebration-flash';
+    flash.style.position = 'fixed';
+    flash.style.inset = '0';
+    flash.style.pointerEvents = 'none';
+    flash.style.zIndex = '999';
+    container.appendChild(flash);
+    setTimeout(() => flash.remove(), 400);
+
+    // パーティクル生成（6個）
+    const colors = ['#06b6d4', '#a78bfa', '#fbbf24'];
+    for (let i = 0; i < 6; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.textContent = ['⭐', '✨', '💫'][Math.floor(Math.random() * 3)];
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.color = colors[i % colors.length];
+      particle.style.top = '-30px';
+      container.appendChild(particle);
+      setTimeout(() => particle.remove(), 1000);
+    }
+
+    // 「完了」テキスト表示
+    const text = document.createElement('div');
+    text.className = 'celebration-text';
+    text.textContent = '🎉 完了！';
+    text.style.fontSize = window.innerWidth < 768 ? '2rem' : '3rem';
+    container.appendChild(text);
+    setTimeout(() => text.remove(), 1200);
   }
 
   startPractice() {
@@ -665,6 +736,196 @@ export class CosmicTypingApp {
       this._liveChart.data.datasets[0].data.shift();
     }
     this._liveChart.update('none');
+  }
+
+  // M4-P1: 結果画面用グラフ初期化
+  _initResultCharts(results) {
+    if (!window.Chart) return;
+
+    // 自己ベスト記録を確認
+    const bestWPM = parseFloat(localStorage.getItem('cosmicTyping_bestWPM') || '0');
+    if (results.wpm > bestWPM) {
+      localStorage.setItem('cosmicTyping_bestWPM', results.wpm.toFixed(1));
+    }
+
+    // スコアバーグラフ
+    this._drawScoreBar(results.wpm, bestWPM);
+    // 正確率ゲージ
+    this._drawAccuracyGauge(results.accuracy);
+  }
+
+  // WPMスコアバーを描画
+  _drawScoreBar(wpm, bestWPM) {
+    const canvas = document.getElementById('scoreBarChart');
+    if (!canvas || !window.Chart) return;
+
+    if (this._resultScoreChart) this._resultScoreChart.destroy();
+
+    const ctx = canvas.getContext('2d');
+    const targetWPM = 100; // 目標値
+    const percentage = Math.min((wpm / targetWPM) * 100, 100);
+
+    let color = '#9ca3af'; // グレー
+    if (percentage >= 80) color = '#10b981'; // グリーン
+    else if (percentage >= 50) color = '#f59e0b'; // オレンジ
+
+    this._resultScoreChart = new window.Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['WPM'],
+        datasets: [{
+          label: 'スコア',
+          data: [wpm],
+          backgroundColor: [color],
+          borderRadius: 4,
+          borderWidth: 0
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        animation: { duration: 1000, easing: 'easeInOutQuart' },
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { max: 100, ticks: { color: '#9ca3af', font: { size: 10 } }, grid: { color: 'rgba(75,85,99,0.3)' } },
+          y: { ticks: { color: '#9ca3af' }, grid: { display: false } }
+        }
+      }
+    });
+  }
+
+  // 正確率ゲージを描画
+  _drawAccuracyGauge(accuracy) {
+    const canvas = document.getElementById('accuracyGaugeChart');
+    if (!canvas || !window.Chart) return;
+
+    if (this._resultAccuracyChart) this._resultAccuracyChart.destroy();
+
+    const ctx = canvas.getContext('2d');
+    let color = '#ef4444'; // レッド
+    if (accuracy >= 95) color = '#06b6d4'; // シアン
+    else if (accuracy >= 90) color = '#10b981'; // グリーン
+    else if (accuracy >= 80) color = '#f59e0b'; // オレンジ
+
+    const remaining = 100 - accuracy;
+
+    this._resultAccuracyChart = new window.Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['正確率', ''],
+        datasets: [{
+          data: [accuracy, remaining],
+          backgroundColor: [color, 'rgba(75,85,99,0.3)'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        animation: { duration: 1000, easing: 'easeInOutQuart' },
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false }
+        },
+        cutout: '70%'
+      }
+    });
+
+    // 正確率テキストを表示（グラフの中央上部に追加）
+    const canvasParent = canvas.parentElement;
+    if (canvasParent) {
+      const label = canvasParent.querySelector('.accuracy-gauge-label');
+      if (label) {
+        label.textContent = `正確率 ${Math.round(accuracy)}%`;
+      } else {
+        const newLabel = document.createElement('div');
+        newLabel.className = 'accuracy-gauge-label';
+        newLabel.textContent = `正確率 ${Math.round(accuracy)}%`;
+        canvas.parentElement.appendChild(newLabel);
+      }
+    }
+  }
+
+  // M4-P1: タイムアタック結果用グラフ初期化
+  _initTimeAttackResultCharts(results) {
+    if (!window.Chart) return;
+    this._drawTimeAttackScoreBar(results.wpm);
+    this._drawTimeAttackAccuracyGauge(results.accuracy);
+  }
+
+  // タイムアタック用スコアバー
+  _drawTimeAttackScoreBar(wpm) {
+    const canvas = document.getElementById('taScoreBarChart');
+    if (!canvas || !window.Chart) return;
+
+    if (this._taResultScoreChart) this._taResultScoreChart.destroy();
+
+    const ctx = canvas.getContext('2d');
+    const targetWPM = 80;
+    const percentage = Math.min((wpm / targetWPM) * 100, 100);
+
+    let color = '#9ca3af';
+    if (percentage >= 80) color = '#10b981';
+    else if (percentage >= 50) color = '#f59e0b';
+
+    this._taResultScoreChart = new window.Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['WPM'],
+        datasets: [{
+          label: 'スコア',
+          data: [wpm],
+          backgroundColor: [color],
+          borderRadius: 4,
+          borderWidth: 0
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        animation: { duration: 800 },
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { max: 80, ticks: { color: '#9ca3af', font: { size: 10 } }, grid: { color: 'rgba(75,85,99,0.3)' } },
+          y: { ticks: { color: '#9ca3af' }, grid: { display: false } }
+        }
+      }
+    });
+  }
+
+  // タイムアタック用正確率ゲージ
+  _drawTimeAttackAccuracyGauge(accuracy) {
+    const canvas = document.getElementById('taAccuracyGaugeChart');
+    if (!canvas || !window.Chart) return;
+
+    if (this._taResultAccuracyChart) this._taResultAccuracyChart.destroy();
+
+    const ctx = canvas.getContext('2d');
+    let color = '#ef4444';
+    if (accuracy >= 95) color = '#06b6d4';
+    else if (accuracy >= 90) color = '#10b981';
+    else if (accuracy >= 80) color = '#f59e0b';
+
+    const remaining = 100 - accuracy;
+
+    this._taResultAccuracyChart = new window.Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['正確率', ''],
+        datasets: [{
+          data: [accuracy, remaining],
+          backgroundColor: [color, 'rgba(75,85,99,0.3)'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        animation: { duration: 800 },
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false }
+        }
+      }
+    });
   }
 
   pausePractice() {
