@@ -2,6 +2,7 @@
 <html lang="ja">
 
 <head>
+    <meta name="robots" content="noindex, follow">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#7c3aed">
@@ -1539,6 +1540,107 @@
                     </div>
                 </div>
             </div>
+
+            <!-- M7: 比較・シミュレーション機能セクション -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-12">
+                <div class="lg:col-span-3">
+                    <div class="bg-cosmic-card rounded-xl p-6 border border-blue-500">
+                        <h3 class="font-orbitron font-bold text-xl text-cosmic-cyan mb-6">📊 比較・シミュレーション</h3>
+
+                        <!-- M7-1: セッション比較表 -->
+                        <div class="mb-8">
+                            <h4 class="font-bold text-lg text-cosmic-cyan mb-3">📈 最近のセッション比較</h4>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm border-collapse">
+                                    <thead>
+                                        <tr style="background:#1e293b;">
+                                            <th class="border border-gray-700 p-2 text-left text-gray-300">順位</th>
+                                            <th class="border border-gray-700 p-2 text-left text-gray-300">WPM</th>
+                                            <th class="border border-gray-700 p-2 text-left text-gray-300">正確率</th>
+                                            <th class="border border-gray-700 p-2 text-left text-gray-300">コンボ</th>
+                                            <th class="border border-gray-700 p-2 text-left text-gray-300">実行時間</th>
+                                            <th class="border border-gray-700 p-2 text-left text-gray-300">差分 (前回比)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="comparisonTableBody">
+                                        <tr>
+                                            <td colspan="6" class="border border-gray-700 p-4 text-center text-gray-400">
+                                                セッションをプレイするとデータが表示されます
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- M7-2: WPMシミュレーター -->
+                        <div class="bg-gray-900 rounded-lg p-6 border border-gray-700">
+                            <h4 class="font-bold text-lg text-cosmic-cyan mb-4">⚡ WPMシミュレーター</h4>
+                            <p class="text-xs text-gray-400 mb-4">WPM値を変更して、テキスト完了時間を予測します</p>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-300 mb-2">テキスト長（文字数）</label>
+                                    <input type="number" id="simTextLength" value="100" min="10" max="500" step="10"
+                                        class="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:border-cosmic-cyan focus:outline-none"
+                                        oninput="updateWPMSimulation()">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-300 mb-2">目標WPM</label>
+                                    <input type="number" id="simWPM" value="60" min="10" max="300" step="5"
+                                        class="w-full bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white focus:border-cosmic-cyan focus:outline-none"
+                                        oninput="updateWPMSimulation()">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-300 mb-2">予想正確率</label>
+                                    <div class="flex gap-2 items-center">
+                                        <input type="range" id="simAccuracy" value="95" min="50" max="100" step="1"
+                                            class="flex-1 h-2 rounded-full accent-cosmic-cyan cursor-pointer"
+                                            oninput="updateWPMSimulation()">
+                                        <span id="simAccuracyLabel" class="text-sm font-bold text-cosmic-cyan w-12 text-right">95%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- シミュレーション結果 -->
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                <div class="bg-gray-800 rounded p-3 border border-gray-700">
+                                    <div class="text-xs text-gray-400 mb-1">完了時間</div>
+                                    <div class="text-2xl font-bold text-energy-green" id="simTime">0秒</div>
+                                </div>
+                                <div class="bg-gray-800 rounded p-3 border border-gray-700">
+                                    <div class="text-xs text-gray-400 mb-1">分単位</div>
+                                    <div class="text-2xl font-bold text-cosmic-cyan" id="simTimeMin">0分</div>
+                                </div>
+                                <div class="bg-gray-800 rounded p-3 border border-gray-700">
+                                    <div class="text-xs text-gray-400 mb-1">タイムアタック達成</div>
+                                    <div class="text-lg font-bold" id="simTA60Result" style="color:#f97316;">60秒✓</div>
+                                </div>
+                                <div class="bg-gray-800 rounded p-3 border border-gray-700">
+                                    <div class="text-xs text-gray-400 mb-1">最初のミスまで</div>
+                                    <div class="text-lg font-bold text-red-400" id="simFirstMiss">約<span id="simFirstMissNum">0</span>文字</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- M7-3: パフォーマンス比較グラフ -->
+                        <div class="mt-8 bg-gray-900 rounded-lg p-6 border border-gray-700">
+                            <h4 class="font-bold text-lg text-cosmic-cyan mb-4">📊 パフォーマンス比較</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <canvas id="comparisonWPMChart" height="100"></canvas>
+                                </div>
+                                <div>
+                                    <canvas id="comparisonAccuracyChart" height="100"></canvas>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-xs text-gray-400 text-center">
+                                最近10セッションのWPMと正確率の推移
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- Fleet Section -->
@@ -2766,6 +2868,341 @@
                 updateStickyBar();
             });
         })();
+
+        // M4: グラフ・スコア・ゲージで結果を可視化（Chart.js）
+        function initResultCharts(wpm, accuracy) {
+            if (!window.Chart) return;
+
+            // WPMスコアバーグラフ（横棒で目標値との比較）
+            var scoreCanvas = document.getElementById('scoreBarChart');
+            if (scoreCanvas) {
+                if (window.resultScoreChart) window.resultScoreChart.destroy();
+                var ctx = scoreCanvas.getContext('2d');
+                var targetWPM = 100;
+                var achieveRate = Math.min(100, (wpm / targetWPM) * 100);
+                var scoreColor = achieveRate >= 80 ? '#10b981' : (achieveRate >= 50 ? '#f97316' : '#9ca3af');
+                window.resultScoreChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['WPM達成率'],
+                        datasets: [{
+                            label: wpm.toFixed(1) + ' / ' + targetWPM,
+                            data: [achieveRate],
+                            backgroundColor: scoreColor,
+                            borderColor: scoreColor,
+                            borderWidth: 2,
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        animation: { duration: 800 },
+                        plugins: {
+                            legend: { display: true, labels: { color: '#9ca3af', font: { size: 11 } } },
+                            tooltip: { enabled: true, backgroundColor: 'rgba(0,0,0,0.8)', titleColor: '#fff' }
+                        },
+                        scales: {
+                            x: {
+                                min: 0,
+                                max: 100,
+                                ticks: { color: '#9ca3af', font: { size: 10 } },
+                                grid: { color: '#374151' }
+                            },
+                            y: {
+                                ticks: { color: '#9ca3af', font: { size: 11 } },
+                                grid: { display: false }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 正確率ゲージ（ドーナツチャート）
+            var gaugeCanvas = document.getElementById('accuracyGaugeChart');
+            if (gaugeCanvas) {
+                if (window.resultAccuracyChart) window.resultAccuracyChart.destroy();
+                var ctx2 = gaugeCanvas.getContext('2d');
+                var accColor = accuracy >= 95 ? '#06b6d4' : (accuracy >= 90 ? '#10b981' : (accuracy >= 80 ? '#f97316' : '#ef4444'));
+                var remainAcc = 100 - accuracy;
+                window.resultAccuracyChart = new Chart(ctx2, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['正確率', ''],
+                        datasets: [{
+                            data: [accuracy, remainAcc],
+                            backgroundColor: [accColor, 'rgba(107,114,128,0.3)'],
+                            borderColor: ['#1f2937', '#1f2937'],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        animation: { duration: 800 },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { enabled: true, callbacks: {
+                                label: function(ctx) { return ctx.label + ': ' + ctx.parsed + '%'; }
+                            }}
+                        }
+                    }
+                });
+            }
+        }
+
+        // タイムアタック結果用のチャート初期化
+        function initTimeAttackResultCharts(wpm, accuracy) {
+            if (!window.Chart) return;
+
+            // タイムアタック用WPMスコアバー
+            var taScoreCanvas = document.getElementById('taScoreBarChart');
+            if (taScoreCanvas) {
+                if (window.taResultScoreChart) window.taResultScoreChart.destroy();
+                var ctx = taScoreCanvas.getContext('2d');
+                var targetWPM = 100;
+                var achieveRate = Math.min(100, (wpm / targetWPM) * 100);
+                var scoreColor = achieveRate >= 80 ? '#10b981' : (achieveRate >= 50 ? '#f97316' : '#9ca3af');
+                window.taResultScoreChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['WPM達成率'],
+                        datasets: [{
+                            label: wpm.toFixed(1) + ' / ' + targetWPM,
+                            data: [achieveRate],
+                            backgroundColor: scoreColor,
+                            borderColor: scoreColor,
+                            borderWidth: 2,
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        animation: { duration: 800 },
+                        plugins: {
+                            legend: { display: true, labels: { color: '#9ca3af', font: { size: 11 } } },
+                            tooltip: { enabled: true, backgroundColor: 'rgba(0,0,0,0.8)', titleColor: '#fff' }
+                        },
+                        scales: {
+                            x: {
+                                min: 0,
+                                max: 100,
+                                ticks: { color: '#9ca3af', font: { size: 10 } },
+                                grid: { color: '#374151' }
+                            },
+                            y: {
+                                ticks: { color: '#9ca3af', font: { size: 11 } },
+                                grid: { display: false }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // タイムアタック用正確率ゲージ
+            var taGaugeCanvas = document.getElementById('taAccuracyGaugeChart');
+            if (taGaugeCanvas) {
+                if (window.taResultAccuracyChart) window.taResultAccuracyChart.destroy();
+                var ctx2 = taGaugeCanvas.getContext('2d');
+                var accColor = accuracy >= 95 ? '#06b6d4' : (accuracy >= 90 ? '#10b981' : (accuracy >= 80 ? '#f97316' : '#ef4444'));
+                var remainAcc = 100 - accuracy;
+                window.taResultAccuracyChart = new Chart(ctx2, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['正確率', ''],
+                        datasets: [{
+                            data: [accuracy, remainAcc],
+                            backgroundColor: [accColor, 'rgba(107,114,128,0.3)'],
+                            borderColor: ['#1f2937', '#1f2937'],
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        animation: { duration: 800 },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { enabled: true, callbacks: {
+                                label: function(ctx) { return ctx.label + ': ' + ctx.parsed + '%'; }
+                            }}
+                        }
+                    }
+                });
+            }
+        }
+
+        // M7: 比較・シミュレーション機能
+        function refreshComparisonData() {
+            var discoveries = [];
+            try { discoveries = JSON.parse(localStorage.getItem('cosmicTyping_discoveries') || '[]'); } catch(e) {}
+
+            // テーブル更新
+            var tbody = document.getElementById('comparisonTableBody');
+            if (tbody && discoveries.length > 0) {
+                var rows = discoveries.slice(0, 10).map(function(d, idx) {
+                    var prevWPM = idx + 1 < discoveries.length ? parseFloat(discoveries[idx + 1].wpm) || 0 : 0;
+                    var currWPM = parseFloat(d.wpm) || 0;
+                    var diff = currWPM - prevWPM;
+                    var diffColor = diff >= 0 ? '#10b981' : '#ef4444';
+                    var diffSign = diff >= 0 ? '▲' : '▼';
+                    var execTime = parseInt(d.seconds) || 0;
+                    var execLabel = execTime < 60 ? execTime + '秒' : Math.floor(execTime / 60) + '分' + (execTime % 60) + '秒';
+                    return '<tr style="background:#1a1a2e;"><td class="border border-gray-700 p-2">' + (idx + 1) + '</td><td class="border border-gray-700 p-2 font-bold text-energy-green">' + currWPM.toFixed(1) + '</td><td class="border border-gray-700 p-2">' + (d.accuracy || '?') + '%</td><td class="border border-gray-700 p-2">' + (d.combo || '0') + 'x</td><td class="border border-gray-700 p-2 text-gray-400">' + execLabel + '</td><td class="border border-gray-700 p-2" style="color:' + diffColor + ';">' + (idx + 1 < discoveries.length ? diffSign + ' ' + Math.abs(diff).toFixed(1) : '−') + '</td></tr>';
+                }).join('');
+                tbody.innerHTML = rows;
+            }
+
+            // グラフ更新
+            updateComparisonCharts(discoveries);
+        }
+
+        function updateComparisonCharts(discoveries) {
+            if (!discoveries || discoveries.length === 0) return;
+            var recentSessions = discoveries.slice(0, 10).reverse();
+            var wpmData = recentSessions.map(function(d) { return parseFloat(d.wpm) || 0; });
+            var accData = recentSessions.map(function(d) { return parseInt(d.accuracy) || 0; });
+            var labels = recentSessions.map(function(d, i) { return (i + 1) + '回目'; });
+
+            // WPM グラフ
+            var wpmCanvas = document.getElementById('comparisonWPMChart');
+            if (wpmCanvas && window.Chart) {
+                if (window.comparisonWPMChart) window.comparisonWPMChart.destroy();
+                var ctx = wpmCanvas.getContext('2d');
+                window.comparisonWPMChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'WPM推移',
+                            data: wpmData,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16,185,129,0.15)',
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#06b6d4',
+                            fill: true,
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        animation: false,
+                        plugins: { legend: { display: true, labels: { color: '#9ca3af' } } },
+                        scales: {
+                            x: { ticks: { color: '#9ca3af' }, grid: { color: '#374151' } },
+                            y: { ticks: { color: '#9ca3af' }, beginAtZero: true, grid: { color: '#374151' } }
+                        }
+                    }
+                });
+            }
+
+            // 正確率グラフ
+            var accCanvas = document.getElementById('comparisonAccuracyChart');
+            if (accCanvas && window.Chart) {
+                if (window.comparisonAccuracyChart) window.comparisonAccuracyChart.destroy();
+                var ctx2 = accCanvas.getContext('2d');
+                window.comparisonAccuracyChart = new Chart(ctx2, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: '正確率',
+                            data: accData,
+                            backgroundColor: 'rgba(6,182,212,0.6)',
+                            borderColor: '#06b6d4',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        animation: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { ticks: { color: '#9ca3af' }, grid: { display: false } },
+                            y: { ticks: { color: '#9ca3af' }, beginAtZero: true, max: 100, grid: { color: '#374151' } }
+                        }
+                    }
+                });
+            }
+        }
+
+        function updateWPMSimulation() {
+            var textLen = parseInt(document.getElementById('simTextLength')?.value || 100);
+            var wpm = parseInt(document.getElementById('simWPM')?.value || 60);
+            var accuracy = parseInt(document.getElementById('simAccuracy')?.value || 95);
+            var accLabel = document.getElementById('simAccuracyLabel');
+            if (accLabel) accLabel.textContent = accuracy + '%';
+
+            // 計算: 1分で WPM 単語、1単語は 5 文字換算
+            // KPM（1分あたりのキー数）= WPM * 5
+            var kpmPerMin = wpm * 5;
+            var secondsNeeded = (textLen / kpmPerMin) * 60;
+            var secondsStr = Math.max(1, Math.round(secondsNeeded));
+            var minutesStr = Math.floor(secondsNeeded / 60) + '分' + (Math.round(secondsNeeded) % 60) + '秒';
+
+            // シミュレーション結果を表示
+            var timeEl = document.getElementById('simTime');
+            var timeMinEl = document.getElementById('simTimeMin');
+            var ta60El = document.getElementById('simTA60Result');
+            var firstMissEl = document.getElementById('simFirstMissNum');
+
+            if (timeEl) timeEl.textContent = secondsStr + '秒';
+            if (timeMinEl) timeMinEl.textContent = minutesStr;
+            if (firstMissEl) firstMissEl.textContent = Math.max(5, Math.floor(textLen * accuracy / 100));
+
+            // タイムアタック60秒達成判定
+            if (ta60El) {
+                if (secondsNeeded <= 60) {
+                    ta60El.innerHTML = '60秒✓';
+                    ta60El.style.color = '#10b981';
+                } else {
+                    ta60El.innerHTML = '60秒✗';
+                    ta60El.style.color = '#ef4444';
+                }
+            }
+        }
+
+        // セッション完了時に比較データを更新・グラフを描画
+        window._onSessionComplete = window._onSessionComplete || function() {};
+        var origOnComplete = window._onSessionComplete;
+        window._onSessionComplete = function() {
+            if (origOnComplete) origOnComplete();
+            setTimeout(function() {
+                var lastWPM = 0, lastAccuracy = 95;
+                try {
+                    var discoveries = JSON.parse(localStorage.getItem('cosmicTyping_discoveries') || '[]');
+                    if (discoveries.length > 0) {
+                        lastWPM = parseFloat(discoveries[0].wpm) || 0;
+                        lastAccuracy = parseInt(discoveries[0].accuracy) || 95;
+                    }
+                } catch(e) {}
+                initResultCharts(lastWPM, lastAccuracy);
+                refreshComparisonData();
+            }, 200);
+        };
+
+        // タイムアタック完了時にグラフを描画
+        window._onTimeAttackComplete = window._onTimeAttackComplete || function() {};
+        var origOnTAComplete = window._onTimeAttackComplete;
+        window._onTimeAttackComplete = function() {
+            if (origOnTAComplete) origOnTAComplete();
+            setTimeout(function() {
+                var taWPM = 0, taAccuracy = 95;
+                try {
+                    var taStats = JSON.parse(localStorage.getItem('cosmicTyping_taStats') || '{}');
+                    if (taStats && taStats.wpm) {
+                        taWPM = parseFloat(taStats.wpm) || 0;
+                        taAccuracy = parseInt(taStats.accuracy) || 95;
+                    }
+                } catch(e) {}
+                initTimeAttackResultCharts(taWPM, taAccuracy);
+            }, 200);
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            refreshComparisonData();
+            updateWPMSimulation();
+        });
     </script>
 
     <!-- P1: 宇宙アンビエントBGM -->
