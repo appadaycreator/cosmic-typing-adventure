@@ -225,8 +225,74 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:h
 .lp-footer-links a:hover{color:var(--white)}
 .lp-footer-copy{font-size:.7rem;color:var(--text-dim)}
 
+/* ===== STEP7 REFINEMENTS ===== */
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+
+/* Hero visual wrapper */
+.hero-visual-wrap{position:relative}
+.hv-float-wpm{position:absolute;top:-22px;right:0;background:linear-gradient(135deg,#7C3AED,#5B21B6);color:#fff;font-size:.82rem;font-weight:900;padding:9px 15px;border-radius:12px;box-shadow:0 6px 22px rgba(124,58,237,.6);animation:floatY 3s ease-in-out infinite;white-space:nowrap;z-index:10;pointer-events:none}
+.hv-float-acc{position:absolute;bottom:-18px;left:-8px;background:linear-gradient(135deg,#0891B2,#0E7490);color:#fff;font-size:.8rem;font-weight:900;padding:8px 14px;border-radius:11px;box-shadow:0 6px 18px rgba(8,145,178,.55);animation:floatY 3.6s ease-in-out infinite .5s;white-space:nowrap;z-index:10;pointer-events:none}
+.hv-float-planet{position:absolute;width:44px;height:44px;object-fit:contain;opacity:.9;z-index:10;pointer-events:none}
+.hv-fp-1{top:32%;left:-22px;animation:floatY 5s ease-in-out infinite .8s}
+.hv-fp-2{bottom:28%;right:-16px;animation:floatY 4.2s ease-in-out infinite .2s}
+@media(max-width:900px){.hv-float-wpm,.hv-float-acc,.hv-float-planet{display:none!important}}
+
+/* Gradient Feature Cards */
+.feat-row.gp{background:linear-gradient(135deg,rgba(139,92,246,.22),rgba(109,40,217,.06));border-color:rgba(139,92,246,.55)}
+.feat-row.gt{background:linear-gradient(135deg,rgba(6,182,212,.2),rgba(8,145,178,.06));border-color:rgba(6,182,212,.5)}
+.feat-row.gb{background:linear-gradient(135deg,rgba(59,130,246,.2),rgba(37,99,235,.06));border-color:rgba(59,130,246,.5)}
+.feat-row.gr{background:linear-gradient(135deg,rgba(239,68,68,.17),rgba(185,28,28,.06));border-color:rgba(239,68,68,.5)}
+.feat-row.gg{background:linear-gradient(135deg,rgba(16,185,129,.17),rgba(5,150,105,.06));border-color:rgba(16,185,129,.5)}
+.feat-row.go{background:linear-gradient(135deg,rgba(249,115,22,.17),rgba(194,65,12,.06));border-color:rgba(249,115,22,.5)}
+.feat-row.gy{background:linear-gradient(135deg,rgba(245,158,11,.17),rgba(180,83,9,.06));border-color:rgba(245,158,11,.5)}
+.feat-row.gi{background:linear-gradient(135deg,rgba(99,102,241,.2),rgba(67,56,202,.06));border-color:rgba(99,102,241,.5)}
+.feat-row.gp .feat-title{color:#C4B5FD}
+.feat-row.gt .feat-title{color:#67E8F9}
+.feat-row.gb .feat-title{color:#93C5FD}
+.feat-row.gr .feat-title{color:#FCA5A5}
+.feat-row.gg .feat-title{color:#6EE7B7}
+.feat-row.go .feat-title{color:#FED7AA}
+.feat-row.gy .feat-title{color:#FDE68A}
+.feat-row.gi .feat-title{color:#C7D2FE}
+
+/* Stats bar gradient tints */
+.stat-item.si-p{background:linear-gradient(135deg,rgba(139,92,246,.18),rgba(139,92,246,.03))}
+.stat-item.si-t{background:linear-gradient(135deg,rgba(6,182,212,.18),rgba(6,182,212,.03))}
+.stat-item.si-b{background:linear-gradient(135deg,rgba(59,130,246,.18),rgba(59,130,246,.03))}
+.stat-item.si-g{background:linear-gradient(135deg,rgba(245,158,11,.18),rgba(245,158,11,.03))}
+
+/* Mascots Section */
+.mascots-sec-bg{background:linear-gradient(180deg,rgba(139,92,246,.06) 0%,var(--bg2) 100%)}
+.mascots-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.mascot-card{border-radius:20px;padding:28px 16px 22px;text-align:center;border:1px solid rgba(255,255,255,.1);transition:transform .25s,box-shadow .25s}
+.mascot-card:hover{transform:translateY(-8px);box-shadow:0 16px 40px rgba(0,0,0,.45)}
+.mc-blue{background:linear-gradient(160deg,rgba(59,130,246,.35),rgba(37,99,235,.08));border-color:rgba(59,130,246,.55)}
+.mc-purple{background:linear-gradient(160deg,rgba(139,92,246,.35),rgba(109,40,217,.08));border-color:rgba(139,92,246,.55)}
+.mc-orange{background:linear-gradient(160deg,rgba(249,115,22,.32),rgba(194,65,12,.08));border-color:rgba(249,115,22,.5)}
+.mc-green{background:linear-gradient(160deg,rgba(16,185,129,.32),rgba(5,150,105,.08));border-color:rgba(16,185,129,.5)}
+.mascot-ring{width:88px;height:88px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center}
+.mc-blue .mascot-ring{background:rgba(59,130,246,.2);box-shadow:0 0 0 2px rgba(59,130,246,.45)}
+.mc-purple .mascot-ring{background:rgba(139,92,246,.2);box-shadow:0 0 0 2px rgba(139,92,246,.45)}
+.mc-orange .mascot-ring{background:rgba(249,115,22,.2);box-shadow:0 0 0 2px rgba(249,115,22,.45)}
+.mc-green .mascot-ring{background:rgba(16,185,129,.2);box-shadow:0 0 0 2px rgba(16,185,129,.45)}
+.mascot-face{font-size:3.2rem;line-height:1}
+.mascot-stat-chip{font-size:.6rem;font-weight:800;color:#fff;background:rgba(0,0,0,.4);border-radius:20px;padding:2px 10px;display:inline-block;margin-bottom:8px;letter-spacing:.04em}
+.mascot-name{font-size:.95rem;font-weight:900;color:#fff;margin-bottom:4px}
+.mascot-role{font-size:.71rem;color:rgba(255,255,255,.65);line-height:1.55;margin-bottom:10px}
+.mascot-badge-chip{display:inline-block;padding:3px 10px;border-radius:100px;font-size:.6rem;font-weight:700;letter-spacing:.04em}
+.mc-blue .mascot-badge-chip{background:rgba(59,130,246,.25);color:#93C5FD;border:1px solid rgba(59,130,246,.45)}
+.mc-purple .mascot-badge-chip{background:rgba(139,92,246,.25);color:#C4B5FD;border:1px solid rgba(139,92,246,.45)}
+.mc-orange .mascot-badge-chip{background:rgba(249,115,22,.25);color:#FED7AA;border:1px solid rgba(249,115,22,.45)}
+.mc-green .mascot-badge-chip{background:rgba(16,185,129,.25);color:#6EE7B7;border:1px solid rgba(16,185,129,.45)}
+
+/* Decorative planets */
+.deco-planet{position:absolute;object-fit:contain;pointer-events:none;opacity:.28;animation:floatY 6s ease-in-out infinite;z-index:0}
+
 /* Responsive */
 @media(max-width:768px){
+  .mascots-grid{grid-template-columns:repeat(2,1fr)}
+  .mascot-face{font-size:2.6rem}
+  .mascot-ring{width:72px;height:72px}
   .hero-inner{grid-template-columns:1fr;padding:60px 16px 40px}
   .hero-visual{display:none}
   .hero h1{font-size:1.5rem}
@@ -287,15 +353,21 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:h
       </div>
       <p class="hero-proof">⭐ <strong>10,000+</strong> ユーザーが速度アップを実感 ／ 完全無料・登録不要</p>
     </div>
-    <div class="hero-visual">
-      <div class="hv-label">● LIVE SESSION</div>
-      <img class="hv-photo" src="../assets/photos/photo_02.jpg" alt="タイピング練習">
-      <div class="hv-text-line"><span class="hv-text-typed">universe.explore(</span>"nebula", speed=MAX)</div>
-      <div class="hv-stats">
-        <div class="hv-stat"><div class="hv-stat-val">86</div><div class="hv-stat-lbl">WPM</div></div>
-        <div class="hv-stat"><div class="hv-stat-val">96<small style="font-size:.55rem">%</small></div><div class="hv-stat-lbl">正確率</div></div>
-        <div class="hv-stat"><div class="hv-stat-val" style="color:var(--gold)">×12</div><div class="hv-stat-lbl">COMBO</div></div>
+    <div class="hero-visual-wrap">
+      <div class="hero-visual">
+        <div class="hv-label">● LIVE SESSION</div>
+        <img class="hv-photo" src="../assets/photos/photo_02.jpg" alt="タイピング練習">
+        <div class="hv-text-line"><span class="hv-text-typed">universe.explore(</span>"nebula", speed=MAX)</div>
+        <div class="hv-stats">
+          <div class="hv-stat"><div class="hv-stat-val">86</div><div class="hv-stat-lbl">WPM</div></div>
+          <div class="hv-stat"><div class="hv-stat-val">96<small style="font-size:.55rem">%</small></div><div class="hv-stat-lbl">正確率</div></div>
+          <div class="hv-stat"><div class="hv-stat-val" style="color:var(--gold)">×12</div><div class="hv-stat-lbl">COMBO</div></div>
+        </div>
       </div>
+      <div class="hv-float-wpm">⚡ WPM: 86 達成！</div>
+      <div class="hv-float-acc">🎯 正確率: 96%</div>
+      <img class="hv-float-planet hv-fp-1" src="../assets/icons/split/01-03.png" alt="">
+      <img class="hv-float-planet hv-fp-2" src="../assets/icons/split/01-05.png" alt="">
     </div>
   </div>
 </section>
@@ -303,22 +375,22 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:h
 <!-- Stats Bar -->
 <div class="stats-bar">
   <div class="stats-bar-inner">
-    <div class="stat-item">
+    <div class="stat-item si-p">
       <img class="stat-icon" src="../assets/icons/split/02-07.png" alt="">
       <div class="stat-val">86<span class="stat-unit">WPM</span></div>
       <div class="stat-lbl">リアルタイムWPM</div>
     </div>
-    <div class="stat-item">
+    <div class="stat-item si-t">
       <img class="stat-icon" src="../assets/icons/split/03-05.png" alt="">
       <div class="stat-val">96<span class="stat-unit">%</span></div>
       <div class="stat-lbl">正確率測定</div>
     </div>
-    <div class="stat-item">
+    <div class="stat-item si-b">
       <img class="stat-icon" src="../assets/icons/split/02-03.png" alt="">
       <div class="stat-val">AI<span class="stat-unit">分析</span></div>
       <div class="stat-lbl">弱点キー分析</div>
     </div>
-    <div class="stat-item">
+    <div class="stat-item si-g">
       <img class="stat-icon" src="../assets/icons/split/04-04.png" alt="">
       <div class="stat-val">∞<span class="stat-unit">惑星</span></div>
       <div class="stat-lbl">宇宙ストーリー</div>
@@ -364,14 +436,57 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:h
   </div>
 </section>
 
+<!-- Mascots -->
+<section class="sec mascots-sec-bg">
+  <div class="sec-inner">
+    <div style="text-align:center;margin-bottom:36px">
+      <div class="sec-tag">こんなにいます！</div>
+      <h2 class="sec-title">あなたの練習を支える<br>宇宙の個性派キャラクター</h2>
+      <p class="sec-sub" style="max-width:540px;margin:8px auto 0">4体の宇宙ロボットたちが、あなたのタイピングを360度サポート</p>
+    </div>
+    <div class="mascots-grid">
+      <div class="mascot-card mc-blue">
+        <div class="mascot-ring"><span class="mascot-face">🤖</span></div>
+        <div class="mascot-stat-chip">⚡ 86 WPM 計測中</div>
+        <div class="mascot-name">スピードロボ</div>
+        <div class="mascot-role">WPMをリアルタイムで<br>計測・分析するロボット</div>
+        <span class="mascot-badge-chip">WPM計測担当</span>
+      </div>
+      <div class="mascot-card mc-purple">
+        <div class="mascot-ring"><span class="mascot-face">👾</span></div>
+        <div class="mascot-stat-chip">🎯 96% 正確率管理</div>
+        <div class="mascot-name">アキュラボット</div>
+        <div class="mascot-role">ミスを即検出する<br>精密分析ロボット</div>
+        <span class="mascot-badge-chip">正確率担当</span>
+      </div>
+      <div class="mascot-card mc-orange">
+        <div class="mascot-ring"><span class="mascot-face">🚀</span></div>
+        <div class="mascot-stat-chip">🌟 MISSION ON</div>
+        <div class="mascot-name">ミッション司令官</div>
+        <div class="mascot-role">毎日のデイリーミッションを<br>企画する宇宙司令官</div>
+        <span class="mascot-badge-chip">ミッション担当</span>
+      </div>
+      <div class="mascot-card mc-green">
+        <div class="mascot-ring"><span class="mascot-face">👽</span></div>
+        <div class="mascot-stat-chip">🔥 STREAK ×7</div>
+        <div class="mascot-name">ストリークエイリアン</div>
+        <div class="mascot-role">継続記録をサポートする<br>モチベーション宇宙人</div>
+        <span class="mascot-badge-chip">継続サポート担当</span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- Features -->
-<section class="sec features-bg" id="features">
+<section class="sec features-bg" id="features" style="position:relative">
+  <img class="deco-planet" style="top:20px;right:28px;width:52px;height:52px" src="../assets/icons/split/01-03.png" alt="">
+  <img class="deco-planet" style="bottom:24px;left:20px;width:38px;height:38px;animation-delay:.6s" src="../assets/icons/split/01-05.png" alt="">
   <div class="sec-inner">
     <div class="sec-tag">主な機能</div>
     <h2 class="sec-title">他とは違う、3つの強み</h2>
     <p class="sec-sub">最新の学習科学に基づいた機能で、最速でタイピング速度を伸ばす</p>
     <div class="features-grid">
-      <div class="feat-row">
+      <div class="feat-row gp">
         <img class="feat-icon" src="../assets/icons/split/02-03.png" alt="">
         <div class="feat-body">
           <div class="feat-title">AI適応型弱点分析（Keybr方式）</div>
@@ -379,7 +494,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:h
           <span class="feat-badge">NEW</span>
         </div>
       </div>
-      <div class="feat-row">
+      <div class="feat-row gt">
         <img class="feat-icon" src="../assets/icons/split/02-08.png" alt="">
         <div class="feat-body">
           <div class="feat-title">テスト時間を自由に選択</div>
@@ -387,14 +502,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:h
           <span class="feat-badge">選択可能</span>
         </div>
       </div>
-      <div class="feat-row">
+      <div class="feat-row gb">
         <img class="feat-icon" src="../assets/icons/split/02-07.png" alt="">
         <div class="feat-body">
           <div class="feat-title">リアルタイムWPM計測</div>
           <div class="feat-desc">入力中に毎秒更新されるWPM表示。目標に向かってその場で改善できます。</div>
         </div>
       </div>
-      <div class="feat-row">
+      <div class="feat-row gr">
         <img class="feat-icon" src="../assets/icons/split/03-07.png" alt="">
         <div class="feat-body">
           <div class="feat-title">タイピングミスのリアルタイム赤ハイライト</div>
@@ -402,7 +517,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:h
           <span class="feat-badge">NEW</span>
         </div>
       </div>
-      <div class="feat-row">
+      <div class="feat-row gg">
         <img class="feat-icon" src="../assets/icons/split/04-01.png" alt="">
         <div class="feat-body">
           <div class="feat-title">SNSシェア機能</div>
@@ -410,7 +525,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:h
           <span class="feat-badge">NEW</span>
         </div>
       </div>
-      <div class="feat-row">
+      <div class="feat-row go">
         <img class="feat-icon" src="../assets/icons/split/03-01.png" alt="">
         <div class="feat-body">
           <div class="feat-title">モバイル・スマホ対応</div>
@@ -418,7 +533,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:h
           <span class="feat-badge">NEW</span>
         </div>
       </div>
-      <div class="feat-row">
+      <div class="feat-row gy">
         <img class="feat-icon" src="../assets/icons/split/03-04.png" alt="">
         <div class="feat-body">
           <div class="feat-title">「もう一度」ボタン常時表示</div>
@@ -426,7 +541,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:h
           <span class="feat-badge">NEW</span>
         </div>
       </div>
-      <div class="feat-row">
+      <div class="feat-row gi">
         <img class="feat-icon" src="../assets/icons/split/02-06.png" alt="">
         <div class="feat-body">
           <div class="feat-title">キーボードビジュアライザー</div>
@@ -438,7 +553,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:h
 </section>
 
 <!-- Modes -->
-<section class="sec modes-bg" id="modes">
+<section class="sec modes-bg" id="modes" style="position:relative">
+  <img class="deco-planet" style="top:16px;left:24px;width:44px;height:44px;animation-delay:1s" src="../assets/icons/split/01-04.png" alt="">
+  <img class="deco-planet" style="bottom:20px;right:20px;width:34px;height:34px;animation-delay:.3s" src="../assets/icons/split/04-03.png" alt="">
   <div class="sec-inner">
     <div class="sec-tag">練習モード</div>
     <h2 class="sec-title">目的別に選べる4つのモード</h2>
