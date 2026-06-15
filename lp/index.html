@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>無料タイピング練習ゲーム｜WPM計測・弱点克服で速度を爆上げ | TypingMaster Pro</title>
+<meta name="description" content="リアルタイムWPM計測・正確率測定・弱点キー克服機能付き無料タイピング練習。宇宙テーマで楽しくスキルアップ。登録不要・スマホ対応。">
+<link rel="canonical" href="https://appadaycreator.com/cosmic-typing-adventure/lp/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://appadaycreator.com/cosmic-typing-adventure/lp/">
+<meta property="og:title" content="無料タイピング練習ゲーム｜WPM計測・弱点克服で速度を爆上げ">
+<meta property="og:description" content="リアルタイムWPM計測・正確率測定・弱点キー克服機能付き無料タイピング練習。宇宙テーマで楽しくスキルアップ。">
+<meta property="og:image" content="https://appadaycreator.com/cosmic-typing-adventure/assets/photos/photo_01.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<!-- GTM -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-TXQGZRF9');</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZDPNYD2875"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-ZDPNYD2875',{send_page_view:false});</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8427583028015858" crossorigin="anonymous"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#8B5CF6;
+  --primary-dark:#6D28D9;
+  --accent:#06B6D4;
+  --accent-dark:#0891B2;
+  --bg:#0D0B1E;
+  --bg2:#120F2D;
+  --bg3:#1A1640;
+  --card:#1E1B3A;
+  --card2:#251F4A;
+  --text:#E2E0F0;
+  --text-dim:#9D99C0;
+  --white:#fff;
+  --gold:#F59E0B;
+  --green:#10B981;
+  --red:#EF4444;
+  --font:ui-monospace,'Cascadia Code','Fira Code','Source Code Pro',monospace;
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
+
+/* Stars */
+.stars-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle 3s infinite alternate}
+@keyframes twinkle{0%{opacity:.3}100%{opacity:1}}
+
+/* Header */
+.lp-header{position:sticky;top:0;z-index:100;background:rgba(13,11,30,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(139,92,246,.2);padding:0 24px}
+.lp-header-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px;gap:16px}
+.lp-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.lp-logo-icon{width:32px;height:32px}
+.lp-logo-name{font-size:1rem;font-weight:800;color:var(--white);letter-spacing:.04em}
+.lp-logo-sub{font-size:.62rem;color:var(--primary);font-weight:600;letter-spacing:.08em;display:block;line-height:1}
+.lp-nav{display:flex;align-items:center;gap:20px}
+.lp-nav a{color:var(--text-dim);font-size:.78rem;text-decoration:none;transition:color .2s;font-weight:600;letter-spacing:.04em}
+.lp-nav a:hover{color:var(--white)}
+.lp-cta-btn{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;border:none;padding:9px 22px;border-radius:8px;font-size:.82rem;font-weight:800;cursor:pointer;text-decoration:none;white-space:nowrap;transition:opacity .2s;font-family:var(--font)}
+.lp-cta-btn:hover{opacity:.85}
+
+/* Hero */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;z-index:1;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background-image:url('../assets/photos/photo_01.jpg');background-size:cover;background-position:center top}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(13,11,30,.88) 50%,rgba(13,11,30,.55) 100%)}
+.hero-inner{position:relative;max-width:1100px;margin:0 auto;padding:80px 24px 60px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;width:100%}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.4);color:var(--primary);font-size:.72rem;font-weight:700;padding:5px 12px;border-radius:100px;letter-spacing:.06em;margin-bottom:20px}
+.hero h1{font-size:2.1rem;font-weight:900;line-height:1.2;color:var(--white);margin-bottom:16px;letter-spacing:-.01em}
+.hero h1 .hl{color:var(--accent);display:block}
+.hero-sub{font-size:.95rem;color:var(--text-dim);line-height:1.75;margin-bottom:28px;max-width:480px}
+.hero-cta-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:28px}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;border:none;padding:14px 32px;border-radius:10px;font-size:1rem;font-weight:900;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:transform .15s,opacity .15s;font-family:var(--font);letter-spacing:.02em}
+.btn-primary:hover{transform:translateY(-2px);opacity:.9}
+.btn-ghost{background:transparent;border:2px solid rgba(139,92,246,.5);color:var(--text);padding:12px 24px;border-radius:10px;font-size:.9rem;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:border-color .2s;font-family:var(--font)}
+.btn-ghost:hover{border-color:var(--primary);color:var(--white)}
+.hero-proof{font-size:.78rem;color:var(--text-dim)}
+.hero-proof strong{color:var(--gold)}
+
+/* Hero right - visual panel */
+.hero-visual{background:rgba(30,27,58,.7);backdrop-filter:blur(12px);border:1px solid rgba(139,92,246,.25);border-radius:16px;padding:20px;position:relative;overflow:hidden}
+.hero-visual::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(139,92,246,.05),rgba(6,182,212,.05));pointer-events:none}
+.hv-label{font-size:.65rem;color:var(--primary);font-weight:700;letter-spacing:.1em;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.hv-label::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);display:block;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.hv-photo{width:100%;height:160px;object-fit:cover;border-radius:10px;margin-bottom:14px}
+.hv-text-line{background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2);border-radius:6px;padding:8px 12px;font-size:.75rem;color:var(--accent);margin-bottom:10px;font-family:var(--font);letter-spacing:.03em}
+.hv-text-typed{color:var(--primary)}
+.hv-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.hv-stat{background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.2);border-radius:8px;padding:8px;text-align:center}
+.hv-stat-val{font-size:1.2rem;font-weight:900;color:var(--white)}
+.hv-stat-lbl{font-size:.6rem;color:var(--text-dim);font-weight:600;letter-spacing:.06em}
+.hv-keyboard{width:100%;margin-top:12px;border-radius:6px;overflow:hidden}
+
+/* Stats Bar */
+.stats-bar{position:relative;z-index:1;background:rgba(18,15,45,.9);border-top:1px solid rgba(139,92,246,.15);border-bottom:1px solid rgba(139,92,246,.15)}
+.stats-bar-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);padding:0}
+.stat-item{padding:24px 20px;text-align:center;border-right:1px solid rgba(139,92,246,.12)}
+.stat-item:last-child{border-right:none}
+.stat-icon{width:36px;height:36px;margin:0 auto 10px;display:block}
+.stat-val{font-size:1.6rem;font-weight:900;color:var(--white);line-height:1}
+.stat-unit{font-size:.68rem;color:var(--accent);font-weight:700;margin-left:2px}
+.stat-lbl{font-size:.72rem;color:var(--text-dim);margin-top:4px;font-weight:600}
+
+/* Section base */
+.sec{position:relative;z-index:1;padding:64px 24px}
+.sec-inner{max-width:1100px;margin:0 auto}
+.sec-tag{font-size:.68rem;font-weight:700;letter-spacing:.12em;color:var(--primary);background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.25);padding:4px 12px;border-radius:100px;display:inline-block;margin-bottom:14px}
+.sec-title{font-size:1.75rem;font-weight:900;color:var(--white);margin-bottom:8px;line-height:1.2}
+.sec-sub{font-size:.9rem;color:var(--text-dim);margin-bottom:36px;line-height:1.7}
+
+/* Audience */
+.audience-bg{background:var(--bg2)}
+.audience-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.aud-card{background:var(--card);border:1px solid rgba(139,92,246,.15);border-radius:14px;overflow:hidden;transition:transform .2s,border-color .2s}
+.aud-card:hover{transform:translateY(-4px);border-color:rgba(139,92,246,.4)}
+.aud-photo{width:100%;height:160px;object-fit:cover}
+.aud-body{padding:18px}
+.aud-icon{width:28px;height:28px;margin-bottom:8px}
+.aud-name{font-size:.88rem;font-weight:800;color:var(--white);margin-bottom:6px}
+.aud-desc{font-size:.78rem;color:var(--text-dim);line-height:1.7}
+.aud-tag{display:inline-block;background:rgba(139,92,246,.15);color:var(--primary);font-size:.65rem;font-weight:700;padding:3px 10px;border-radius:100px;margin-top:8px}
+
+/* Features */
+.features-bg{background:var(--bg)}
+.features-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.feat-row{background:var(--card);border:1px solid rgba(139,92,246,.12);border-radius:12px;padding:16px 20px;display:flex;align-items:flex-start;gap:14px;transition:border-color .2s}
+.feat-row:hover{border-color:rgba(139,92,246,.35)}
+.feat-icon{width:36px;height:36px;flex-shrink:0}
+.feat-body{}
+.feat-title{font-size:.88rem;font-weight:800;color:var(--white);margin-bottom:4px}
+.feat-desc{font-size:.75rem;color:var(--text-dim);line-height:1.65}
+.feat-badge{display:inline-block;background:rgba(6,182,212,.15);color:var(--accent);font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:100px;margin-top:4px}
+
+/* Modes */
+.modes-bg{background:var(--bg2)}
+.modes-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.mode-card{background:var(--card);border:1px solid rgba(139,92,246,.15);border-radius:16px;overflow:hidden}
+.mode-photo{width:100%;height:180px;object-fit:cover}
+.mode-body{padding:20px}
+.mode-tag{display:inline-block;background:rgba(139,92,246,.15);color:var(--primary);font-size:.65rem;font-weight:700;padding:3px 10px;border-radius:100px;margin-bottom:10px;letter-spacing:.06em}
+.mode-title{font-size:1rem;font-weight:800;color:var(--white);margin-bottom:8px}
+.mode-desc{font-size:.78rem;color:var(--text-dim);line-height:1.7;margin-bottom:12px}
+.mode-list{list-style:none;padding:0}
+.mode-list li{font-size:.75rem;color:var(--text-dim);padding:3px 0;display:flex;align-items:center;gap:6px}
+.mode-list li::before{content:'✓';color:var(--green);font-weight:700;font-size:.7rem}
+
+/* Daily Mission */
+.mission-bg{background:var(--bg)}
+.mission-inner{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.mission-visual{position:relative}
+.mission-photo{width:100%;border-radius:14px;object-fit:cover;height:280px}
+.mission-overlay{position:absolute;bottom:16px;left:16px;right:16px;background:rgba(13,11,30,.85);backdrop-filter:blur(8px);border:1px solid rgba(139,92,246,.25);border-radius:10px;padding:14px}
+.mission-planets{display:flex;gap:10px;align-items:center;margin-top:8px}
+.planet-item{display:flex;flex-direction:column;align-items:center;gap:4px}
+.planet-item img{width:36px;height:36px}
+.planet-item span{font-size:.58rem;color:var(--text-dim)}
+.planet-locked{opacity:.35;filter:grayscale(1)}
+.unlock-badge{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.4);color:var(--gold);font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:100px;display:inline-block;margin-bottom:6px}
+.progress-bar-wrap{background:rgba(255,255,255,.08);border-radius:100px;height:6px;margin-top:8px}
+.progress-bar-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--primary),var(--accent));width:43%}
+
+/* Results */
+.results-bg{background:var(--bg2)}
+.results-inner{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.results-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.res-card{background:var(--card);border:1px solid rgba(139,92,246,.15);border-radius:12px;padding:18px;text-align:center}
+.res-val{font-size:2rem;font-weight:900;color:var(--white);line-height:1}
+.res-unit{font-size:.75rem;color:var(--accent)}
+.res-lbl{font-size:.68rem;color:var(--text-dim);margin-top:4px}
+.share-block{margin-top:20px}
+.share-label{font-size:.75rem;color:var(--text-dim);margin-bottom:10px}
+.share-btns{display:flex;gap:8px;flex-wrap:wrap}
+.share-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:.75rem;font-weight:700;text-decoration:none;cursor:pointer;border:none;font-family:var(--font)}
+.share-x{background:#000;color:#fff}
+.share-line{background:#06C755;color:#fff}
+.share-copy{background:rgba(139,92,246,.2);border:1px solid rgba(139,92,246,.4);color:var(--primary)}
+.results-photo{border-radius:14px;width:100%;height:300px;object-fit:cover}
+
+/* Mobile */
+.mobile-bg{background:var(--bg)}
+.mobile-inner{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.mobile-photos{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mobile-photos img{border-radius:12px;width:100%;height:160px;object-fit:cover}
+.mobile-main-photo{grid-column:span 2;height:200px!important}
+.mobile-points{list-style:none;padding:0}
+.mobile-points li{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid rgba(139,92,246,.1)}
+.mobile-points li:last-child{border-bottom:none}
+.mp-icon{width:32px;height:32px;flex-shrink:0}
+.mp-text strong{display:block;font-size:.85rem;color:var(--white);margin-bottom:2px}
+.mp-text span{font-size:.75rem;color:var(--text-dim)}
+
+/* Steps */
+.steps-bg{background:var(--bg2)}
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;position:relative}
+.steps-grid::before{content:'';position:absolute;top:40px;left:calc(16.67% + 16px);right:calc(16.67% + 16px);height:2px;background:linear-gradient(90deg,var(--primary),var(--accent));z-index:0}
+.step-card{background:var(--card);border:1px solid rgba(139,92,246,.15);border-radius:14px;padding:24px;text-align:center;position:relative;z-index:1;transition:transform .2s}
+.step-card:hover{transform:translateY(-4px)}
+.step-no{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));font-size:1.1rem;font-weight:900;color:#fff;margin-bottom:16px}
+.step-photo{width:100%;height:120px;object-fit:cover;border-radius:8px;margin-bottom:12px}
+.step-title{font-size:.92rem;font-weight:800;color:var(--white);margin-bottom:6px}
+.step-desc{font-size:.75rem;color:var(--text-dim);line-height:1.65}
+
+/* Gallery */
+.gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:24px}
+.gallery-item{border-radius:10px;overflow:hidden;aspect-ratio:1}
+.gallery-item img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.gallery-item:hover img{transform:scale(1.05)}
+
+/* Final CTA */
+.finalcta{position:relative;z-index:1;overflow:hidden;padding:80px 24px}
+.finalcta-bg{position:absolute;inset:0;background-image:url('../assets/photos/photo_06.jpg');background-size:cover;background-position:center}
+.finalcta-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(13,11,30,.9),rgba(109,40,217,.7))}
+.finalcta-inner{position:relative;max-width:700px;margin:0 auto;text-align:center}
+.finalcta h2{font-size:1.8rem;font-weight:900;color:var(--white);margin-bottom:12px;line-height:1.2}
+.finalcta p{font-size:.9rem;color:rgba(255,255,255,.7);margin-bottom:32px}
+.btn-xl{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;border:none;padding:18px 48px;border-radius:12px;font-size:1.15rem;font-weight:900;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:transform .15s;font-family:var(--font);box-shadow:0 8px 32px rgba(139,92,246,.4)}
+.btn-xl:hover{transform:translateY(-3px)}
+.finalcta-badges{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:20px;flex-wrap:wrap}
+.fbadge{font-size:.72rem;color:rgba(255,255,255,.5);display:flex;align-items:center;gap:4px}
+
+/* Footer */
+.lp-footer{background:#08061A;border-top:1px solid rgba(139,92,246,.1);padding:32px 24px;position:relative;z-index:1}
+.lp-footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.lp-footer-links{display:flex;gap:16px;flex-wrap:wrap}
+.lp-footer-links a{font-size:.75rem;color:var(--text-dim);text-decoration:none}
+.lp-footer-links a:hover{color:var(--white)}
+.lp-footer-copy{font-size:.7rem;color:var(--text-dim)}
+
+/* Responsive */
+@media(max-width:768px){
+  .hero-inner{grid-template-columns:1fr;padding:60px 16px 40px}
+  .hero-visual{display:none}
+  .hero h1{font-size:1.5rem}
+  .stats-bar-inner{grid-template-columns:repeat(2,1fr)}
+  .stat-item:nth-child(2){border-right:none}
+  .audience-grid,.modes-grid,.mission-inner,.results-inner,.mobile-inner{grid-template-columns:1fr}
+  .steps-grid{grid-template-columns:1fr}
+  .steps-grid::before{display:none}
+  .gallery-grid{grid-template-columns:repeat(2,1fr)}
+  .features-grid{grid-template-columns:1fr}
+  .lp-nav{display:none}
+  .sec{padding:48px 16px}
+  .finalcta h2{font-size:1.35rem}
+}
+</style>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TXQGZRF9" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<!-- Stars -->
+<div class="stars-bg" id="starsContainer"></div>
+
+<!-- Header -->
+<header class="lp-header">
+  <div class="lp-header-inner">
+    <a class="lp-logo" href="../">
+      <img class="lp-logo-icon" src="../assets/icons/split/01-04.png" alt="TypingMaster Pro">
+      <div>
+        <span class="lp-logo-name">TypingMaster Pro</span>
+        <span class="lp-logo-sub">COSMIC TYPING ADVENTURE</span>
+      </div>
+    </a>
+    <nav class="lp-nav">
+      <a href="#features">特徴</a>
+      <a href="#modes">モード</a>
+      <a href="#mission">ミッション</a>
+      <a href="#steps">使い方</a>
+    </nav>
+    <a class="lp-cta-btn" href="../">🚀 宇宙へ発進</a>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <div class="hero-badge">
+        <img src="../assets/icons/split/01-01.png" alt="" style="width:16px;height:16px">
+        無料・登録不要
+      </div>
+      <h1>無料タイピング練習ゲーム<span class="hl">WPM計測・弱点克服で<br>速度を爆上げ</span></h1>
+      <p class="hero-sub">リアルタイムWPM計測・正確率測定・AI弱点キー克服機能付き。宇宙テーマで楽しくスキルアップ。プログラマー・在宅ワーカー・事務職の生産性を爆速UP。</p>
+      <div class="hero-cta-row">
+        <a class="btn-primary" href="../">🚀 宇宙へ発進</a>
+        <a class="btn-ghost" href="#steps">▶ 使い方を見る</a>
+      </div>
+      <p class="hero-proof">⭐ <strong>10,000+</strong> ユーザーが速度アップを実感 ／ 完全無料・登録不要</p>
+    </div>
+    <div class="hero-visual">
+      <div class="hv-label">● LIVE SESSION</div>
+      <img class="hv-photo" src="../assets/photos/photo_02.jpg" alt="タイピング練習">
+      <div class="hv-text-line"><span class="hv-text-typed">universe.explore(</span>"nebula", speed=MAX)</div>
+      <div class="hv-stats">
+        <div class="hv-stat"><div class="hv-stat-val">86</div><div class="hv-stat-lbl">WPM</div></div>
+        <div class="hv-stat"><div class="hv-stat-val">96<small style="font-size:.55rem">%</small></div><div class="hv-stat-lbl">正確率</div></div>
+        <div class="hv-stat"><div class="hv-stat-val" style="color:var(--gold)">×12</div><div class="hv-stat-lbl">COMBO</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Bar -->
+<div class="stats-bar">
+  <div class="stats-bar-inner">
+    <div class="stat-item">
+      <img class="stat-icon" src="../assets/icons/split/02-07.png" alt="">
+      <div class="stat-val">86<span class="stat-unit">WPM</span></div>
+      <div class="stat-lbl">リアルタイムWPM</div>
+    </div>
+    <div class="stat-item">
+      <img class="stat-icon" src="../assets/icons/split/03-05.png" alt="">
+      <div class="stat-val">96<span class="stat-unit">%</span></div>
+      <div class="stat-lbl">正確率測定</div>
+    </div>
+    <div class="stat-item">
+      <img class="stat-icon" src="../assets/icons/split/02-03.png" alt="">
+      <div class="stat-val">AI<span class="stat-unit">分析</span></div>
+      <div class="stat-lbl">弱点キー分析</div>
+    </div>
+    <div class="stat-item">
+      <img class="stat-icon" src="../assets/icons/split/04-04.png" alt="">
+      <div class="stat-val">∞<span class="stat-unit">惑星</span></div>
+      <div class="stat-lbl">宇宙ストーリー</div>
+    </div>
+  </div>
+</div>
+
+<!-- Audience -->
+<section class="sec audience-bg" id="audience">
+  <div class="sec-inner">
+    <div class="sec-tag">こんな方におすすめ！</div>
+    <h2 class="sec-title">あなたに合ったタイピング練習</h2>
+    <p class="sec-sub">プログラマーから事務職まで、すべてのキーボードワーカーの生産性をサポート</p>
+    <div class="audience-grid">
+      <div class="aud-card">
+        <img class="aud-photo" src="../assets/photos/photo_03.jpg" alt="プログラマー向けタイピング">
+        <div class="aud-body">
+          <img class="aud-icon" src="../assets/icons/split/03-02.png" alt="">
+          <div class="aud-name">プログラマー・エンジニア</div>
+          <div class="aud-desc">コード・変数名・コマンドを使ったプログラミング特化モードで開発効率を爆上げ。記号入力も徹底強化。</div>
+          <span class="aud-tag">プログラミングモード搭載</span>
+        </div>
+      </div>
+      <div class="aud-card">
+        <img class="aud-photo" src="../assets/photos/photo_04.jpg" alt="在宅ワーカー向けタイピング">
+        <div class="aud-body">
+          <img class="aud-icon" src="../assets/icons/split/03-01.png" alt="">
+          <div class="aud-name">在宅ワーカー・事務職</div>
+          <div class="aud-desc">日本語ビジネス文書モードで実務に直結。メール・報告書・議事録の入力速度を劇的に改善。</div>
+          <span class="aud-tag">ビジネス文書モード搭載</span>
+        </div>
+      </div>
+      <div class="aud-card">
+        <img class="aud-photo" src="../assets/photos/photo_05.jpg" alt="学生向けタイピング">
+        <div class="aud-body">
+          <img class="aud-icon" src="../assets/icons/split/02-04.png" alt="">
+          <div class="aud-name">学生・タイピング初心者</div>
+          <div class="aud-desc">宇宙ストーリー型デイリーミッションで毎日楽しく継続。ゲーム感覚でブラインドタッチをマスター。</div>
+          <span class="aud-tag">デイリーミッション搭載</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="sec features-bg" id="features">
+  <div class="sec-inner">
+    <div class="sec-tag">主な機能</div>
+    <h2 class="sec-title">他とは違う、3つの強み</h2>
+    <p class="sec-sub">最新の学習科学に基づいた機能で、最速でタイピング速度を伸ばす</p>
+    <div class="features-grid">
+      <div class="feat-row">
+        <img class="feat-icon" src="../assets/icons/split/02-03.png" alt="">
+        <div class="feat-body">
+          <div class="feat-title">AI適応型弱点分析（Keybr方式）</div>
+          <div class="feat-desc">打鍵履歴から苦手キーを自動検出し、難度をリアルタイム調整。効率的に弱点を克服できます。</div>
+          <span class="feat-badge">NEW</span>
+        </div>
+      </div>
+      <div class="feat-row">
+        <img class="feat-icon" src="../assets/icons/split/02-08.png" alt="">
+        <div class="feat-body">
+          <div class="feat-title">テスト時間を自由に選択</div>
+          <div class="feat-desc">30秒・1分・3分から選べるタイムアタック。隙間時間にも本格練習が可能。</div>
+          <span class="feat-badge">選択可能</span>
+        </div>
+      </div>
+      <div class="feat-row">
+        <img class="feat-icon" src="../assets/icons/split/02-07.png" alt="">
+        <div class="feat-body">
+          <div class="feat-title">リアルタイムWPM計測</div>
+          <div class="feat-desc">入力中に毎秒更新されるWPM表示。目標に向かってその場で改善できます。</div>
+        </div>
+      </div>
+      <div class="feat-row">
+        <img class="feat-icon" src="../assets/icons/split/03-07.png" alt="">
+        <div class="feat-body">
+          <div class="feat-title">タイピングミスのリアルタイム赤ハイライト</div>
+          <div class="feat-desc">ミス文字を即座に赤表示＋エラー数カウント。視覚的なフィードバックで正確性が向上。</div>
+          <span class="feat-badge">NEW</span>
+        </div>
+      </div>
+      <div class="feat-row">
+        <img class="feat-icon" src="../assets/icons/split/04-01.png" alt="">
+        <div class="feat-body">
+          <div class="feat-title">SNSシェア機能</div>
+          <div class="feat-desc">WPM・正確率をX(Twitter)・LINEへ即シェア。友達と競い合ってモチベーションをキープ。</div>
+          <span class="feat-badge">NEW</span>
+        </div>
+      </div>
+      <div class="feat-row">
+        <img class="feat-icon" src="../assets/icons/split/03-01.png" alt="">
+        <div class="feat-body">
+          <div class="feat-title">モバイル・スマホ対応</div>
+          <div class="feat-desc">スマホキーボード入力・タッチ操作に完全対応。スマホからも本格タイピング練習が可能。</div>
+          <span class="feat-badge">NEW</span>
+        </div>
+      </div>
+      <div class="feat-row">
+        <img class="feat-icon" src="../assets/icons/split/03-04.png" alt="">
+        <div class="feat-body">
+          <div class="feat-title">「もう一度」ボタン常時表示</div>
+          <div class="feat-desc">結果画面でもファーストビューに大きく表示。ワンクリックで即リトライ、継続練習をサポート。</div>
+          <span class="feat-badge">NEW</span>
+        </div>
+      </div>
+      <div class="feat-row">
+        <img class="feat-icon" src="../assets/icons/split/02-06.png" alt="">
+        <div class="feat-body">
+          <div class="feat-title">キーボードビジュアライザー</div>
+          <div class="feat-desc">次に押すべきキーをキーボード上でリアルタイムハイライト。初心者でも迷わず入力できます。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modes -->
+<section class="sec modes-bg" id="modes">
+  <div class="sec-inner">
+    <div class="sec-tag">練習モード</div>
+    <h2 class="sec-title">目的別に選べる4つのモード</h2>
+    <p class="sec-sub">あなたの目標に合ったモードで、最短距離でスキルアップ</p>
+    <div class="modes-grid">
+      <div class="mode-card">
+        <img class="mode-photo" src="../assets/photos/photo_07.jpg" alt="プログラミングモード">
+        <div class="mode-body">
+          <span class="mode-tag">💻 プログラミング特化</span>
+          <div class="mode-title">プログラミングモード</div>
+          <div class="mode-desc">コード・変数名・コマンド（Python/JS/Bash等）のタイピング練習。記号・特殊文字も完全網羅。</div>
+          <ul class="mode-list">
+            <li>Python・JavaScript・Bash対応</li>
+            <li>括弧・記号の速度を強化</li>
+            <li>実際のコードスニペットで練習</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mode-card">
+        <img class="mode-photo" src="../assets/photos/photo_08.jpg" alt="ビジネス文書モード">
+        <div class="mode-body">
+          <span class="mode-tag">📄 ビジネス文書</span>
+          <div class="mode-title">ビジネス文書モード（日本語）</div>
+          <div class="mode-desc">在宅ワーク・事務職向けの実務テキスト練習。メール・報告書・議事録のリアルな文章で速度UP。</div>
+          <ul class="mode-list">
+            <li>ビジネスメール・報告書フォーマット</li>
+            <li>日本語ローマ字入力に特化</li>
+            <li>事務・営業職の業務効率化に直結</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Daily Mission -->
+<section class="sec mission-bg" id="mission">
+  <div class="sec-inner">
+    <div class="mission-inner">
+      <div class="mission-visual">
+        <img class="mission-photo" src="../assets/photos/photo_09.jpg" alt="デイリーミッション">
+        <div class="mission-overlay">
+          <span class="unlock-badge">🌟 デイリーミッション</span>
+          <div style="font-size:.82rem;font-weight:800;color:var(--white);margin-bottom:8px">今日の惑星をクリア！</div>
+          <div class="mission-planets">
+            <div class="planet-item"><img src="../assets/icons/split/01-04.png" alt="Earth"><span>地球</span></div>
+            <div class="planet-item"><img src="../assets/icons/split/01-05.png" alt="Moon"><span>月</span></div>
+            <div class="planet-item"><img src="../assets/icons/split/01-03.png" alt="Saturn"><span>土星</span></div>
+            <div class="planet-item planet-locked"><img src="../assets/icons/split/04-03.png" alt="?"><span>???</span></div>
+            <div class="planet-item planet-locked"><img src="../assets/icons/split/01-07.png" alt="?"><span>???</span></div>
+          </div>
+          <div style="font-size:.65rem;color:var(--text-dim);margin-top:8px">達成率</div>
+          <div class="progress-bar-wrap"><div class="progress-bar-fill"></div></div>
+          <div style="font-size:.6rem;color:var(--accent);margin-top:4px;text-align:right">3 / 7 惑星</div>
+        </div>
+      </div>
+      <div>
+        <div class="sec-tag">デイリーミッション</div>
+        <h2 class="sec-title">宇宙ストーリー進行型<br>毎日が新たな冒険</h2>
+        <p class="sec-sub">毎日クリアで新惑星を開放。宇宙探索ストーリーを進めながら、気づけばタイピングが速くなっている。</p>
+        <ul style="list-style:none;padding:0">
+          <li style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid rgba(139,92,246,.1)">
+            <img src="../assets/icons/split/04-05.png" alt="" style="width:28px;height:28px;flex-shrink:0">
+            <div><strong style="display:block;font-size:.85rem;color:var(--white);margin-bottom:2px">毎日新しいミッションが出現</strong><span style="font-size:.75rem;color:var(--text-dim)">WPMチャレンジ・正確率チャレンジ・タイムアタックを毎日ローテーション</span></div>
+          </li>
+          <li style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid rgba(139,92,246,.1)">
+            <img src="../assets/icons/split/01-03.png" alt="" style="width:28px;height:28px;flex-shrink:0">
+            <div><strong style="display:block;font-size:.85rem;color:var(--white);margin-bottom:2px">惑星を集めて宇宙を制覇</strong><span style="font-size:.75rem;color:var(--text-dim)">30の惑星・星雲・銀河をアンロック。コレクション要素で継続意欲UP</span></div>
+          </li>
+          <li style="display:flex;align-items:flex-start;gap:12px;padding:12px 0">
+            <img src="../assets/icons/split/03-04.png" alt="" style="width:28px;height:28px;flex-shrink:0">
+            <div><strong style="display:block;font-size:.85rem;color:var(--white);margin-bottom:2px">ストリークボーナスで記録が加速</strong><span style="font-size:.75rem;color:var(--text-dim)">連続ログインでWPMボーナス＆レアバッジ獲得。継続すればするほどお得</span></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Results / Share -->
+<section class="sec results-bg" id="results">
+  <div class="sec-inner">
+    <div class="results-inner">
+      <div>
+        <div class="sec-tag">結果画面（シェア機能付き！）</div>
+        <h2 class="sec-title">スコアをSNSでシェアして<br>仲間と競おう</h2>
+        <p class="sec-sub">WPM・正確率・弱点キーを分析した結果をワンクリックでX/Twitterに投稿。タイピング仲間と切磋琢磨。</p>
+        <div class="results-stats">
+          <div class="res-card">
+            <div class="res-val">86</div>
+            <div class="res-unit">WPM</div>
+            <div class="res-lbl">タイピング速度</div>
+          </div>
+          <div class="res-card">
+            <div class="res-val">96<small style="font-size:.8rem">%</small></div>
+            <div class="res-unit">ACCURACY</div>
+            <div class="res-lbl">正確率</div>
+          </div>
+          <div class="res-card">
+            <div class="res-val" style="color:var(--gold)">5</div>
+            <div class="res-unit">ERRORS</div>
+            <div class="res-lbl">エラー数</div>
+          </div>
+          <div class="res-card">
+            <div class="res-val" style="color:var(--accent)">25<small style="font-size:.8rem">s</small></div>
+            <div class="res-unit">TIME</div>
+            <div class="res-lbl">テスト時間</div>
+          </div>
+        </div>
+        <div class="share-block">
+          <div class="share-label">📤 この結果をシェア</div>
+          <div class="share-btns">
+            <a class="share-btn share-x" href="#">𝕏 X でシェア</a>
+            <a class="share-btn share-line" href="#">LINE</a>
+            <button class="share-btn share-copy">📋 コピー</button>
+          </div>
+        </div>
+      </div>
+      <img class="results-photo" src="../assets/photos/photo_10.jpg" alt="タイピング結果">
+    </div>
+  </div>
+</section>
+
+<!-- Mobile Support -->
+<section class="sec mobile-bg">
+  <div class="sec-inner">
+    <div class="mobile-inner">
+      <div class="mobile-photos">
+        <img class="mobile-main-photo" src="../assets/photos/photo_11.jpg" alt="スマホタイピング">
+        <img src="../assets/photos/photo_12.jpg" alt="スマホ画面" style="border-radius:12px;width:100%;height:120px;object-fit:cover">
+        <img src="../assets/photos/photo_13.jpg" alt="タブレット" style="border-radius:12px;width:100%;height:120px;object-fit:cover">
+      </div>
+      <div>
+        <div class="sec-tag">スマホでも使える！</div>
+        <h2 class="sec-title">モバイル完全対応<br>いつでもどこでも練習</h2>
+        <p class="sec-sub">スマートフォン・タブレットのソフトウェアキーボードでも本格的なタイピング練習が可能。</p>
+        <ul class="mobile-points">
+          <li>
+            <img class="mp-icon" src="../assets/icons/split/03-01.png" alt="">
+            <div class="mp-text"><strong>スマホキーボード完全対応</strong><span>iOS・Android のソフトキーボードでスムーズ入力</span></div>
+          </li>
+          <li>
+            <img class="mp-icon" src="../assets/icons/split/03-06.png" alt="">
+            <div class="mp-text"><strong>レスポンシブUI</strong><span>画面サイズに自動最適化。スマホ・タブレット・PC全対応</span></div>
+          </li>
+          <li>
+            <img class="mp-icon" src="../assets/icons/split/04-02.png" alt="">
+            <div class="mp-text"><strong>QRコードでかんたんアクセス</strong><span>スキャンするだけで即スタート。ブックマーク不要</span></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Gallery -->
+<section class="sec" style="background:var(--bg2);padding-top:0">
+  <div class="sec-inner">
+    <div class="gallery-grid">
+      <div class="gallery-item"><img src="../assets/photos/photo_14.jpg" alt="タイピング練習風景"></div>
+      <div class="gallery-item"><img src="../assets/photos/photo_15.jpg" alt="WPM計測"></div>
+      <div class="gallery-item"><img src="../assets/photos/photo_16.jpg" alt="宇宙テーマ"></div>
+      <div class="gallery-item"><img src="../assets/photos/photo_17.jpg" alt="キーボード練習"></div>
+      <div class="gallery-item"><img src="../assets/photos/photo_18.jpg" alt="タイピングゲーム"></div>
+      <div class="gallery-item"><img src="../assets/photos/photo_19.jpg" alt="正確率向上"></div>
+      <div class="gallery-item"><img src="../assets/photos/photo_20.jpg" alt="弱点克服"></div>
+      <div class="gallery-item"><img src="../assets/photos/photo_21.jpg" alt="速度向上"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Steps -->
+<section class="sec steps-bg" id="steps">
+  <div class="sec-inner">
+    <div class="sec-tag">始め方はとっても簡単！</div>
+    <h2 class="sec-title">3ステップで宇宙へ出発</h2>
+    <p class="sec-sub">登録不要。今すぐブラウザだけでタイピング練習が始められます。</p>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-no">1</div>
+        <img class="step-photo" src="../assets/photos/photo_22.jpg" alt="ステップ1">
+        <div class="step-title">モードを選ぶ</div>
+        <div class="step-desc">スタンダード・プログラミング・ビジネス文書・デイリーミッションから目的に合ったモードを選択</div>
+      </div>
+      <div class="step-card">
+        <div class="step-no">2</div>
+        <img class="step-photo" src="../assets/photos/photo_07.jpg" alt="ステップ2">
+        <div class="step-title">タイピング開始</div>
+        <div class="step-desc">表示された文章を入力。ミスはリアルタイムで赤ハイライト表示。WPM・正確率をリアルタイム計測</div>
+      </div>
+      <div class="step-card">
+        <div class="step-no">3</div>
+        <img class="step-photo" src="../assets/photos/photo_08.jpg" alt="ステップ3">
+        <div class="step-title">結果を確認＆シェア</div>
+        <div class="step-desc">WPM・正確率・弱点キーを確認。SNSにシェアして仲間と比較。「もう一度」で即リトライ！</div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:40px">
+      <a class="btn-xl" href="../">🚀 宇宙へ発進</a>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA -->
+<section class="finalcta">
+  <div class="finalcta-bg"></div>
+  <div class="finalcta-overlay"></div>
+  <div class="finalcta-inner">
+    <div style="font-size:2rem;margin-bottom:12px">🚀</div>
+    <h2>毎日5分のタイピング練習で<br>宇宙級のスキルアップ。</h2>
+    <p>無料・登録不要。今すぐブラウザで始められます。</p>
+    <a class="btn-xl" href="../">🚀 宇宙へ発進</a>
+    <div class="finalcta-badges">
+      <span class="fbadge">✓ 完全無料</span>
+      <span class="fbadge">✓ 登録不要</span>
+      <span class="fbadge">✓ スマホ対応</span>
+      <span class="fbadge">✓ PWA対応</span>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="lp-footer">
+  <div class="lp-footer-inner">
+    <a class="lp-logo" href="../" style="text-decoration:none">
+      <img style="width:24px;height:24px" src="../assets/icons/split/01-04.png" alt="">
+      <span style="font-size:.82rem;font-weight:700;color:var(--text-dim)">TypingMaster Pro</span>
+    </a>
+    <div class="lp-footer-links">
+      <a href="../privacy-policy.html">プライバシーポリシー</a>
+      <a href="../terms.html">利用規約</a>
+      <a href="../contact.html">お問い合わせ</a>
+      <a href="/">全サービス</a>
+    </div>
+    <div class="lp-footer-copy">© 2026 AppADayCreator</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var c=document.getElementById('starsContainer');
+  if(!c)return;
+  var W=window.innerWidth,H=document.body.scrollHeight||2000;
+  var frag=document.createDocumentFragment();
+  for(var i=0;i<200;i++){
+    var s=document.createElement('div');
+    s.className='star';
+    var sz=Math.random()<0.7?1:Math.random()<0.7?1.5:2;
+    s.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+(Math.random()*100)+'%;top:'+(Math.random()*100)+'%;animation-delay:'+(-Math.random()*3)+'s;animation-duration:'+(2+Math.random()*3)+'s;opacity:'+(0.3+Math.random()*0.7);
+    frag.appendChild(s);
+  }
+  c.appendChild(frag);
+})();
+</script>
+</body>
+</html>
