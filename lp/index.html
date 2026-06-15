@@ -288,8 +288,59 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:h
 /* Decorative planets */
 .deco-planet{position:absolute;object-fit:contain;pointer-events:none;opacity:.28;animation:floatY 6s ease-in-out infinite;z-index:0}
 
+/* Audience Character Cards */
+.aud-char-area{width:100%;height:190px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.aud-blue{background:linear-gradient(160deg,#1E3A8A 0%,#1E40AF 55%,#3B82F6 100%)}
+.aud-orange{background:linear-gradient(160deg,#7C2D12 0%,#C2410C 55%,#F97316 100%)}
+.aud-teal{background:linear-gradient(160deg,#134E4A 0%,#0F766E 55%,#14B8A6 100%)}
+.aud-card.aud-col-blue{border-color:rgba(59,130,246,.5);background:linear-gradient(180deg,rgba(30,58,138,.14) 0%,var(--card) 40%)}
+.aud-card.aud-col-blue:hover{border-color:rgba(59,130,246,.8)}
+.aud-card.aud-col-orange{border-color:rgba(249,115,22,.45);background:linear-gradient(180deg,rgba(124,45,18,.14) 0%,var(--card) 40%)}
+.aud-card.aud-col-orange:hover{border-color:rgba(249,115,22,.75)}
+.aud-card.aud-col-teal{border-color:rgba(20,184,166,.45);background:linear-gradient(180deg,rgba(19,78,74,.14) 0%,var(--card) 40%)}
+.aud-card.aud-col-teal:hover{border-color:rgba(20,184,166,.75)}
+.aud-char-emoji{font-size:5.5rem;position:relative;z-index:2;animation:floatY 4s ease-in-out infinite;filter:drop-shadow(0 8px 24px rgba(0,0,0,.4))}
+.aud-orbit{position:absolute;border-radius:50%;border:1.5px dashed rgba(255,255,255,.22);top:50%;left:50%}
+.aud-orbit-s{width:90px;height:90px;animation:aud-spin 10s linear infinite}
+.aud-orbit-m{width:145px;height:145px;animation:aud-spin 17s linear infinite reverse}
+.aud-orbit-l{width:195px;height:195px;animation:aud-spin 23s linear infinite}
+.aud-char-stat-chip{position:absolute;bottom:10px;right:10px;background:rgba(0,0,0,.58);border:1px solid rgba(255,255,255,.18);color:#fff;font-size:.62rem;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:.04em;z-index:3;font-family:var(--font)}
+.aud-char-deco{position:absolute;font-size:1.5rem;opacity:.6;z-index:1;animation:floatY 5s ease-in-out infinite}
+@keyframes aud-spin{0%{transform:translate(-50%,-50%) rotate(0deg)}100%{transform:translate(-50%,-50%) rotate(360deg)}}
+
+/* Mode Tiles */
+.mode-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
+.mode-tile{border-radius:14px;padding:20px 16px;border:1px solid rgba(255,255,255,.1);transition:transform .2s,box-shadow .2s;cursor:default}
+.mode-tile:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.45)}
+.mode-tile-icon{font-size:2rem;margin-bottom:10px;display:block}
+.mode-tile-title{font-size:.88rem;font-weight:800;color:#fff;margin-bottom:5px}
+.mode-tile-desc{font-size:.72rem;line-height:1.62;color:rgba(255,255,255,.72)}
+.mt-purple{background:linear-gradient(135deg,rgba(139,92,246,.55),rgba(109,40,217,.22));border-color:rgba(139,92,246,.5)}
+.mt-teal{background:linear-gradient(135deg,rgba(6,182,212,.5),rgba(8,145,178,.18));border-color:rgba(6,182,212,.45)}
+.mt-orange{background:linear-gradient(135deg,rgba(249,115,22,.52),rgba(194,65,12,.18));border-color:rgba(249,115,22,.4)}
+.mt-blue{background:linear-gradient(135deg,rgba(59,130,246,.52),rgba(37,99,235,.18));border-color:rgba(59,130,246,.45)}
+.mt-green{background:linear-gradient(135deg,rgba(16,185,129,.52),rgba(5,150,105,.18));border-color:rgba(16,185,129,.4)}
+.mt-gold{background:linear-gradient(135deg,rgba(245,158,11,.52),rgba(180,83,9,.18));border-color:rgba(245,158,11,.4)}
+
+/* QR & Share Section */
+.qr-bg{background:linear-gradient(180deg,var(--bg2) 0%,var(--bg3) 100%)}
+.qr-inner{display:grid;grid-template-columns:1fr auto;gap:56px;align-items:center}
+.qr-card{background:var(--card);border:2px solid rgba(139,92,246,.3);border-radius:20px;padding:24px;text-align:center;min-width:210px}
+.qr-svg-wrap{background:#fff;border-radius:10px;padding:12px;display:inline-block;margin-bottom:10px}
+.qr-url-text{font-size:.6rem;color:var(--text-dim);line-height:1.6}
+.qr-share-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:24px}
+.qr-share-btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:12px 16px;border-radius:10px;font-size:.82rem;font-weight:800;text-decoration:none;border:none;cursor:pointer;font-family:var(--font);transition:opacity .18s,transform .15s;letter-spacing:.02em}
+.qr-share-btn:hover{opacity:.88;transform:translateY(-1px)}
+.qsb-x{background:#000;color:#fff}
+.qsb-line{background:#06C755;color:#fff}
+.qsb-fb{background:#1877F2;color:#fff}
+.qsb-copy{background:rgba(139,92,246,.18);border:1px solid rgba(139,92,246,.45);color:var(--primary)}
+
 /* Responsive */
 @media(max-width:768px){
+  .mode-tiles{grid-template-columns:repeat(2,1fr)}
+  .qr-inner{grid-template-columns:1fr}
+  .qr-card{margin:0 auto}
   .mascots-grid{grid-template-columns:repeat(2,1fr)}
   .mascot-face{font-size:2.6rem}
   .mascot-ring{width:72px;height:72px}
@@ -405,31 +456,55 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:h
     <h2 class="sec-title">あなたに合ったタイピング練習</h2>
     <p class="sec-sub">プログラマーから事務職まで、すべてのキーボードワーカーの生産性をサポート</p>
     <div class="audience-grid">
-      <div class="aud-card">
-        <img class="aud-photo" src="../assets/photos/photo_03.jpg" alt="プログラマー向けタイピング">
+      <div class="aud-card aud-col-blue">
+        <div class="aud-char-area aud-blue">
+          <div class="aud-orbit aud-orbit-s"></div>
+          <div class="aud-orbit aud-orbit-m"></div>
+          <div class="aud-orbit aud-orbit-l"></div>
+          <span class="aud-char-deco" style="top:14px;left:18px;animation-delay:.3s">🪐</span>
+          <span class="aud-char-deco" style="top:18px;right:16px;animation-delay:1.2s">⭐</span>
+          <span class="aud-char-emoji">👨‍🚀</span>
+          <span class="aud-char-stat-chip">⚡ WPM 120+ 到達可能</span>
+        </div>
         <div class="aud-body">
           <img class="aud-icon" src="../assets/icons/split/03-02.png" alt="">
           <div class="aud-name">プログラマー・エンジニア</div>
           <div class="aud-desc">コード・変数名・コマンドを使ったプログラミング特化モードで開発効率を爆上げ。記号入力も徹底強化。</div>
-          <span class="aud-tag">プログラミングモード搭載</span>
+          <span class="aud-tag" style="background:rgba(59,130,246,.15);color:#93C5FD">プログラミングモード搭載</span>
         </div>
       </div>
-      <div class="aud-card">
-        <img class="aud-photo" src="../assets/photos/photo_04.jpg" alt="在宅ワーカー向けタイピング">
+      <div class="aud-card aud-col-orange">
+        <div class="aud-char-area aud-orange">
+          <div class="aud-orbit aud-orbit-s" style="animation-delay:.5s"></div>
+          <div class="aud-orbit aud-orbit-m" style="animation-delay:-.8s"></div>
+          <div class="aud-orbit aud-orbit-l" style="animation-delay:-.4s"></div>
+          <span class="aud-char-deco" style="top:16px;left:20px;animation-delay:.7s">🌙</span>
+          <span class="aud-char-deco" style="bottom:20px;right:14px;animation-delay:1.5s">✨</span>
+          <span class="aud-char-emoji" style="animation-delay:.4s">👩‍🚀</span>
+          <span class="aud-char-stat-chip">📄 文書入力 ×2.5倍速</span>
+        </div>
         <div class="aud-body">
           <img class="aud-icon" src="../assets/icons/split/03-01.png" alt="">
           <div class="aud-name">在宅ワーカー・事務職</div>
           <div class="aud-desc">日本語ビジネス文書モードで実務に直結。メール・報告書・議事録の入力速度を劇的に改善。</div>
-          <span class="aud-tag">ビジネス文書モード搭載</span>
+          <span class="aud-tag" style="background:rgba(249,115,22,.15);color:#FED7AA">ビジネス文書モード搭載</span>
         </div>
       </div>
-      <div class="aud-card">
-        <img class="aud-photo" src="../assets/photos/photo_05.jpg" alt="学生向けタイピング">
+      <div class="aud-card aud-col-teal">
+        <div class="aud-char-area aud-teal">
+          <div class="aud-orbit aud-orbit-s" style="animation-delay:1s"></div>
+          <div class="aud-orbit aud-orbit-m" style="animation-delay:-.3s"></div>
+          <div class="aud-orbit aud-orbit-l" style="animation-delay:-.7s"></div>
+          <span class="aud-char-deco" style="top:12px;right:18px;animation-delay:.9s">🌟</span>
+          <span class="aud-char-deco" style="bottom:18px;left:16px;animation-delay:1.8s">🌀</span>
+          <span class="aud-char-emoji" style="animation-delay:.8s">🧑‍🚀</span>
+          <span class="aud-char-stat-chip">🌟 30日で速度3倍UP</span>
+        </div>
         <div class="aud-body">
           <img class="aud-icon" src="../assets/icons/split/02-04.png" alt="">
           <div class="aud-name">学生・タイピング初心者</div>
           <div class="aud-desc">宇宙ストーリー型デイリーミッションで毎日楽しく継続。ゲーム感覚でブラインドタッチをマスター。</div>
-          <span class="aud-tag">デイリーミッション搭載</span>
+          <span class="aud-tag" style="background:rgba(20,184,166,.15);color:#5EEAD4">デイリーミッション搭載</span>
         </div>
       </div>
     </div>
@@ -560,6 +635,38 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:h
     <div class="sec-tag">練習モード</div>
     <h2 class="sec-title">目的別に選べる4つのモード</h2>
     <p class="sec-sub">あなたの目標に合ったモードで、最短距離でスキルアップ</p>
+    <div class="mode-tiles">
+      <div class="mode-tile mt-purple">
+        <span class="mode-tile-icon">💻</span>
+        <div class="mode-tile-title">プログラミングモード</div>
+        <div class="mode-tile-desc">Python・JS・Bash対応。括弧・記号も徹底強化</div>
+      </div>
+      <div class="mode-tile mt-teal">
+        <span class="mode-tile-icon">📄</span>
+        <div class="mode-tile-title">ビジネス文書モード</div>
+        <div class="mode-tile-desc">メール・報告書・議事録の実務テキストで練習</div>
+      </div>
+      <div class="mode-tile mt-orange">
+        <span class="mode-tile-icon">🎯</span>
+        <div class="mode-tile-title">弱点キー特訓</div>
+        <div class="mode-tile-desc">AI分析で苦手キーを自動検出し集中練習</div>
+      </div>
+      <div class="mode-tile mt-blue">
+        <span class="mode-tile-icon">⏱</span>
+        <div class="mode-tile-title">タイムアタック</div>
+        <div class="mode-tile-desc">30秒・1分・3分で集中タイピング勝負</div>
+      </div>
+      <div class="mode-tile mt-green">
+        <span class="mode-tile-icon">🌟</span>
+        <div class="mode-tile-title">デイリーミッション</div>
+        <div class="mode-tile-desc">毎日更新のミッションで継続力を着実に強化</div>
+      </div>
+      <div class="mode-tile mt-gold">
+        <span class="mode-tile-icon">🚀</span>
+        <div class="mode-tile-title">宇宙ストーリー</div>
+        <div class="mode-tile-desc">惑星を開放しながら宇宙を制覇しよう</div>
+      </div>
+    </div>
     <div class="modes-grid">
       <div class="mode-card">
         <img class="mode-photo" src="../assets/photos/photo_07.jpg" alt="プログラミングモード">
@@ -706,6 +813,53 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);overflow-x:h
             <div class="mp-text"><strong>QRコードでかんたんアクセス</strong><span>スキャンするだけで即スタート。ブックマーク不要</span></div>
           </li>
         </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QR Code & SNS Share -->
+<section class="sec qr-bg">
+  <div class="sec-inner">
+    <div class="qr-inner">
+      <div>
+        <div class="sec-tag">スマホでかんたんアクセス</div>
+        <h2 class="sec-title">QRコードでスキャン<br>今すぐ宇宙タイピングへ</h2>
+        <p class="sec-sub">URLを入力しなくてもOK。カメラを向けるだけで即スタート。友達にも簡単シェアできます！</p>
+        <div class="qr-share-grid">
+          <a class="qr-share-btn qsb-x" href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fappadaycreator.com%2Fcosmic-typing-adventure%2F&text=%E7%84%A1%E6%96%99%E3%82%BF%E3%82%A4%E3%83%94%E3%83%B3%E3%82%B0%E7%B7%B4%E7%BF%92%E3%82%B2%E3%83%BC%E3%83%A0%E3%81%A7WPM%E7%88%86%E4%B8%8A%E3%81%92%EF%BC%81+%23TypingMasterPro" target="_blank" rel="noopener">𝕏 X でシェア</a>
+          <a class="qr-share-btn qsb-line" href="https://line.me/R/msg/text/?%E7%84%A1%E6%96%99%E3%82%BF%E3%82%A4%E3%83%94%E3%83%B3%E3%82%B0%E7%B7%B4%E7%BF%92%E3%82%B2%E3%83%BC%E3%83%A0%0Ahttps%3A%2F%2Fappadaycreator.com%2Fcosmic-typing-adventure%2F" target="_blank" rel="noopener">💬 LINE で送る</a>
+          <a class="qr-share-btn qsb-fb" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fappadaycreator.com%2Fcosmic-typing-adventure%2F" target="_blank" rel="noopener">📘 Facebook</a>
+          <button class="qr-share-btn qsb-copy" onclick="navigator.clipboard.writeText('https://appadaycreator.com/cosmic-typing-adventure/').then(()=>{this.textContent='✓ コピーしました！';setTimeout(()=>this.textContent='📋 URLをコピー',2000)})">📋 URLをコピー</button>
+        </div>
+      </div>
+      <div>
+        <div class="qr-card">
+          <div class="qr-svg-wrap">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 21" width="156" height="156" shape-rendering="crispEdges">
+              <rect width="21" height="21" fill="#fff"/>
+              <rect x="0" y="0" width="7" height="7" fill="#0D0B1E"/><rect x="1" y="1" width="5" height="5" fill="#fff"/><rect x="2" y="2" width="3" height="3" fill="#0D0B1E"/>
+              <rect x="14" y="0" width="7" height="7" fill="#0D0B1E"/><rect x="15" y="1" width="5" height="5" fill="#fff"/><rect x="16" y="2" width="3" height="3" fill="#0D0B1E"/>
+              <rect x="0" y="14" width="7" height="7" fill="#0D0B1E"/><rect x="1" y="15" width="5" height="5" fill="#fff"/><rect x="2" y="16" width="3" height="3" fill="#0D0B1E"/>
+              <rect x="8" y="6" width="1" height="1" fill="#0D0B1E"/><rect x="10" y="6" width="1" height="1" fill="#0D0B1E"/><rect x="12" y="6" width="1" height="1" fill="#0D0B1E"/>
+              <rect x="6" y="8" width="1" height="1" fill="#0D0B1E"/><rect x="6" y="10" width="1" height="1" fill="#0D0B1E"/><rect x="6" y="12" width="1" height="1" fill="#0D0B1E"/>
+              <rect x="7" y="7" width="1" height="1" fill="#0D0B1E"/><rect x="8" y="7" width="1" height="1" fill="#0D0B1E"/><rect x="11" y="7" width="1" height="1" fill="#0D0B1E"/><rect x="13" y="7" width="1" height="1" fill="#0D0B1E"/>
+              <rect x="7" y="8" width="1" height="1" fill="#0D0B1E"/><rect x="9" y="8" width="1" height="1" fill="#0D0B1E"/><rect x="10" y="8" width="1" height="1" fill="#0D0B1E"/><rect x="12" y="8" width="1" height="1" fill="#0D0B1E"/><rect x="14" y="8" width="1" height="1" fill="#0D0B1E"/><rect x="16" y="8" width="1" height="1" fill="#0D0B1E"/><rect x="17" y="8" width="1" height="1" fill="#0D0B1E"/><rect x="19" y="8" width="1" height="1" fill="#0D0B1E"/><rect x="20" y="8" width="1" height="1" fill="#0D0B1E"/>
+              <rect x="7" y="9" width="1" height="1" fill="#0D0B1E"/><rect x="11" y="9" width="1" height="1" fill="#0D0B1E"/><rect x="13" y="9" width="1" height="1" fill="#0D0B1E"/><rect x="15" y="9" width="1" height="1" fill="#0D0B1E"/><rect x="18" y="9" width="1" height="1" fill="#0D0B1E"/><rect x="20" y="9" width="1" height="1" fill="#0D0B1E"/>
+              <rect x="8" y="10" width="1" height="1" fill="#0D0B1E"/><rect x="10" y="10" width="1" height="1" fill="#0D0B1E"/><rect x="12" y="10" width="1" height="1" fill="#0D0B1E"/><rect x="14" y="10" width="1" height="1" fill="#0D0B1E"/><rect x="16" y="10" width="1" height="1" fill="#0D0B1E"/><rect x="17" y="10" width="1" height="1" fill="#0D0B1E"/><rect x="19" y="10" width="1" height="1" fill="#0D0B1E"/>
+              <rect x="7" y="11" width="1" height="1" fill="#0D0B1E"/><rect x="9" y="11" width="1" height="1" fill="#0D0B1E"/><rect x="11" y="11" width="1" height="1" fill="#0D0B1E"/><rect x="13" y="11" width="1" height="1" fill="#0D0B1E"/><rect x="15" y="11" width="1" height="1" fill="#0D0B1E"/><rect x="18" y="11" width="1" height="1" fill="#0D0B1E"/><rect x="20" y="11" width="1" height="1" fill="#0D0B1E"/>
+              <rect x="7" y="12" width="1" height="1" fill="#0D0B1E"/><rect x="8" y="12" width="1" height="1" fill="#0D0B1E"/><rect x="10" y="12" width="1" height="1" fill="#0D0B1E"/><rect x="12" y="12" width="1" height="1" fill="#0D0B1E"/><rect x="14" y="12" width="1" height="1" fill="#0D0B1E"/><rect x="16" y="12" width="1" height="1" fill="#0D0B1E"/><rect x="19" y="12" width="1" height="1" fill="#0D0B1E"/>
+              <rect x="8" y="14" width="1" height="1" fill="#0D0B1E"/><rect x="9" y="14" width="1" height="1" fill="#0D0B1E"/><rect x="11" y="14" width="1" height="1" fill="#0D0B1E"/><rect x="12" y="14" width="1" height="1" fill="#0D0B1E"/><rect x="14" y="14" width="1" height="1" fill="#0D0B1E"/><rect x="16" y="14" width="1" height="1" fill="#0D0B1E"/><rect x="18" y="14" width="1" height="1" fill="#0D0B1E"/><rect x="20" y="14" width="1" height="1" fill="#0D0B1E"/>
+              <rect x="7" y="15" width="1" height="1" fill="#0D0B1E"/><rect x="10" y="15" width="1" height="1" fill="#0D0B1E"/><rect x="13" y="15" width="1" height="1" fill="#0D0B1E"/><rect x="15" y="15" width="1" height="1" fill="#0D0B1E"/><rect x="17" y="15" width="1" height="1" fill="#0D0B1E"/><rect x="19" y="15" width="1" height="1" fill="#0D0B1E"/>
+              <rect x="8" y="16" width="1" height="1" fill="#0D0B1E"/><rect x="11" y="16" width="1" height="1" fill="#0D0B1E"/><rect x="14" y="16" width="1" height="1" fill="#0D0B1E"/><rect x="16" y="16" width="1" height="1" fill="#0D0B1E"/><rect x="18" y="16" width="1" height="1" fill="#0D0B1E"/><rect x="20" y="16" width="1" height="1" fill="#0D0B1E"/>
+              <rect x="7" y="17" width="1" height="1" fill="#0D0B1E"/><rect x="9" y="17" width="1" height="1" fill="#0D0B1E"/><rect x="12" y="17" width="1" height="1" fill="#0D0B1E"/><rect x="13" y="17" width="1" height="1" fill="#0D0B1E"/><rect x="15" y="17" width="1" height="1" fill="#0D0B1E"/><rect x="17" y="17" width="1" height="1" fill="#0D0B1E"/><rect x="19" y="17" width="1" height="1" fill="#0D0B1E"/>
+              <rect x="8" y="18" width="1" height="1" fill="#0D0B1E"/><rect x="10" y="18" width="1" height="1" fill="#0D0B1E"/><rect x="11" y="18" width="1" height="1" fill="#0D0B1E"/><rect x="14" y="18" width="1" height="1" fill="#0D0B1E"/><rect x="16" y="18" width="1" height="1" fill="#0D0B1E"/><rect x="18" y="18" width="1" height="1" fill="#0D0B1E"/><rect x="20" y="18" width="1" height="1" fill="#0D0B1E"/>
+              <rect x="7" y="19" width="1" height="1" fill="#0D0B1E"/><rect x="9" y="19" width="1" height="1" fill="#0D0B1E"/><rect x="13" y="19" width="1" height="1" fill="#0D0B1E"/><rect x="15" y="19" width="1" height="1" fill="#0D0B1E"/><rect x="17" y="19" width="1" height="1" fill="#0D0B1E"/><rect x="19" y="19" width="1" height="1" fill="#0D0B1E"/>
+              <rect x="8" y="20" width="1" height="1" fill="#0D0B1E"/><rect x="10" y="20" width="1" height="1" fill="#0D0B1E"/><rect x="12" y="20" width="1" height="1" fill="#0D0B1E"/><rect x="14" y="20" width="1" height="1" fill="#0D0B1E"/><rect x="16" y="20" width="1" height="1" fill="#0D0B1E"/><rect x="18" y="20" width="1" height="1" fill="#0D0B1E"/><rect x="20" y="20" width="1" height="1" fill="#0D0B1E"/>
+            </svg>
+          </div>
+          <p class="qr-url-text">appadaycreator.com/<br>cosmic-typing-adventure/</p>
+        </div>
       </div>
     </div>
   </div>
